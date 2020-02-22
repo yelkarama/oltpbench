@@ -17,18 +17,15 @@
 
 package com.oltpbenchmark.api;
 
+import com.oltpbenchmark.catalog.Table;
+import com.oltpbenchmark.util.Histogram;
+import com.oltpbenchmark.util.SQLUtil;
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.oltpbenchmark.catalog.Catalog;
-import com.oltpbenchmark.util.StringUtil;
-import org.apache.log4j.Logger;
-
-import com.oltpbenchmark.catalog.Table;
-import com.oltpbenchmark.util.Histogram;
-import com.oltpbenchmark.util.SQLUtil;
 
 public abstract class AbstractTestLoader<T extends BenchmarkModule> extends AbstractTestCase<T> {
     

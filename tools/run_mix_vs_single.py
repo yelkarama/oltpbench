@@ -13,12 +13,12 @@ Options:
                     use existing saved .res files.
     -h --help     Show this screen.
 """
-from subprocess import check_call
-from contextlib import contextmanager
 import os
-import sys
 import pylab as p
 import shutil
+import sys
+from contextlib import contextmanager
+from subprocess import check_call
 
 try:
     from docopt import docopt

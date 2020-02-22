@@ -7,8 +7,8 @@ Created on Wed Oct  3 12:30:54 2012
 """
 import numpy as np
 import pylab as p
-from matplotlib.ticker import MaxNLocator
 import sys
+from matplotlib.ticker import MaxNLocator
 
 SLICE_SIZE = 5
 MAX_THROUGHPUT_TICKS = 10

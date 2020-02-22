@@ -17,18 +17,12 @@
 
 package com.oltpbenchmark.benchmarks.twitter.util;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
-
+import ch.ethz.ssh2.util.Tokenizer;
 import com.oltpbenchmark.api.TransactionTypes;
 
-import ch.ethz.ssh2.util.Tokenizer;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class TransactionSelector {
 
@@ -51,7 +45,7 @@ public class TransactionSelector {
 		if(filename2==null || filename2.isEmpty())
 			throw new FileNotFoundException("You must specify a filename to instantiate the TransactionSelector... (probably missing in your workload configuration?)");
 
-		
+
 		File file = new File(filename);
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
@@ -71,7 +65,7 @@ public class TransactionSelector {
 		bis2 = new BufferedInputStream(fis2);
 		dis2 = new DataInputStream(bis2);
 		dis2.mark(1024 * 1024 * 1024);
-	
+
 	}
 
 	public synchronized TwitterOperation nextTransaction() throws IOException {
@@ -91,7 +85,7 @@ public class TransactionSelector {
 		String line2 = dis2.readLine();
 		String[] sa2 = Tokenizer.parseTokens(line2, ' ');
 		int uid = Integer.parseInt(sa2[0]);
-		
+
 		return new TwitterOperation(tweetid,uid);
 	}
 

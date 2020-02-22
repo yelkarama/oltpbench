@@ -16,21 +16,18 @@
 
 package com.oltpbenchmark.benchmarks.jpab;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import com.oltpbenchmark.api.Loader;
+import com.oltpbenchmark.benchmarks.jpab.tests.BasicTest;
+import com.oltpbenchmark.benchmarks.jpab.tests.Test;
+import org.apache.log4j.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
-import com.oltpbenchmark.api.Loader;
-import com.oltpbenchmark.api.Loader.LoaderThread;
-import com.oltpbenchmark.benchmarks.jpab.tests.BasicTest;
-import com.oltpbenchmark.benchmarks.jpab.tests.Test;
-import com.oltpbenchmark.benchmarks.twitter.TwitterLoader;
-import org.apache.log4j.Logger;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JPABLoader extends Loader<JPABBenchmark> {
     private static final Logger LOG = Logger.getLogger(JPABLoader.class);

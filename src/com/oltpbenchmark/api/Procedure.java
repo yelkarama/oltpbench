@@ -16,6 +16,10 @@
 
 package com.oltpbenchmark.api;
 
+import com.oltpbenchmark.jdbc.AutoIncrementPreparedStatement;
+import com.oltpbenchmark.types.DatabaseType;
+import org.apache.log4j.Logger;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.Connection;
@@ -27,11 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
-
-import com.oltpbenchmark.jdbc.AutoIncrementPreparedStatement;
-import com.oltpbenchmark.types.DatabaseType;
-
 public abstract class Procedure {
     private static final Logger LOG = Logger.getLogger(Procedure.class);
 
@@ -40,14 +39,14 @@ public abstract class Procedure {
     private Map<String, SQLStmt> name_stmt_xref;
     private final Map<SQLStmt, String> stmt_name_xref = new HashMap<SQLStmt, String>();
     private final Map<SQLStmt, PreparedStatement> prepardStatements = new HashMap<SQLStmt, PreparedStatement>();
-    
+
     /**
      * Constructor
      */
     protected Procedure() {
         this.procName = this.getClass().getSimpleName();
     }
-    
+
     /**
      * Initialize all of the SQLStmt handles. This must be called separately from
      * the constructor, otherwise we can't get access to all of our SQLStmts.
@@ -66,7 +65,7 @@ public abstract class Procedure {
                                     this, this.name_stmt_xref.size(), this.name_stmt_xref.keySet()));
         return ((T)this);
     }
-    
+
     /**
      * Return the name of this Procedure
      */
@@ -81,7 +80,7 @@ public abstract class Procedure {
     protected final DatabaseType getDatabaseType() {
         return (this.dbType);
     }
-    
+
     /**
      * Flush all PreparedStatements, requiring us to rebuild them the next time
      * we try to run one.
@@ -97,7 +96,7 @@ public abstract class Procedure {
      * This will automatically call setObject for all the parameters you pass in
      * @param conn
      * @param stmt
-     * @param parameters 
+     * @param parameters
      * @return
      * @throws SQLException
      */
@@ -108,14 +107,14 @@ public abstract class Procedure {
         } // FOR
         return (pStmt);
     }
-    
+
     /**
      * Return a PreparedStatement for the given SQLStmt handle
      * The underlying Procedure API will make sure that the proper SQL
-     * for the target DBMS is used for this SQLStmt. 
+     * for the target DBMS is used for this SQLStmt.
      * @param conn
      * @param stmt
-     * @param is 
+     * @param is
      * @return
      * @throws SQLException
      */
@@ -125,7 +124,7 @@ public abstract class Procedure {
         if (pStmt == null) {
             assert(this.stmt_name_xref.containsKey(stmt)) :
                 "Unexpected SQLStmt handle in " + this.getClass().getSimpleName() + "\n" + this.name_stmt_xref;
-            
+
             // HACK: If the target system is Postgres, wrap the PreparedStatement in a special
             //       one that fakes the getGeneratedKeys().
             if (is != null && this.dbType == DatabaseType.POSTGRES) {
@@ -150,7 +149,7 @@ public abstract class Procedure {
      * @throws SQLException
      */
     protected final void generateAllPreparedStatements(Connection conn) {
-        for (Entry<String, SQLStmt> e : this.name_stmt_xref.entrySet()) { 
+        for (Entry<String, SQLStmt> e : this.name_stmt_xref.entrySet()) {
             SQLStmt stmt = e.getValue();
             try {
                 this.getPreparedStatement(conn, stmt);
@@ -159,10 +158,10 @@ public abstract class Procedure {
             }
         } // FOR
     }
-    
+
     /**
      * Fetch the SQL from the dialect map
-     * @param dialectMap 
+     * @param dialectMap
      */
     protected final void loadSQLDialect(StatementDialects dialects) {
         assert(this.name_stmt_xref != null) :
@@ -177,7 +176,7 @@ public abstract class Procedure {
                               stmtName, this.procName, this.stmt_name_xref.keySet());
 			String sql = dialects.getSQL(this.procName, stmtName);
 			assert(sql != null);
-			
+
 			SQLStmt stmt = this.name_stmt_xref.get(stmtName);
 	        assert(stmt != null) :
 	            String.format("Unexpected null SQLStmt handle for %s.%s",
@@ -188,7 +187,7 @@ public abstract class Procedure {
 	        stmt.setSQL(sql);
 		} // FOR (stmt)
     }
-    
+
     /**
      * Hook for testing
      * @return
@@ -198,7 +197,7 @@ public abstract class Procedure {
             "Trying to access Procedure " + this.procName + " before it is initialized!";
         return (Collections.unmodifiableMap(this.name_stmt_xref));
     }
-    
+
     /**
      * Hook for testing to retrieve a SQLStmt based on its name
      * @param stmtName
@@ -209,7 +208,7 @@ public abstract class Procedure {
             "Trying to access Procedure " + this.procName + " before it is initialized!";
         return (this.name_stmt_xref.get(stmtName));
     }
-    
+
     protected static Map<String, SQLStmt> getStatments(Procedure proc) {
         Class<? extends Procedure> c = proc.getClass();
         Map<String, SQLStmt> stmts = new HashMap<String, SQLStmt>();
@@ -230,12 +229,12 @@ public abstract class Procedure {
         } // FOR
         return (stmts);
     }
-    
+
     @Override
     public String toString() {
         return (this.procName);
     }
-    
+
     /**
      * Thrown from a Procedure to indicate to the Worker
      * that the procedure should be aborted and rolled back.
@@ -251,7 +250,7 @@ public abstract class Procedure {
         public UserAbortException(String msg, Throwable ex) {
             super(msg, ex);
         }
-        
+
         /**
          * Constructs a new UserAbortException
          * with the specified detail message.
@@ -259,5 +258,5 @@ public abstract class Procedure {
         public UserAbortException(String msg) {
             this(msg, null);
         }
-    } // END CLASS    
+    } // END CLASS
 }

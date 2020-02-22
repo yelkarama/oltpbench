@@ -16,43 +16,27 @@
 
 package com.oltpbenchmark.jdbc;
 
+import com.oltpbenchmark.types.DatabaseType;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.NClob;
-import java.sql.ParameterMetaData;
-import java.sql.PreparedStatement;
-import java.sql.Ref;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.RowId;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Calendar;
 
-import com.oltpbenchmark.types.DatabaseType;
-
 public class AutoIncrementPreparedStatement implements PreparedStatement {
-    
+
     private final DatabaseType dbType;
     private final PreparedStatement stmt;
-    
+
     public AutoIncrementPreparedStatement(DatabaseType dbType, PreparedStatement stmt) {
         this.dbType = dbType;
         this.stmt = stmt;
     }
 
     /**
-     * Special override for Postgres 
+     * Special override for Postgres
      */
     @Override
     public ResultSet getGeneratedKeys() throws SQLException {
@@ -62,7 +46,7 @@ public class AutoIncrementPreparedStatement implements PreparedStatement {
             return this.stmt.getGeneratedKeys();
         }
     }
-    
+
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
         return this.stmt.executeQuery(sql);
@@ -76,7 +60,7 @@ public class AutoIncrementPreparedStatement implements PreparedStatement {
     @Override
     public void close() throws SQLException {
         this.stmt.close();
-        
+
     }
 
     @Override
@@ -87,7 +71,7 @@ public class AutoIncrementPreparedStatement implements PreparedStatement {
     @Override
     public void setMaxFieldSize(int max) throws SQLException {
         this.stmt.setMaxFieldSize(max);
-        
+
     }
 
     @Override
@@ -98,13 +82,13 @@ public class AutoIncrementPreparedStatement implements PreparedStatement {
     @Override
     public void setMaxRows(int max) throws SQLException {
         this.stmt.setMaxRows(max);
-        
+
     }
 
     @Override
     public void setEscapeProcessing(boolean enable) throws SQLException {
         this.stmt.setEscapeProcessing(enable);
-        
+
     }
 
     @Override
@@ -130,7 +114,7 @@ public class AutoIncrementPreparedStatement implements PreparedStatement {
     @Override
     public void clearWarnings() throws SQLException {
         this.stmt.clearWarnings();
-        
+
     }
 
     @Override
@@ -320,7 +304,7 @@ public class AutoIncrementPreparedStatement implements PreparedStatement {
     @Override
     public void setDouble(int parameterIndex, double x) throws SQLException {
         this.stmt.setDouble(parameterIndex, x);
-        
+
     }
 
     @Override
@@ -377,7 +361,7 @@ public class AutoIncrementPreparedStatement implements PreparedStatement {
     public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
         this.stmt.setObject(parameterIndex, x, targetSqlType);
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -549,7 +533,7 @@ public class AutoIncrementPreparedStatement implements PreparedStatement {
     public void setNClob(int parameterIndex, Reader reader) throws SQLException {
         this.stmt.setNClob(parameterIndex, reader);
     }
-    
+
     // Java7 Fixes
     public void closeOnCompletion() throws SQLException {
         throw new SQLException();

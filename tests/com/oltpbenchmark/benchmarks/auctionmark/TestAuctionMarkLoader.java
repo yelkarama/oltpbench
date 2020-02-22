@@ -16,29 +16,29 @@
 
 package com.oltpbenchmark.benchmarks.auctionmark;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import com.oltpbenchmark.api.AbstractTestLoader;
 import com.oltpbenchmark.api.Worker;
 import com.oltpbenchmark.benchmarks.auctionmark.util.ItemInfo;
 import com.oltpbenchmark.util.Histogram;
 import com.oltpbenchmark.util.RandomGenerator;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 public class TestAuctionMarkLoader extends AbstractTestLoader<AuctionMarkBenchmark> {
 
     private static String IGNORE[] = {
 //        AuctionMarkConstants.TABLENAME_CONFIG_PROFILE,
     };
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp(AuctionMarkBenchmark.class, IGNORE, TestAuctionMarkBenchmark.PROC_CLASSES);
         this.workConf.setScaleFactor(0.1);
     }
-    
+
     /**
      * testSaveLoadProfile
      */
@@ -51,20 +51,20 @@ public class TestAuctionMarkLoader extends AbstractTestLoader<AuctionMarkBenchma
         AuctionMarkProfile orig = loader.profile;
         assertNotNull(orig);
         assertFalse(orig.users_per_itemCount.isEmpty());
-        
+
         AuctionMarkProfile copy = new AuctionMarkProfile(this.benchmark, new RandomGenerator(0));
         assertTrue(copy.users_per_itemCount.isEmpty());
-        
+
         List<Worker<?>> workers = this.benchmark.makeWorkers(false);
-        AuctionMarkWorker worker = (AuctionMarkWorker)workers.get(0); 
+        AuctionMarkWorker worker = (AuctionMarkWorker)workers.get(0);
         copy.loadProfile(worker);
-        
+
         assertEquals(orig.scale_factor, copy.scale_factor);
         assertEquals(orig.getLoaderStartTime().toString(), copy.getLoaderStartTime().toString());
         assertEquals(orig.getLoaderStopTime().toString(), copy.getLoaderStopTime().toString());
         assertEquals(orig.users_per_itemCount, copy.users_per_itemCount);
     }
-    
+
     /**
      * testLoadProfilePerClient
      */
@@ -76,7 +76,7 @@ public class TestAuctionMarkLoader extends AbstractTestLoader<AuctionMarkBenchma
         this.workConf.setTerminals(num_clients);
         AuctionMarkLoader loader = (AuctionMarkLoader)this.benchmark.makeLoaderImpl();
         assertNotNull(loader);
-        
+
         Set<ItemInfo> allItemInfos = new HashSet<ItemInfo>();
         Set<ItemInfo> clientItemInfos = new HashSet<ItemInfo>();
         Histogram<Integer> clientItemCtr = new Histogram<Integer>();
@@ -86,14 +86,14 @@ public class TestAuctionMarkLoader extends AbstractTestLoader<AuctionMarkBenchma
             AuctionMarkWorker worker = (AuctionMarkWorker)workers.get(i);
             assertNotNull(worker);
             worker.initialize(); // Initializes the profile we need
-            
+
             clientItemInfos.clear();
             for (LinkedList<ItemInfo> items : worker.profile.allItemSets) {
                 assertNotNull(items);
                 for (ItemInfo itemInfo : items) {
                     // Make sure we haven't seen it another list for this client
                     assertFalse(itemInfo.toString(), clientItemInfos.contains(itemInfo));
-                    // Nor that we have seen it in any other client 
+                    // Nor that we have seen it in any other client
                     assertFalse(itemInfo.toString(), allItemInfos.contains(itemInfo));
                 } // FOR
                 clientItemInfos.addAll(items);
@@ -104,5 +104,5 @@ public class TestAuctionMarkLoader extends AbstractTestLoader<AuctionMarkBenchma
         } // FOR
         System.err.println(clientItemCtr);
     }
-    
+
 }

@@ -18,10 +18,9 @@
 package com.oltpbenchmark.benchmarks.resourcestresser;
 
 import com.oltpbenchmark.api.AbstractTestBenchmarkModule;
-import com.oltpbenchmark.benchmarks.resourcestresser.procedures.*;
 
 public class TestResourceStresserBenchmark extends AbstractTestBenchmarkModule<ResourceStresserBenchmark> {
-	
+
     public static final Class<?> PROC_CLASSES[] = {
         Contention1.class,
         Contention2.class,
@@ -30,7 +29,7 @@ public class TestResourceStresserBenchmark extends AbstractTestBenchmarkModule<R
         IO1.class,
         IO2.class,
     };
-    
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp(ResourceStresserBenchmark.class, PROC_CLASSES);

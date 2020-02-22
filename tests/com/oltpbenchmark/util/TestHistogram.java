@@ -17,14 +17,11 @@
 
 package com.oltpbenchmark.util;
 
+import com.oltpbenchmark.util.json.JSONObject;
+import junit.framework.TestCase;
 import org.junit.Test;
 
-import com.oltpbenchmark.util.json.JSONObject;
-
 import java.lang.reflect.Field;
-import java.util.*;
-
-import junit.framework.TestCase;
 
 /**
  * 

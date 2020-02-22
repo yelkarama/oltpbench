@@ -17,13 +17,14 @@
 package com.oltpbenchmark.benchmarks.chbenchmark.queries;
 
 import com.oltpbenchmark.api.SQLStmt;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Q15 extends GenericQuery {
-	
+
     public final SQLStmt createview_stmt = new SQLStmt(
               "CREATE view revenue0 (supplier_no, total_revenue) AS "
             +     "SELECT "
@@ -38,7 +39,7 @@ public class Q15 extends GenericQuery {
             +     "GROUP BY "
             +         "supplier_no"
         );
-    
+
     public final SQLStmt query_stmt = new SQLStmt (
               "SELECT su_suppkey, "
             +        "su_name, "
@@ -50,11 +51,11 @@ public class Q15 extends GenericQuery {
             +     "AND total_revenue = (select max(total_revenue) from revenue0) "
             + "ORDER BY su_suppkey"
         );
-		
+
     public final SQLStmt dropview_stmt = new SQLStmt(
               "DROP VIEW revenue0"
         );
-	
+
 		protected SQLStmt get_query() {
 	    return query_stmt;
 	}

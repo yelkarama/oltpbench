@@ -16,13 +16,11 @@
 
 package com.oltpbenchmark.benchmarks.noop;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-
+import com.oltpbenchmark.api.Loader;
 import org.apache.log4j.Logger;
 
-import com.oltpbenchmark.api.Loader;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * This doesn't load any data!

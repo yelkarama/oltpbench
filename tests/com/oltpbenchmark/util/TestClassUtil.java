@@ -17,11 +17,10 @@
 
 package com.oltpbenchmark.util;
 
+import junit.framework.TestCase;
+
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.util.*;
-
-import junit.framework.TestCase;
 
 /**
  * @author pavlo

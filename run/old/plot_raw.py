@@ -2,9 +2,8 @@
 
 import csv
 import os.path
-import sys
-
 import stupidplot
+import sys
 
 
 def CSVIterator(path):

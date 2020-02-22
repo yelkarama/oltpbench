@@ -17,38 +17,38 @@
 
 package com.oltpbenchmark.benchmarks.wikipedia.procedures;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import com.oltpbenchmark.api.Procedure;
 import com.oltpbenchmark.api.SQLStmt;
 import com.oltpbenchmark.benchmarks.wikipedia.WikipediaConstants;
 import com.oltpbenchmark.util.TimeUtil;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class AddWatchList extends Procedure {
 
     // -----------------------------------------------------------------
     // STATEMENTS
     // -----------------------------------------------------------------
-    
+
     public SQLStmt insertWatchList = new SQLStmt(
-        "INSERT INTO " + WikipediaConstants.TABLENAME_WATCHLIST + " (" + 
+        "INSERT INTO " + WikipediaConstants.TABLENAME_WATCHLIST + " (" +
         "wl_user, wl_namespace, wl_title, wl_notificationtimestamp" +
         ") VALUES (" +
         "?,?,?,NULL" +
         ")"
     );
-   
+
     public SQLStmt setUserTouched = new SQLStmt(
-        "UPDATE " + WikipediaConstants.TABLENAME_USER + 
+        "UPDATE " + WikipediaConstants.TABLENAME_USER +
         "   SET user_touched = ? WHERE user_id = ?"
     );
-    
+
     // -----------------------------------------------------------------
     // RUN
     // -----------------------------------------------------------------
-	
+
     public void run(Connection conn, int userId, int nameSpace, String pageTitle) throws SQLException {
 		if (userId > 0) {
 		    // TODO: find a way to by pass Unique constraints in SQL server (Replace, Merge ..?)
@@ -65,9 +65,9 @@ public class AddWatchList extends Procedure {
                 if (ex.getErrorCode() != 2627 || !ex.getSQLState().equals("23000"))
                     throw new RuntimeException("Unique Key Problem in this DBMS");
             }
-		
-			if (nameSpace == 0) 
-			{ 
+
+			if (nameSpace == 0)
+			{
 		        try
 		        {
     				// if regular page, also add a line of
@@ -90,5 +90,5 @@ public class AddWatchList extends Procedure {
 			ps.executeUpdate();
 		}
 	}
-    
+
 }

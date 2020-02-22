@@ -18,7 +18,6 @@
 package com.oltpbenchmark.benchmarks.wikipedia;
 
 import com.oltpbenchmark.api.AbstractTestBenchmarkModule;
-import com.oltpbenchmark.benchmarks.wikipedia.procedures.*;
 
 public class TestWikipediaBenchmark extends AbstractTestBenchmarkModule<WikipediaBenchmark> {
 
@@ -29,7 +28,7 @@ public class TestWikipediaBenchmark extends AbstractTestBenchmarkModule<Wikipedi
         RemoveWatchList.class,
         UpdatePage.class,
     };
-    
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp(WikipediaBenchmark.class, PROC_CLASSES);

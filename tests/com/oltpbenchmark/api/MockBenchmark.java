@@ -16,15 +16,14 @@
 
 package com.oltpbenchmark.api;
 
+import com.oltpbenchmark.WorkloadConfiguration;
+import com.oltpbenchmark.types.DatabaseType;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-
-import com.oltpbenchmark.WorkloadConfiguration;
-import com.oltpbenchmark.types.DatabaseType;
 
 public class MockBenchmark extends BenchmarkModule {
     public MockBenchmark() {

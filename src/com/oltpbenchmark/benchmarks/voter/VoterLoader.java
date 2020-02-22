@@ -16,18 +16,16 @@
 
 package com.oltpbenchmark.benchmarks.voter;
 
+import com.oltpbenchmark.api.Loader;
+import com.oltpbenchmark.catalog.Table;
+import com.oltpbenchmark.util.SQLUtil;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.oltpbenchmark.api.Loader;
-import com.oltpbenchmark.api.Loader.LoaderThread;
-import com.oltpbenchmark.catalog.Table;
-import com.oltpbenchmark.util.SQLUtil;
-import org.apache.log4j.Logger;
-import org.hibernate.exception.SQLGrammarException;
 
 public class VoterLoader extends Loader<VoterBenchmark> {
 

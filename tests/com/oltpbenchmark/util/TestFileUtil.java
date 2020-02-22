@@ -16,15 +16,14 @@
 
 package com.oltpbenchmark.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class TestFileUtil extends TestCase {
 

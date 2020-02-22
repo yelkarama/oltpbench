@@ -17,16 +17,16 @@
 
 package com.oltpbenchmark.util;
 
+import ch.ethz.ssh2.Connection;
+import ch.ethz.ssh2.Session;
+import ch.ethz.ssh2.StreamGobbler;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.StringTokenizer;
-
-import ch.ethz.ssh2.Connection;
-import ch.ethz.ssh2.Session;
-import ch.ethz.ssh2.StreamGobbler;
 
 public class SSHGetStats {
 	String hostname;
@@ -141,14 +141,14 @@ public class SSHGetStats {
 	}
 
 	/**
-	 * 
+	 *
 	 * Field 0 -- #/sec of reads issued Field 1 -- #/sec of reads merged Field 2
 	 * -- #/sec of sectors read Field 3 -- % of time spent reading Field 4 --
 	 * #/sec of writes completed Filed 5 -- #/sec of writes merged Field 6 --
 	 * #/sec of sectors written Field 7 -- % of time spent writing Field 8 -- #
 	 * of I/Os currently in progress Field 9 -- % of time spent doing I/Os Field
 	 * 10 -- weighted % of time spend doing I/Os
-	 * 
+	 *
 	 * @return
 	 */
 

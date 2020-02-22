@@ -17,11 +17,11 @@
 
 package com.oltpbenchmark.api;
 
+import com.oltpbenchmark.api.Procedure.UserAbortException;
+
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.oltpbenchmark.api.Procedure.UserAbortException;
 
 public abstract class AbstractTestWorker<T extends BenchmarkModule> extends AbstractTestCase<T> {
     

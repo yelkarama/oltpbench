@@ -16,11 +16,10 @@
 
 package com.oltpbenchmark.api;
 
-import junit.framework.TestCase;
-
 import com.oltpbenchmark.catalog.Catalog;
 import com.oltpbenchmark.catalog.Table;
 import com.oltpbenchmark.types.DatabaseType;
+import junit.framework.TestCase;
 
 public class TestCreateDialects extends TestCase {
     

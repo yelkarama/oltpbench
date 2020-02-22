@@ -16,11 +16,11 @@
 
 package com.oltpbenchmark.benchmarks.seats;
 
-import java.util.List;
-
 import com.oltpbenchmark.api.AbstractTestLoader;
 import com.oltpbenchmark.api.Worker;
 import com.oltpbenchmark.util.RandomGenerator;
+
+import java.util.List;
 
 public class TestSEATSLoader extends AbstractTestLoader<SEATSBenchmark> {
 
@@ -29,7 +29,7 @@ public class TestSEATSLoader extends AbstractTestLoader<SEATSBenchmark> {
         super.setUp(SEATSBenchmark.class, null, TestSEATSBenchmark.PROC_CLASSES);
         SEATSProfile.clearCachedProfile();
     }
-    
+
     /**
      * testSaveLoadProfile
      */
@@ -46,7 +46,7 @@ public class TestSEATSLoader extends AbstractTestLoader<SEATSBenchmark> {
 
         SEATSProfile copy = new SEATSProfile(this.benchmark, new RandomGenerator(0));
         assert(copy.airport_histograms.isEmpty());
-        
+
         List<Worker<?>> workers = this.benchmark.makeWorkers(false);
         SEATSWorker worker = (SEATSWorker)workers.get(0);
         copy.loadProfile(worker);

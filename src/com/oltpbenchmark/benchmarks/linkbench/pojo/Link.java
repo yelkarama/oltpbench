@@ -31,11 +31,11 @@
  */
 package com.oltpbenchmark.benchmarks.linkbench.pojo;
 
+import com.oltpbenchmark.benchmarks.linkbench.LinkBenchConstants;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-
-import com.oltpbenchmark.benchmarks.linkbench.LinkBenchConstants;
 
 public class Link {
 
@@ -112,7 +112,7 @@ public class Link {
 
   /** Arbitrary payload data */
   public byte[] data;
-  
+
   public static Link createLinkFromRow(ResultSet rs) throws SQLException {
       Link l = new Link();
       l.id1 = rs.getLong(1);

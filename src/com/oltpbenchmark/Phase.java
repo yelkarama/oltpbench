@@ -16,14 +16,13 @@
 
 package com.oltpbenchmark;
 
+import com.oltpbenchmark.util.StringUtil;
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
-import org.apache.log4j.Logger;
-
-import com.oltpbenchmark.util.StringUtil;
 
 public class Phase {
     private static final Logger LOG = Logger.getLogger(Phase.class);

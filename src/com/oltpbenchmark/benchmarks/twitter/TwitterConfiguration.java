@@ -16,18 +16,17 @@
 
 package com.oltpbenchmark.benchmarks.twitter;
 
+import com.oltpbenchmark.WorkloadConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import com.oltpbenchmark.WorkloadConfiguration;
-
 public class TwitterConfiguration {
-    
+
     private final XMLConfiguration xmlConfig;
-    
+
     public TwitterConfiguration(WorkloadConfiguration workConf) {
         this.xmlConfig = workConf.getXmlConfig();
     }
-	
+
 	public String getTracefile() {
 		return xmlConfig.getString("tracefile",null);
 	}

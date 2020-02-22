@@ -16,21 +16,19 @@
 
 package com.oltpbenchmark.api;
 
-import java.io.File;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.apache.log4j.Logger;
-
-import junit.framework.TestCase;
-
 import com.oltpbenchmark.WorkloadConfiguration;
 import com.oltpbenchmark.catalog.Catalog;
 import com.oltpbenchmark.types.DatabaseType;
 import com.oltpbenchmark.util.ClassUtil;
 import com.oltpbenchmark.util.FileUtil;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public abstract class AbstractTestCase<T extends BenchmarkModule> extends TestCase {
     

@@ -16,14 +16,13 @@
 
 package com.oltpbenchmark.util;
 
+import com.oltpbenchmark.util.TextGenerator;
+import junit.framework.TestCase;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-
-import com.oltpbenchmark.util.TextGenerator;
-
-import junit.framework.TestCase;
 
 public class TestTextGenerator extends TestCase {
 

@@ -16,12 +16,11 @@
 
 package com.oltpbenchmark.api;
 
-import java.util.Map;
-
 import com.oltpbenchmark.benchmarks.tatp.procedures.DeleteCallForwarding;
 import com.oltpbenchmark.types.DatabaseType;
-
 import junit.framework.TestCase;
+
+import java.util.Map;
 
 public class TestProcedure extends TestCase {
 

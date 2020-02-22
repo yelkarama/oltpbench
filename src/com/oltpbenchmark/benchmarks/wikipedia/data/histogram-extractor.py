@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
-import sys
-import argparse
-from datetime import datetime
-from pprint import pprint,pformat
-from decimal import Decimal
 import MySQLdb as mdb
+import argparse
+import sys
+from decimal import Decimal
+from pprint import pprint
+
 
 class Histogram(object):
     def __init__(self):
@@ -31,13 +30,13 @@ class Histogram(object):
 ## processTrace
 ## ==============================================
 def processTrace(traceFile):
-    ## For the given trace, we want to build a histogram of what pages are accessed 
+    ## For the given trace, we want to build a histogram of what pages are accessed
     ## and what users modified them. We will normalize the user_ids using our own list
     user_ids = { }
     user_id_ctr = 1
     user_h = Histogram()
     page_h = Histogram()
-    
+
     total = 0
     with open(traceFile, "r") as f:
         for line in f:
@@ -46,7 +45,7 @@ def processTrace(traceFile):
             orig_user = int(fields[0])
             namespace = int(fields[1])
             title = fields[2].strip()
-            
+
             new_user = None
             if orig_user == 0:
                 new_user = orig_user
@@ -59,22 +58,22 @@ def processTrace(traceFile):
                     new_user = user_ids[orig_user]
             ## IF
             assert new_user != None
-            
+
             user_h.put(new_user)
             page_h.put(title)
             total += 1
         ## FOR
     ## WITH
-    
+
     print "Anonymous Updates: %d / %d [%f]" % (user_h.get(0), total, user_h.get(0) / float(total))
-    
+
     ## Now reverse them
     updates_per_user = Histogram()
     for x, cnt in user_h.data.items():
         if x == 0: continue
         updates_per_user.put(cnt)
     ## FOR
-    
+
     pprint(updates_per_user.data)
     #pprint(page_h.data)
 ## DEF
@@ -123,19 +122,19 @@ if __name__ == '__main__':
     aparser.add_argument('--pass', type=str, required=False, help='MySQL password')
     aparser.add_argument('--trace', type=str, required=False, help='MySQL password')
     args = vars(aparser.parse_args())
-    
+
     if args['trace']:
         processTrace(args['trace'])
         #print h.toJava()
         sys.exit(0)
     ## IF
-    
+
     mysql_conn = mdb.connect(host=args['host'], db=args['name'], user=args['user'], passwd=args['pass'])
     c1 = mysql_conn.cursor()
     c2 = mysql_conn.cursor()
-    
+
     histograms = { }
-    
+
     ## USER ATTRIBUTES
     fields = [ "user_name", "user_real_name", ]
     sql = """
@@ -158,12 +157,12 @@ if __name__ == '__main__':
                 histograms[f].put(int(row[i]))
         ## FOR
     ## FOR
-    
+
     ## PAGE ATTRIBUTES
     len_fields = [ "page_title" ]
     cnt_fields = [ "page_namespace", "page_restrictions", "page_counter" ]
     extractHistograms(histograms, "page", len_fields, cnt_fields)
-    
+
     ## REVISIONS PER PAGE
     sql = "SELECT COUNT(rev_id), rev_page FROM revision GROUP BY rev_page"
     c1.execute(sql)
@@ -180,7 +179,7 @@ if __name__ == '__main__':
             cnt = round(cnt / 10) * 10
         histograms[f].put(int(cnt))
     ## FOR
-    
+
     ## REVISION SIZES PER PAGE
     ## This one is kind of tricky because larger pages may larger changes
     sql = "SELECT DISTINCT page_id FROM page"
@@ -189,7 +188,7 @@ if __name__ == '__main__':
     histograms[f] = Histogram()
     for row in c1:
         last_len = None
-        
+
         ## For each page record, get the ordered list of their changes
         ## This will allow us to compute the differences in sizes
         sql = """
@@ -205,20 +204,20 @@ if __name__ == '__main__':
             last_len = int(row2[0])
         ## FOR
     ## FOR
-    
+
     ## REVISION ATTRIBUTES
     len_fields = [ "rev_comment" ]
     cnt_fields = [ "rev_minor_edit"  ]
     extractHistograms(histograms, "revision", len_fields, cnt_fields)
-    
+
     ## TEXT ATTRIBUTES
     cnt_fields = [ "old_flags" ]
     custom_fields = { "old_text": "ROUND(LENGTH(old_text)/100.0)*100"}
     extractHistograms(histograms, "text", [], cnt_fields, custom_fields)
-    
+
     c1.close()
     c2.close()
-    
+
     raw = { }
     for key in histograms.keys():
         print key
@@ -226,5 +225,4 @@ if __name__ == '__main__':
         #raw[key] = histograms[key].data
     #pprint(raw)
 ## MAIN
-    
-    
+

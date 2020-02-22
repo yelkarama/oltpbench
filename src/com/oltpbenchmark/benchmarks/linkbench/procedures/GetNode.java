@@ -16,23 +16,22 @@
 
 package com.oltpbenchmark.benchmarks.linkbench.procedures;
 
+import com.oltpbenchmark.api.Procedure;
+import com.oltpbenchmark.api.SQLStmt;
+import com.oltpbenchmark.benchmarks.linkbench.pojo.Node;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
-
-import com.oltpbenchmark.benchmarks.linkbench.pojo.Node;
-import com.oltpbenchmark.api.Procedure;
-import com.oltpbenchmark.api.SQLStmt;
 
 public class GetNode extends Procedure{
 
     private static final Logger LOG = Logger.getLogger(GetNode.class);
 
     private PreparedStatement stmt = null;
-    
+
     public final SQLStmt getNodeStmt = new SQLStmt(
             "SELECT id, type, version, time, data " +
             "FROM nodetable " +
@@ -46,7 +45,7 @@ public class GetNode extends Procedure{
         }
         if(stmt == null)
             stmt = this.getPreparedStatement(conn, getNodeStmt);
-        stmt.setLong(1, id);          
+        stmt.setLong(1, id);
         ResultSet rs = stmt.executeQuery();
         conn.commit();
         if (rs.next()) {

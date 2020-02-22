@@ -18,14 +18,10 @@
 package com.oltpbenchmark.benchmarks.jpab;
 
 import com.oltpbenchmark.api.AbstractTestBenchmarkModule;
-import com.oltpbenchmark.benchmarks.jpab.tests.BasicTest;
-import com.oltpbenchmark.benchmarks.jpab.tests.CollectionTest;
-import com.oltpbenchmark.benchmarks.jpab.tests.ExtTest;
-import com.oltpbenchmark.benchmarks.jpab.tests.IndexTest;
-import com.oltpbenchmark.benchmarks.jpab.tests.NodeTest;
+import com.oltpbenchmark.benchmarks.jpab.tests.*;
 
 public class TestJPABBenchmark extends AbstractTestBenchmarkModule<JPABBenchmark> {
-	
+
     public static final Class<?> PROC_CLASSES[] = {
         BasicTest.class,
         CollectionTest.class,
@@ -33,7 +29,7 @@ public class TestJPABBenchmark extends AbstractTestBenchmarkModule<JPABBenchmark
         IndexTest.class,
         NodeTest.class
     };
-    
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp(JPABBenchmark.class, PROC_CLASSES);

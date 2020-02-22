@@ -17,13 +17,12 @@
 
 package com.oltpbenchmark.benchmarks.seats;
 
+import com.oltpbenchmark.api.AbstractTestBenchmarkModule;
+
 import java.io.File;
 
-import com.oltpbenchmark.api.AbstractTestBenchmarkModule;
-import com.oltpbenchmark.benchmarks.seats.procedures.*;
-
 public class TestSEATSBenchmark extends AbstractTestBenchmarkModule<SEATSBenchmark> {
-	
+
     public static final Class<?> PROC_CLASSES[] = {
         DeleteReservation.class,
         FindFlights.class,
@@ -32,13 +31,13 @@ public class TestSEATSBenchmark extends AbstractTestBenchmarkModule<SEATSBenchma
         UpdateCustomer.class,
         UpdateReservation.class
     };
-    
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp(SEATSBenchmark.class, PROC_CLASSES);
 		SEATSProfile.clearCachedProfile();
 	}
-	
+
 	/**
 	 * testGetDataDir
 	 */

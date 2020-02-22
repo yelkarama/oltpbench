@@ -17,13 +17,12 @@
 
 package com.oltpbenchmark.benchmarks.auctionmark;
 
+import com.oltpbenchmark.api.AbstractTestBenchmarkModule;
+
 import java.io.File;
 
-import com.oltpbenchmark.api.AbstractTestBenchmarkModule;
-import com.oltpbenchmark.benchmarks.auctionmark.procedures.*;
-
 public class TestAuctionMarkBenchmark extends AbstractTestBenchmarkModule<AuctionMarkBenchmark> {
-	
+
     public static final Class<?> PROC_CLASSES[] = {
         GetItem.class,
         GetUserInfo.class,
@@ -35,13 +34,13 @@ public class TestAuctionMarkBenchmark extends AbstractTestBenchmarkModule<Auctio
         NewPurchase.class,
         UpdateItem.class
     };
-    
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp(AuctionMarkBenchmark.class, PROC_CLASSES);
 		AuctionMarkProfile.clearCachedProfile();
 	}
-	
+
 	/**
 	 * testGetDataDir
 	 */
@@ -51,7 +50,7 @@ public class TestAuctionMarkBenchmark extends AbstractTestBenchmarkModule<Auctio
 	    assertNotNull(data_dir);
 	    assertTrue(data_dir.exists());
 	}
-	
+
 //	/**
 //	 * testSupplementalClasses
 //	 */

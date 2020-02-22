@@ -11,7 +11,6 @@ class dstat_plugin(dstat):
 
     def check(self):
         global iwlibs
-        from pythonwifi import iwlibs
 
     def vars(self):
         return iwlibs.getNICnames()

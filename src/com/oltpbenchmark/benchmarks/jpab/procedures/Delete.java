@@ -35,12 +35,10 @@
 
 package com.oltpbenchmark.benchmarks.jpab.procedures;
 
-import javax.persistence.EntityManager;
-
 import com.oltpbenchmark.api.Procedure;
-import com.oltpbenchmark.benchmarks.jpab.objects.Person;
-import com.oltpbenchmark.benchmarks.jpab.objects.TestEntity;
 import com.oltpbenchmark.benchmarks.jpab.tests.Test;
+
+import javax.persistence.EntityManager;
 
 /**
  * Tests using simple Person entity objects.  

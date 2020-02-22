@@ -17,14 +17,13 @@
 
 package com.oltpbenchmark.api;
 
-import java.io.File;
-import java.net.URL;
-
-import org.apache.commons.io.IOUtils;
-
 import com.oltpbenchmark.catalog.Catalog;
 import com.oltpbenchmark.catalog.Table;
 import com.oltpbenchmark.types.DatabaseType;
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.net.URL;
 
 public abstract class AbstractTestBenchmarkModule<T extends BenchmarkModule> extends AbstractTestCase<T> {
 

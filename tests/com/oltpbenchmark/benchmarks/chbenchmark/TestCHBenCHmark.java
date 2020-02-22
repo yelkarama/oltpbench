@@ -17,31 +17,10 @@
 package com.oltpbenchmark.benchmarks.chbenchmark;
 
 import com.oltpbenchmark.api.AbstractTestBenchmarkModule;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q1;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q2;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q3;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q4;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q5;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q6;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q7;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q8;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q9;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q10;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q11;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q12;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q13;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q14;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q15;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q16;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q17;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q18;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q19;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q20;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q21;
-import com.oltpbenchmark.benchmarks.chbenchmark.queries.Q22;
+import com.oltpbenchmark.benchmarks.chbenchmark.queries.*;
 
 public class TestCHBenCHmark extends AbstractTestBenchmarkModule<CHBenCHmark>{
-	
+
     public static final Class<?> PROC_CLASSES[] = {
     	Q1.class,
     	Q2.class,

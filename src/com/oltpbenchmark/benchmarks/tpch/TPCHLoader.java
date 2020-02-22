@@ -26,24 +26,21 @@
 
 package com.oltpbenchmark.benchmarks.tpch;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.sql.*;
+import com.oltpbenchmark.api.Loader;
+import com.oltpbenchmark.benchmarks.tpch.util.CopyUtil;
+import com.oltpbenchmark.types.DatabaseType;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.oltpbenchmark.benchmarks.tpch.util.CopyUtil;
-import com.oltpbenchmark.types.DatabaseType;
-import org.apache.log4j.Logger;
-
-import com.oltpbenchmark.api.Loader;
-import com.oltpbenchmark.api.Loader.LoaderThread;
 
 public class TPCHLoader extends Loader<TPCHBenchmark> {
     private static final Logger LOG = Logger.getLogger(TPCHLoader.class);

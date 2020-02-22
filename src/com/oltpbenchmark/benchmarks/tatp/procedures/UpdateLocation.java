@@ -17,31 +17,31 @@
 
 package com.oltpbenchmark.benchmarks.tatp.procedures;
 
+import com.oltpbenchmark.api.Procedure;
+import com.oltpbenchmark.api.SQLStmt;
+import com.oltpbenchmark.benchmarks.tatp.TATPConstants;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import com.oltpbenchmark.api.Procedure;
-import com.oltpbenchmark.api.SQLStmt;
-import com.oltpbenchmark.benchmarks.tatp.TATPConstants;
 
 public class UpdateLocation extends Procedure {
 
     public final SQLStmt getSubscriber = new SQLStmt(
         "SELECT s_id FROM " + TATPConstants.TABLENAME_SUBSCRIBER + " WHERE sub_nbr = ?"
     );
-    
+
     public final SQLStmt updateSubscriber = new SQLStmt(
         "UPDATE " + TATPConstants.TABLENAME_SUBSCRIBER + " SET vlr_location = ? WHERE s_id = ?"
     );
-    
+
     public long run(Connection conn, int location, String sub_nbr) throws SQLException {
     	PreparedStatement stmt = this.getPreparedStatement(conn, getSubscriber);
     	stmt.setString(1, sub_nbr);
     	ResultSet results = stmt.executeQuery();
     	assert(results != null);
-    	
+
     	if (results.next()) {
     		long s_id = results.getLong(1);
     		results.close();

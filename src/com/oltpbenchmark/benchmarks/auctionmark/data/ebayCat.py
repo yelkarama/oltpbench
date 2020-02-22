@@ -1,5 +1,5 @@
-import urllib.request
 import re
+import urllib.request
 
 filename = 'ebayCat.txt'
 
@@ -8,7 +8,7 @@ def getCategoryUrls(url):
 
     mybytes = fp.read()
     contents = mybytes.decode("utf8")
-     
+
     fp.close()
 
     regex = re.compile("<td colspan=\"5\"><a href=\"(.*?)\"><i>(.*?)<\/i><\/a><\/td>",re.IGNORECASE)
@@ -18,7 +18,7 @@ def getCategoryUrls(url):
 
     for x in match:
         categoriesUrls.append([x[0][(x[0].rfind("<a href=\"") + 9):len(x[0])],x[1][x[1].find("See all ") + 8:x[1].rfind(" categories...")]])
-    
+
     return categoriesUrls
 
 def getCategories(categoryName, url):
@@ -27,9 +27,9 @@ def getCategories(categoryName, url):
 
     mybytes = fp.read()
     contents = mybytes.decode("utf8")
-    
+
     fp.close()
-    
+
     #print(contents)
 
     #regex = re.compile("<a href=\"(.*?)\">(.*?)<\/a>[\s]+\(([\d]+)\)<\/td>",re.IGNORECASE)
@@ -54,7 +54,7 @@ def getCategories(categoryName, url):
 
             if(previousLevel >= level):
                 f.write(line.encode("utf8"))
-            
+
             catNames[level] = x[3]
             quantity = x[5]
             line = categoryName + "\t"
@@ -82,4 +82,4 @@ for category in categories:
 
 #getCategories("http://computers.listings.ebay.com/_W0QQfclZ1QQsocmdZListingCategoryOverview")
 #getCategories("collectable","http://collectibles.listings.ebay.com/_W0QQfclZ1QQsocmdZListingCategoryOverview")
-    
+

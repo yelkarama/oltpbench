@@ -16,15 +16,6 @@
 
 package com.oltpbenchmark.benchmarks.seats;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.oltpbenchmark.WorkloadConfiguration;
 import com.oltpbenchmark.api.BenchmarkModule;
 import com.oltpbenchmark.api.Loader;
@@ -32,6 +23,14 @@ import com.oltpbenchmark.api.Worker;
 import com.oltpbenchmark.benchmarks.seats.procedures.LoadConfig;
 import com.oltpbenchmark.catalog.Table;
 import com.oltpbenchmark.util.RandomGenerator;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SEATSBenchmark extends BenchmarkModule {
 
@@ -71,12 +70,12 @@ public class SEATSBenchmark extends BenchmarkModule {
 		} // FOR
 		return (workers);
 	}
-	
+
 	@Override
 	protected Loader<SEATSBenchmark> makeLoaderImpl() throws SQLException {
 		return new SEATSLoader(this);
 	}
-	
+
 	/**
 	 * Return the path of the CSV file that has data for the given Table catalog handle
 	 * @param data_dir

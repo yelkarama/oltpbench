@@ -16,16 +16,16 @@
 
 package com.oltpbenchmark.benchmarks.epinions.procedures;
 
+import com.oltpbenchmark.api.Procedure;
+import com.oltpbenchmark.api.SQLStmt;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.oltpbenchmark.api.Procedure;
-import com.oltpbenchmark.api.SQLStmt;
-
 public class GetReviewsByUser extends Procedure {
-    
+
     public final SQLStmt getReviewUser = new SQLStmt(
         "SELECT * FROM review r, useracct u WHERE u.u_id = r.u_id AND r.u_id=? " +
         "ORDER BY rating LIMIT 10;"

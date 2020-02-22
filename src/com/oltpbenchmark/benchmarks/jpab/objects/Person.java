@@ -35,11 +35,12 @@
 
 package com.oltpbenchmark.benchmarks.jpab.objects;
 
-import java.util.*;
-import javax.persistence.*;
-
 import com.oltpbenchmark.api.LoaderUtil;
 import com.oltpbenchmark.benchmarks.jpab.tests.Test;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Random;
 
 
 /**

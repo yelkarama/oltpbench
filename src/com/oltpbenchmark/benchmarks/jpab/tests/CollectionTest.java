@@ -35,10 +35,10 @@
 
 package com.oltpbenchmark.benchmarks.jpab.tests;
 
-import javax.persistence.EntityManager;
-
 import com.oltpbenchmark.benchmarks.jpab.objects.CollectionPerson;
 import com.oltpbenchmark.benchmarks.jpab.objects.TestEntity;
+
+import javax.persistence.EntityManager;
 
 
 /**

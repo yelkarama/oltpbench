@@ -16,15 +16,15 @@
 
 package com.oltpbenchmark.api;
 
-import java.io.File;
-import java.util.Collection;
-
 import com.oltpbenchmark.benchmarks.epinions.EpinionsBenchmark;
 import com.oltpbenchmark.benchmarks.epinions.TestEpinionsBenchmark;
 import com.oltpbenchmark.benchmarks.epinions.procedures.GetItemAverageRating;
 import com.oltpbenchmark.types.DatabaseType;
 import com.oltpbenchmark.util.ClassUtil;
 import com.oltpbenchmark.util.FileUtil;
+
+import java.io.File;
+import java.util.Collection;
 
 public class TestStatementDialects extends AbstractTestCase<EpinionsBenchmark> {
     

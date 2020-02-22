@@ -16,10 +16,6 @@
 
 package com.oltpbenchmark.benchmarks.jpab;
 
-import java.sql.SQLException;
-
-import javax.persistence.EntityManager;
-
 import com.oltpbenchmark.api.Procedure.UserAbortException;
 import com.oltpbenchmark.api.TransactionType;
 import com.oltpbenchmark.api.Worker;
@@ -29,6 +25,9 @@ import com.oltpbenchmark.benchmarks.jpab.procedures.Retrieve;
 import com.oltpbenchmark.benchmarks.jpab.procedures.Update;
 import com.oltpbenchmark.benchmarks.jpab.tests.Test;
 import com.oltpbenchmark.types.TransactionStatus;
+
+import javax.persistence.EntityManager;
+import java.sql.SQLException;
 
 public class JPABWorker extends Worker<JPABBenchmark> {
 
