@@ -73,7 +73,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
         threads.add(new LoaderThread() {
             @Override
             public void load(Connection conn) throws SQLException {
-                loadItems(conn, TPCCConfig.configItemCount);
+                loadItems(conn);
                 itemLatch.countDown();
             }
         });
@@ -101,16 +101,16 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
                     loadWarehouse(conn, w_id);
 
                     // STOCK
-                    loadStock(conn, w_id, TPCCConfig.configItemCount);
+                    loadStock(conn, w_id);
 
                     // DISTRICT
-                    loadDistricts(conn, w_id, TPCCConfig.configDistPerWhse);
+                    loadDistricts(conn, w_id);
 
                     // CUSTOMER
-                    loadCustomers(conn, w_id, TPCCConfig.configDistPerWhse, TPCCConfig.configCustPerDist);
+                    loadCustomers(conn, w_id);
 
                     // ORDERS
-                    loadOrders(conn, w_id, TPCCConfig.configDistPerWhse, TPCCConfig.configCustPerDist);
+                    loadOrders(conn, w_id);
                 }
             };
             threads.add(t);
@@ -142,7 +142,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
         }
     }
 
-    protected int loadItems(Connection conn, int itemKount) {
+    protected int loadItems(Connection conn) {
         int k = 0;
         int randPct = 0;
         int len = 0;
@@ -154,7 +154,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 
             Item item = new Item();
             int batchSize = 0;
-            for (int i = 1; i <= itemKount; i++) {
+            for (int i = 1; i <= TPCCConfig.configItemCount; i++) {
 
                 item.i_id = i;
                 item.i_name = TPCCUtil.randomStr(TPCCUtil.randomNumber(14, 24,
@@ -268,7 +268,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 
 	} // end loadWhse()
 
-	protected int loadStock(Connection conn, int w_id, int numItems) {
+	protected int loadStock(Connection conn, int w_id) {
 
 		int k = 0;
 		int randPct = 0;
@@ -278,7 +278,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 		    PreparedStatement stckPrepStmt = getInsertStatement(conn, TPCCConstants.TABLENAME_STOCK);
 
 			Stock stock = new Stock();
-			for (int i = 1; i <= numItems; i++) {
+			for (int i = 1; i <= TPCCConfig.configItemCount; i++) {
 				stock.s_i_id = i;
 				stock.s_w_id = w_id;
 				stock.s_quantity = TPCCUtil.randomNumber(10, 100, benchmark.rng());
@@ -346,7 +346,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 
 	} // end loadStock()
 
-	protected int loadDistricts(Connection conn, int w_id, int distWhseKount) {
+	protected int loadDistricts(Connection conn, int w_id) {
 
 		int k = 0;
 
@@ -355,7 +355,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 			PreparedStatement distPrepStmt = getInsertStatement(conn, TPCCConstants.TABLENAME_DISTRICT);
 			District district = new District();
 
-			for (int d = 1; d <= distWhseKount; d++) {
+			for (int d = 1; d <= TPCCConfig.configDistPerWhse; d++) {
 				district.d_id = d;
 				district.d_w_id = w_id;
 				district.d_ytd = 30000;
@@ -400,7 +400,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 
 	} // end loadDist()
 
-	protected int loadCustomers(Connection conn, int w_id, int districtsPerWarehouse, int customersPerDistrict) {
+	protected int loadCustomers(Connection conn, int w_id) {
 
 		int k = 0;
 
@@ -411,8 +411,8 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 		    PreparedStatement custPrepStmt = getInsertStatement(conn, TPCCConstants.TABLENAME_CUSTOMER);
 		    PreparedStatement histPrepStmt = getInsertStatement(conn, TPCCConstants.TABLENAME_HISTORY);
 
-			for (int d = 1; d <= districtsPerWarehouse; d++) {
-				for (int c = 1; c <= customersPerDistrict; c++) {
+			for (int d = 1; d <= TPCCConfig.configDistPerWhse; d++) {
+				for (int c = 1; c <= TPCCConfig.configCustPerDist; c++) {
 					Timestamp sysdate = this.benchmark.getTimestamp(System.currentTimeMillis());
 
 					customer.c_id = c;
@@ -526,7 +526,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 
 	} // end loadCust()
 
-	protected int loadOrders(Connection conn, int w_id, int districtsPerWarehouse, int customersPerDistrict) {
+	protected int loadOrders(Connection conn, int w_id) {
 
 		int k = 0;
 		int t = 0;
@@ -539,10 +539,10 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 			NewOrder new_order = new NewOrder();
 			OrderLine order_line = new OrderLine();
 
-			for (int d = 1; d <= districtsPerWarehouse; d++) {
+			for (int d = 1; d <= TPCCConfig.configDistPerWhse; d++) {
 				// TPC-C 4.3.3.1: o_c_id must be a permutation of [1, 3000]
-				int[] c_ids = new int[customersPerDistrict];
-				for (int i = 0; i < customersPerDistrict; ++i) {
+				int[] c_ids = new int[TPCCConfig.configCustPerDist];
+				for (int i = 0; i < TPCCConfig.configCustPerDist; ++i) {
 					c_ids[i] = i + 1;
 				}
 				// Collections.shuffle exists, but there is no
@@ -557,7 +557,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 				}
 
 				int newOrderBatch = 0;
-				for (int c = 1; c <= customersPerDistrict; c++) {
+				for (int c = 1; c <= TPCCConfig.configCustPerDist; c++) {
 
 					oorder.o_id = c;
 					oorder.o_w_id = w_id;

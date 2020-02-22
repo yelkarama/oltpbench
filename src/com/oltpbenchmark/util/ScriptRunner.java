@@ -193,13 +193,13 @@ public class ScriptRunner {
     							String name = md.getColumnLabel(i);
     							print(name + "\t");
     						}
-    						println("");
+    						println();
     						while (rs.next()) {
     							for (int i = 0; i < cols; i++) {
     								String value = rs.getString(i);
     								print(value + "\t");
     							}
-    							println("");
+    							println();
     						}
     						rs.close();
     					}
@@ -244,9 +244,9 @@ public class ScriptRunner {
 		}
 	}
 
-	private void println(Object o) {
+	private void println() {
 		if (logWriter != null) {
-			logWriter.println(o);
+			logWriter.println((Object) "");
 		}
 	}
 

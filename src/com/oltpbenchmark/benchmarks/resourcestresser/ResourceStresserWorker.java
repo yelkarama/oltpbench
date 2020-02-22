@@ -30,7 +30,7 @@ public class ResourceStresserWorker extends Worker<ResourceStresserBenchmark> {
     public static final int CONTENTION1_howManyKeys = 10;
     public static final int CONTENTION1_howManyUpdates = 20;
     public static final int CONTENTION1_sleepLength = 1;
-    
+
     public static final int CONTENTION2_howManyKeys = 10;
     public static final int CONTENTION2_howManyUpdates = 5;
     public static final int CONTENTION2_sleepLength = 2;
@@ -52,7 +52,7 @@ public class ResourceStresserWorker extends Worker<ResourceStresserBenchmark> {
 
     public static final Random gen = new Random(1); // I change the random seed
                                                     // every time!
-    
+
     private final int keyRange;
     private final int numKeys;
 
@@ -65,55 +65,55 @@ public class ResourceStresserWorker extends Worker<ResourceStresserBenchmark> {
     @Override
     protected TransactionStatus executeWork(TransactionType nextTrans) throws UserAbortException, SQLException {
         if (nextTrans.getProcedureClass().equals(CPU1.class)) {
-            cpu1Transaction(CPU1_howManyPerTrasaction, CPU1_sleep, CPU1_nestedLevel);
+            cpu1Transaction();
         } else if (nextTrans.getProcedureClass().equals(CPU2.class)) {
-            cpu2Transaction(CPU2_howManyPerTrasaction, CPU2_sleep, CPU2_nestedLevel);
+            cpu2Transaction();
         } else if (nextTrans.getProcedureClass().equals(IO1.class)) {
-            io1Transaction(IO1_howManyColsPerRow, IO1_howManyRowsPerUpdate, IO1_howManyUpdatePerTransaction, keyRange);
+            io1Transaction(keyRange);
         } else if (nextTrans.getProcedureClass().equals(IO2.class)) {
-            io2Transaction(IO2_howManyUpdatePerTransaction, IO2_makeSureWorketSetFitsInMemory, keyRange);
+            io2Transaction(keyRange);
         } else if (nextTrans.getProcedureClass().equals(Contention1.class)) {
-            contention1Transaction(CONTENTION1_howManyUpdates, CONTENTION1_sleepLength);
+            contention1Transaction();
         } else if (nextTrans.getProcedureClass().equals(Contention2.class)) {
-            contention2Transaction(CONTENTION2_howManyKeys, CONTENTION2_howManyUpdates, CONTENTION2_sleepLength);
+            contention2Transaction();
         }
         conn.commit();
         return (TransactionStatus.SUCCESS);
     }
 
-    private void contention1Transaction(int howManyUpdates, int sleepLength) throws SQLException {
+    private void contention1Transaction() throws SQLException {
         Contention1 proc = this.getProcedure(Contention1.class);
         assert (proc != null);
-        proc.run(conn, howManyUpdates, sleepLength, this.numKeys);
+        proc.run(conn, ResourceStresserWorker.CONTENTION1_howManyUpdates, ResourceStresserWorker.CONTENTION1_sleepLength, this.numKeys);
     }
 
-    private void contention2Transaction(int howManyKeys, int howManyUpdates, int sleepLength) throws SQLException {
+    private void contention2Transaction() throws SQLException {
         Contention2 proc = this.getProcedure(Contention2.class);
         assert (proc != null);
-        proc.run(conn, howManyKeys, howManyUpdates, sleepLength, this.numKeys);
+        proc.run(conn, ResourceStresserWorker.CONTENTION2_howManyKeys, ResourceStresserWorker.CONTENTION2_howManyUpdates, ResourceStresserWorker.CONTENTION2_sleepLength, this.numKeys);
     }
 
-    private void io1Transaction(int howManyColsPerRow, int howManyUpdatesPerTransaction, int howManyRowsPerUpdate, int keyRange) throws SQLException {
+    private void io1Transaction(int keyRange) throws SQLException {
         IO1 proc = this.getProcedure(IO1.class);
         assert (proc != null);
-        proc.run(conn, this.getId(), howManyColsPerRow, howManyUpdatesPerTransaction, howManyRowsPerUpdate, keyRange);
+        proc.run(conn, this.getId(), ResourceStresserWorker.IO1_howManyColsPerRow, ResourceStresserWorker.IO1_howManyRowsPerUpdate, ResourceStresserWorker.IO1_howManyUpdatePerTransaction, keyRange);
     }
 
-    private void io2Transaction(int howManyUpdatesPerTransaction, boolean makeSureWorkerSetFitsInMemory, int keyRange) throws SQLException {
+    private void io2Transaction(int keyRange) throws SQLException {
         IO2 proc = this.getProcedure(IO2.class);
         assert (proc != null);
-        proc.run(conn, this.getId(), howManyUpdatesPerTransaction, makeSureWorkerSetFitsInMemory, keyRange);
+        proc.run(conn, this.getId(), ResourceStresserWorker.IO2_howManyUpdatePerTransaction, ResourceStresserWorker.IO2_makeSureWorketSetFitsInMemory, keyRange);
     }
 
-    private void cpu1Transaction(int howManyPerTransaction, int sleepLength, int nestedLevel) throws SQLException {
+    private void cpu1Transaction() throws SQLException {
         CPU1 proc = this.getProcedure(CPU1.class);
         assert (proc != null);
-        proc.run(conn, howManyPerTransaction, sleepLength, nestedLevel);
+        proc.run(conn, ResourceStresserWorker.CPU1_howManyPerTrasaction, ResourceStresserWorker.CPU1_sleep, ResourceStresserWorker.CPU1_nestedLevel);
     }
 
-    private void cpu2Transaction(int howManyPerTransaction, int sleepLength, int nestedLevel) throws SQLException {
+    private void cpu2Transaction() throws SQLException {
         CPU2 proc = this.getProcedure(CPU2.class);
         assert (proc != null);
-        proc.run(conn, howManyPerTransaction, sleepLength, nestedLevel);
+        proc.run(conn, ResourceStresserWorker.CPU2_howManyPerTrasaction, ResourceStresserWorker.CPU2_sleep, ResourceStresserWorker.CPU2_nestedLevel);
     }
 }

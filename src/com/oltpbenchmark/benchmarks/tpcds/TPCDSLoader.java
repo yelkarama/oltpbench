@@ -145,7 +145,7 @@ public class TPCDSLoader extends Loader<TPCDSBenchmark> {
                     throw new RuntimeException(e);
                 }
 
-                loadTable(conn, TPCDSConstants.TABLENAME_CALLCENTER, TPCDSConstants.callcenterTypes);
+                loadTable(conn);
             }
         });
 /*
@@ -610,12 +610,12 @@ public class TPCDSLoader extends Loader<TPCDSBenchmark> {
         }
     }
 
-    private void loadTable(Connection conn, String tableName, TPCDSConstants.CastTypes[] types) throws SQLException {
-        Table catalog_tbl = this.benchmark.getTableCatalog(tableName);
+    private void loadTable(Connection conn) throws SQLException {
+        Table catalog_tbl = this.benchmark.getTableCatalog(TPCDSConstants.TABLENAME_CALLCENTER);
         assert (catalog_tbl != null);
 
         String sql = SQLUtil.getInsertSQL(catalog_tbl, this.getDatabaseType());
         PreparedStatement prepStmt = conn.prepareStatement(sql);
-        loadData(conn, tableName, prepStmt, types);
+        loadData(conn, TPCDSConstants.TABLENAME_CALLCENTER, prepStmt, TPCDSConstants.callcenterTypes);
     }
 }

@@ -185,8 +185,8 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
         } // FOR
     }
 
-    protected AbstractTableGenerator getGenerator(String table_name) {
-        return (this.generators.get(table_name));
+    protected AbstractTableGenerator getGenerator() {
+        return (this.generators.get(AuctionMarkConstants.TABLENAME_CATEGORY));
     }
 
     /**
@@ -747,7 +747,7 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
         @Override
         public void prepare() {
             // Grab the number of CATEGORY items that we have inserted
-            long num_categories = getGenerator(AuctionMarkConstants.TABLENAME_CATEGORY).tableSize;
+            long num_categories = getGenerator().tableSize;
 
             for (int i = 0; i < this.tableSize; i++) {
                 int category_id = profile.rng.number(0, (int) num_categories);
