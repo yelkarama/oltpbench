@@ -45,20 +45,20 @@ public class GetLink extends Procedure{
             LOG.debug("getLink : " + id1 + " " + link_type + " " + id2s);
         }
         boolean first = true;
-        String ids = "";
+        StringBuilder ids = new StringBuilder();
         for (long id2: id2s) {
             if (first) {
               first = false;
             } else {
-                ids+=",";
+                ids.append(",");
             }
-            ids+=id2;
+            ids.append(id2);
           }
         if(stmt == null)
           stmt = this.getPreparedStatement(conn, getLinkStmt);
         stmt.setLong(1, id1);
         stmt.setLong(2, link_type);
-        stmt.setString(3, ids);
+        stmt.setString(3, ids.toString());
         ResultSet rs= stmt.executeQuery();
         // Get the row count to allocate result array
         assert(rs.getType() != ResultSet.TYPE_FORWARD_ONLY);

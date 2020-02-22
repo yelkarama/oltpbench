@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TPCCBenchmark extends BenchmarkModule {
@@ -126,8 +127,7 @@ public class TPCCBenchmark extends BenchmarkModule {
 		assert terminals[terminals.length - 1] != null;
 
 		ArrayList<TPCCWorker> ret = new ArrayList<TPCCWorker>();
-		for (TPCCWorker w : terminals)
-			ret.add(w);
+        ret.addAll(Arrays.asList(terminals));
 		return ret;
 	}
 

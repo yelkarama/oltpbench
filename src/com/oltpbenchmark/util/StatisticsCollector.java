@@ -39,9 +39,7 @@ public class StatisticsCollector {
 
 		double[] temp = osStats.getDifferentialDiskStats();
 
-		for (int i = 0; i < 11; i++) {
-			re[2 + i] = temp[i];
-		}
+        System.arraycopy(temp, 0, re, 2, 11);
 
 		return re;
 	}

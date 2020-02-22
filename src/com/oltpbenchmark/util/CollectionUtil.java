@@ -193,7 +193,7 @@ public abstract class CollectionUtil {
 
     public static <E extends Enum<?>> Set<E> getAllExcluding(E[] elements, E...excluding) {
         Set<E> exclude_set = new HashSet<E>();
-        for (E e : excluding) exclude_set.add(e);
+        exclude_set.addAll(Arrays.asList(excluding));
 
         Set<E> elements_set = new HashSet<E>();
         for (int i = 0; i < elements.length; i++) {
@@ -213,9 +213,7 @@ public abstract class CollectionUtil {
      * @param items
      */
     public static <T> Collection<T> addAll(Collection<T> data, T...items) {
-        for (T i : items) {
-            data.add(i);
-        }
+        data.addAll(Arrays.asList(items));
         return (data);
     }
 

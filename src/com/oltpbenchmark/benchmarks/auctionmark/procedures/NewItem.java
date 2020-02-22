@@ -174,6 +174,7 @@ public class NewItem extends Procedure {
         // ATTRIBUTES
         description += "\nATTRIBUTES: ";
         stmt = this.getPreparedStatement(conn, getGlobalAttribute);
+        StringBuilder descriptionBuilder = new StringBuilder(description);
         for (int i = 0; i < gag_ids.length; i++) {
             int col = 1;
             stmt.setLong(col++, gav_ids[i]);
@@ -181,10 +182,11 @@ public class NewItem extends Procedure {
             results = stmt.executeQuery();
             if (results.next()) {
                 col = 1;
-                description += String.format(" * %s -> %s\n", results.getString(col++), results.getString(col++));
+                descriptionBuilder.append(String.format(" * %s -> %s\n", results.getString(col++), results.getString(col++)));
             }
             results.close();
         } // FOR
+        description = descriptionBuilder.toString();
 
         // CATEGORY
         stmt = this.getPreparedStatement(conn, getCategory, category_id);

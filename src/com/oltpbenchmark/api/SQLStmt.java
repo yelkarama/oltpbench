@@ -62,7 +62,7 @@ public final class SQLStmt {
             assert(ctr > 0);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < ctr; i++) {
-                sb.append((i > 0 ? ", " : "") + "?");
+                sb.append(i > 0 ? ", " : "").append("?");
             } // FOR
             Matcher m = SUBSTITUTION_PATTERN.matcher(sql);
             String replace = sb.toString();

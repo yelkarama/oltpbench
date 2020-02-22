@@ -29,18 +29,18 @@ import java.sql.SQLException;
 public class CPU1 extends Procedure {
 
     public final SQLStmt cpuSelect;
-    { 
-        String complexClause = "'passwd'";
+    {
+        StringBuilder complexClause = new StringBuilder("'passwd'");
         for (int i = 1; i <= ResourceStresserWorker.CPU1_nestedLevel; ++i) {
-            complexClause = "md5(concat(" + complexClause +",?))";
+            complexClause = new StringBuilder("md5(concat(" + complexClause + ",?))");
         } // FOR
         cpuSelect = new SQLStmt(
-            "SELECT count(*) FROM (SELECT " + complexClause + 
+            "SELECT count(*) FROM (SELECT " + complexClause +
             " FROM " + ResourceStresserConstants.TABLENAME_CPUTABLE +
             " WHERE empid >= 0 AND empid < 100) AS T1"
         );
     }
-    
+
     public void run(Connection conn, int howManyPerTransaction, int sleepLength,
     		int nestedLevel) throws SQLException {
         PreparedStatement stmt = this.getPreparedStatement(conn, cpuSelect);
@@ -63,5 +63,5 @@ public class CPU1 extends Procedure {
             rs.close();
         } // FOR
     }
-    
+
 }

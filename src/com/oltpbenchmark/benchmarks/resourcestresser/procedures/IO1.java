@@ -31,15 +31,15 @@ public class IO1 extends Procedure {
 
     public final SQLStmt ioUpdate;
     {
-        String sql = "UPDATE " + ResourceStresserConstants.TABLENAME_IOTABLE + 
+        String sql = "UPDATE " + ResourceStresserConstants.TABLENAME_IOTABLE +
         		" SET %s WHERE empid >= ? AND empid < ?";
-        String setClause = "";
+        StringBuilder setClause = new StringBuilder();
         for (int col=1; col<=ResourceStresserWorker.IO1_howManyColsPerRow; ++col) {
-            setClause = setClause + (col>1 ? "," : "") + " data" + col + "=?";      
+            setClause.append(col > 1 ? "," : "").append(" data").append(col).append("=?");
         }
-        this.ioUpdate = new SQLStmt(String.format(sql, setClause));
+        this.ioUpdate = new SQLStmt(String.format(sql, setClause.toString()));
     }
-    
+
     public void run(Connection conn, int myId, int howManyColsPerRow, int howManyUpdatesPerTransaction,
     		int howManyRowsPerUpdate, int keyRange) throws SQLException {
         assert howManyUpdatesPerTransaction > 0;
