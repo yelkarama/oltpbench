@@ -299,7 +299,7 @@ public abstract class BenchmarkModule {
                                 maxConcurrent));
                     ThreadUtil.runNewPool(loaderThreads, maxConcurrent);
 
-                    if (loader.getTableCounts().isEmpty() == false) {
+                    if (!loader.getTableCounts().isEmpty()) {
                         LOG.info("Table Counts:\n" + loader.getTableCounts());
                     }
                 }

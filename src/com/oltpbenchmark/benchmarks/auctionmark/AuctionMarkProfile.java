@@ -384,7 +384,7 @@ public class AuctionMarkProfile {
 
     private final void initializeUserIdGenerator(int clientId) {
         assert(this.users_per_itemCount != null);
-        assert(this.users_per_itemCount.isEmpty() == false);
+        assert(!this.users_per_itemCount.isEmpty());
         this.userIdGenerator = new UserIdGenerator(this.users_per_itemCount,
                                                    this.num_clients,
                                                    (clientId < 0 ? null : clientId));
@@ -654,7 +654,7 @@ public class AuctionMarkProfile {
     public void addPendingItemCommentResponse(ItemCommentResponse cr) {
         if (this.client_id != -1) {
             UserId sellerId = new UserId(cr.sellerId);
-            if (this.userIdGenerator.checkClient(sellerId) == false) {
+            if (!this.userIdGenerator.checkClient(sellerId)) {
                 return;
             }
         }
@@ -743,7 +743,7 @@ public class AuctionMarkProfile {
         // which means that we always want to keep it
         if (this.client_id != -1) {
             if (this.userIdGenerator == null) this.initializeUserIdGenerator(this.client_id);
-            if (this.userIdGenerator.checkClient(itemInfo.getSellerId()) == false) {
+            if (!this.userIdGenerator.checkClient(itemInfo.getSellerId())) {
                 return (null);
             }
         }
@@ -826,7 +826,7 @@ public class AuctionMarkProfile {
             tmp_seenItems.add(temp);
 
             // Needs to have an embedded currentPrice
-            if (needCurrentPrice && temp.hasCurrentPrice() == false) {
+            if (needCurrentPrice && !temp.hasCurrentPrice()) {
                 continue;
             }
 
@@ -836,7 +836,7 @@ public class AuctionMarkProfile {
                 boolean compareTo = (temp.getEndDate().compareTo(currentTime) < 0);
                 if (LOG.isTraceEnabled())
                     LOG.trace("CurrentTime:" + currentTime + " / EndTime:" + temp.getEndDate() + " [compareTo=" + compareTo + "]");
-                if (temp.hasEndDate() == false || compareTo) {
+                if (!temp.hasEndDate() || compareTo) {
                     continue;
                 }
             }

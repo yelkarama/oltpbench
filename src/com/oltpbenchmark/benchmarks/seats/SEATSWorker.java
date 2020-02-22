@@ -351,7 +351,7 @@ public class SEATSWorker extends Worker<SEATSBenchmark> {
         }/*catch(Exception e) {
         	LOG.error("caught Exception in SEATSWorker for procedure "+txnType.getName() +":" + e, e);
         }*/
-        if (ret == false) {
+        if (!ret) {
             if (LOG.isDebugEnabled())
                 LOG.debug("Unable to execute " + proc + " right now");
             return (TransactionStatus.RETRY_DIFFERENT);
@@ -588,7 +588,7 @@ public class SEATSWorker extends Worker<SEATSBenchmark> {
                 LOG.trace("QUEUED INSERT: " + search_flight + " / " + search_flight.encode() + " -> " + customer_id);
         } // WHILE
 
-        if (tmp_reservations.isEmpty() == false) {
+        if (!tmp_reservations.isEmpty()) {
             Collections.shuffle(tmp_reservations);
             cache.addAll(tmp_reservations);
             while (cache.size() > SEATSConstants.CACHE_LIMIT_PENDING_INSERTS) {
@@ -662,7 +662,7 @@ public class SEATSWorker extends Worker<SEATSBenchmark> {
 
         boolean successful = false;
   //      int count = 0;
-        while(successful==false){
+        while(!successful){
         	try{
  //       		count ++;
         		proc.run(conn,

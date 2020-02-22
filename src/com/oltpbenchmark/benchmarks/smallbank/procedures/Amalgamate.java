@@ -40,75 +40,75 @@ import java.sql.SQLException;
  * @author pavlo
  */
 public class Amalgamate extends Procedure {
-    
+
     // 2013-05-05
     // In the original version of the benchmark, this is suppose to be a look up
-    // on the customer's name. We don't have fast implementation of replicated 
+    // on the customer's name. We don't have fast implementation of replicated
     // secondary indexes, so we'll just ignore that part for now.
     public final SQLStmt GetAccount = new SQLStmt(
         "SELECT * FROM " + SmallBankConstants.TABLENAME_ACCOUNTS +
         " WHERE custid = ?"
     );
-    
+
     public final SQLStmt GetSavingsBalance = new SQLStmt(
         "SELECT bal FROM " + SmallBankConstants.TABLENAME_SAVINGS +
         " WHERE custid = ?"
     );
-    
+
     public final SQLStmt GetCheckingBalance = new SQLStmt(
         "SELECT bal FROM " + SmallBankConstants.TABLENAME_CHECKING +
         " WHERE custid = ?"
     );
-    
+
     public final SQLStmt UpdateSavingsBalance = new SQLStmt(
-        "UPDATE " + SmallBankConstants.TABLENAME_SAVINGS + 
+        "UPDATE " + SmallBankConstants.TABLENAME_SAVINGS +
         "   SET bal = bal - ? " +
         " WHERE custid = ?"
     );
-    
+
     public final SQLStmt UpdateCheckingBalance = new SQLStmt(
-        "UPDATE " + SmallBankConstants.TABLENAME_CHECKING + 
+        "UPDATE " + SmallBankConstants.TABLENAME_CHECKING +
         "   SET bal = bal + ? " +
         " WHERE custid = ?"
     );
-    
+
     public final SQLStmt ZeroCheckingBalance = new SQLStmt(
-        "UPDATE " + SmallBankConstants.TABLENAME_CHECKING + 
+        "UPDATE " + SmallBankConstants.TABLENAME_CHECKING +
         "   SET bal = 0.0 " +
         " WHERE custid = ?"
     );
-    
+
     public void run(Connection conn, long custId0, long custId1) throws SQLException {
         // Get Account Information
         PreparedStatement stmt0 = this.getPreparedStatement(conn, GetAccount, custId0);
         ResultSet r0 = stmt0.executeQuery();
-        if (r0.next() == false) {
+        if (!r0.next()) {
             String msg = "Invalid account '" + custId0 + "'";
             throw new UserAbortException(msg);
         }
-        
+
         PreparedStatement stmt1 = this.getPreparedStatement(conn, GetAccount, custId1);
         ResultSet r1 = stmt1.executeQuery();
-        if (r1.next() == false) {
+        if (!r1.next()) {
             String msg = "Invalid account '" + custId1 + "'";
             throw new UserAbortException(msg);
         }
-        
+
         // Get Balance Information
         PreparedStatement balStmt0 = this.getPreparedStatement(conn, GetSavingsBalance, custId0);
         ResultSet balRes0 = balStmt0.executeQuery();
-        if (balRes0.next() == false) {
+        if (!balRes0.next()) {
             String msg = String.format("No %s for customer #%d",
-                                       SmallBankConstants.TABLENAME_SAVINGS, 
+                                       SmallBankConstants.TABLENAME_SAVINGS,
                                        custId0);
             throw new UserAbortException(msg);
         }
-        
+
         PreparedStatement balStmt1 = this.getPreparedStatement(conn, GetCheckingBalance, custId1);
         ResultSet balRes1 = balStmt1.executeQuery();
-        if (balRes1.next() == false) {
+        if (!balRes1.next()) {
             String msg = String.format("No %s for customer #%d",
-                                       SmallBankConstants.TABLENAME_CHECKING, 
+                                       SmallBankConstants.TABLENAME_CHECKING,
                                        custId1);
             throw new UserAbortException(msg);
         }
@@ -120,18 +120,18 @@ public class Amalgamate extends Procedure {
         PreparedStatement updateStmt0 = this.getPreparedStatement(conn, ZeroCheckingBalance, custId0);
         int status = updateStmt0.executeUpdate();
         assert(status == 1);
-        
+
         PreparedStatement updateStmt1 = this.getPreparedStatement(conn, UpdateSavingsBalance, total, custId1);
         status = updateStmt1.executeUpdate();
         assert(status == 1);
-                
+
 //        if (balance < 0) {
 //            String msg = String.format("Negative %s balance for customer #%d",
-//                                       SmallBankConstants.TABLENAME_SAVINGS, 
+//                                       SmallBankConstants.TABLENAME_SAVINGS,
 //                                       acctId);
 //            throw new UserAbortException(msg);
 //        }
-//        
+//
 //        voltQueueSQL(UpdateSavingsBalance, amount);
 //        results = voltExecuteSQL(true);
 //        return (results[0]);

@@ -166,7 +166,7 @@ public abstract class Procedure {
             "Trying to access Procedure " + this.procName + " before it is initialized!";
         Collection<String> stmtNames = dialects.getStatementNames(this.procName);
         if (stmtNames == null) return;
-        assert(this.name_stmt_xref.isEmpty() == false) :
+        assert(!this.name_stmt_xref.isEmpty()) :
             "There are no SQLStmts for Procedure " + this.procName + "?";
         for (String stmtName : stmtNames) {
             assert(this.name_stmt_xref.containsKey(stmtName)) :
@@ -212,9 +212,9 @@ public abstract class Procedure {
         Map<String, SQLStmt> stmts = new HashMap<String, SQLStmt>();
         for (Field f : c.getDeclaredFields()) {
             int modifiers = f.getModifiers();
-            if (Modifier.isTransient(modifiers) == false &&
-                Modifier.isPublic(modifiers) == true &&
-                Modifier.isStatic(modifiers) == false) {
+            if (!Modifier.isTransient(modifiers) &&
+                        Modifier.isPublic(modifiers) &&
+                        !Modifier.isStatic(modifiers)) {
                 try {
                     Object o = f.get(proc);
                     if (o instanceof SQLStmt) {

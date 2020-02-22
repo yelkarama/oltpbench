@@ -112,7 +112,7 @@ public class CloseAuctions extends Procedure {
             dueItemsStmt.setInt(param++, ItemStatus.OPEN.ordinal());
             dueItemsTable = dueItemsStmt.executeQuery();
             boolean adv = dueItemsTable.next();
-            if (adv == false) break;
+            if (!adv) break;
 
             output_rows.clear();
             while (dueItemsTable.next()) {

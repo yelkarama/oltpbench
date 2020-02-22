@@ -250,7 +250,7 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
 
         // Mark as finished
         boolean fail = false;
-        if (fail == false) {
+        if (!fail) {
             generator.markAsFinished();
             synchronized (this) {
                 this.finished.add(tableName);
@@ -320,7 +320,7 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
             }
 
             // Initialize dynamic parameters for tables that are not loaded from data files
-            if (!data_file && !dynamic_size && tableName.equalsIgnoreCase(AuctionMarkConstants.TABLENAME_ITEM) == false) {
+            if (!data_file && !dynamic_size && !tableName.equalsIgnoreCase(AuctionMarkConstants.TABLENAME_ITEM)) {
                 field_name = "TABLESIZE_" + catalog_tbl.getName();
                 try {
 
@@ -406,7 +406,7 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
         }
         @SuppressWarnings("unchecked")
         public void releaseHoldsToSubTableGenerators() {
-            if (this.subGenerator_hold.isEmpty() == false) {
+            if (!this.subGenerator_hold.isEmpty()) {
                 LOG.debug(String.format("%s: Releasing %d held objects to %d sub-generators",
                                         this.tableName, this.subGenerator_hold.size(), this.sub_generators.size()));
                 for (@SuppressWarnings("rawtypes") SubTableGenerator sub_generator : this.sub_generators) {
@@ -755,7 +755,7 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
                 int id = this.category_groups.get(category_id).intValue();
                 int count = (int)profile.rng.number(1, AuctionMarkConstants.TABLESIZE_GLOBAL_ATTRIBUTE_VALUE_PER_GROUP);
                 GlobalAttributeGroupId gag_id = new GlobalAttributeGroupId(category_id, id, count);
-                assert(profile.gag_ids.contains(gag_id) == false);
+                assert(!profile.gag_ids.contains(gag_id));
                 profile.gag_ids.add(gag_id);
                 this.group_ids.add(gag_id);
             } // FOR
@@ -1413,7 +1413,7 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
             int col = 0;
 
             boolean is_buyer = false;
-            if (remaining == 1 || (bid.buyer_feedback && bid.seller_feedback == false)) {
+            if (remaining == 1 || (bid.buyer_feedback && !bid.seller_feedback)) {
                 is_buyer = true;
             } else {
                 assert(bid.seller_feedback);
@@ -1519,12 +1519,12 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
                     LOG.error("Busted Bidder Histogram:\n" + bidderHistogram);
                     throw ex;
                 }
-                if (this.watchers.contains(buyerId) == false) break;
+                if (!this.watchers.contains(buyerId)) break;
                 buyerId = null;
 
                 // If for some reason we unable to find a buyer from our bidderHistogram,
                 // then just give up and get a random one
-                if (use_random == false && tries == 0) {
+                if (!use_random && tries == 0) {
                     use_random = true;
                     tries = 500;
                 }

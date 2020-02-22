@@ -39,71 +39,71 @@ import java.sql.SQLException;
  * @author pavlo
  */
 public class SendPayment extends Procedure {
-    
+
     public final SQLStmt GetAccount = new SQLStmt(
         "SELECT * FROM " + SmallBankConstants.TABLENAME_ACCOUNTS +
         " WHERE custid = ?"
     );
-    
+
     public final SQLStmt GetCheckingBalance = new SQLStmt(
         "SELECT bal FROM " + SmallBankConstants.TABLENAME_CHECKING +
         " WHERE custid = ?"
     );
-    
+
     public final SQLStmt UpdateCheckingBalance = new SQLStmt(
-        "UPDATE " + SmallBankConstants.TABLENAME_CHECKING + 
+        "UPDATE " + SmallBankConstants.TABLENAME_CHECKING +
         "   SET bal = bal + ? " +
         " WHERE custid = ?"
     );
-    
+
     public void run(Connection conn, long sendAcct, long destAcct, double amount) throws SQLException {
         // Get Account Information
         PreparedStatement stmt0 = this.getPreparedStatement(conn, GetAccount, sendAcct);
         ResultSet r0 = stmt0.executeQuery();
-        if (r0.next() == false) {
+        if (!r0.next()) {
             String msg = "Invalid account '" + sendAcct + "'";
             throw new UserAbortException(msg);
         }
-        
+
         PreparedStatement stmt1 = this.getPreparedStatement(conn, GetAccount, destAcct);
         ResultSet r1 = stmt1.executeQuery();
-        if (r1.next() == false) {
+        if (!r1.next()) {
             String msg = "Invalid account '" + destAcct + "'";
             throw new UserAbortException(msg);
         }
-        
+
         // Get the sender's account balance
         PreparedStatement balStmt0 = this.getPreparedStatement(conn, GetCheckingBalance, sendAcct);
         ResultSet balRes0 = balStmt0.executeQuery();
-        if (balRes0.next() == false) {
+        if (!balRes0.next()) {
             String msg = String.format("No %s for customer #%d",
-                                       SmallBankConstants.TABLENAME_CHECKING, 
+                                       SmallBankConstants.TABLENAME_CHECKING,
                                        sendAcct);
             throw new UserAbortException(msg);
         }
         double balance = balRes0.getDouble(1);
-        
+
         // Make sure that they have enough money
         if (balance < amount) {
             String msg = String.format("Insufficient %s funds for customer #%d",
                                        SmallBankConstants.TABLENAME_CHECKING, sendAcct);
             throw new UserAbortException(msg);
         }
-        
+
         // Debt
         PreparedStatement updateStmt = this.getPreparedStatement(conn, UpdateCheckingBalance, amount*-1d, sendAcct);
         int status = updateStmt.executeUpdate();
         assert(status == 1) :
             String.format("Failed to update %s for customer #%d [amount=%.2f]",
                           SmallBankConstants.TABLENAME_CHECKING, sendAcct, amount);
-        
+
         // Credit
         updateStmt = this.getPreparedStatement(conn, UpdateCheckingBalance, amount, destAcct);
         status = updateStmt.executeUpdate();
         assert(status == 1) :
             String.format("Failed to update %s for customer #%d [amount=%.2f]",
                           SmallBankConstants.TABLENAME_CHECKING, destAcct, amount);
-        
+
         return;
     }
 }

@@ -35,27 +35,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Balance extends Procedure {
-    
+
     public final SQLStmt GetAccount = new SQLStmt(
         "SELECT * FROM " + SmallBankConstants.TABLENAME_ACCOUNTS +
         " WHERE name = ?"
     );
-    
+
     public final SQLStmt GetSavingsBalance = new SQLStmt(
         "SELECT bal FROM " + SmallBankConstants.TABLENAME_SAVINGS +
         " WHERE custid = ?"
     );
-    
+
     public final SQLStmt GetCheckingBalance = new SQLStmt(
         "SELECT bal FROM " + SmallBankConstants.TABLENAME_CHECKING +
         " WHERE custid = ?"
     );
-	
+
     public double run(Connection conn, String custName) throws SQLException {
         // First convert the acctName to the acctId
         PreparedStatement stmt0 = this.getPreparedStatement(conn, GetAccount, custName);
         ResultSet r0 = stmt0.executeQuery();
-        if (r0.next() == false) {
+        if (!r0.next()) {
             String msg = "Invalid account '" + custName + "'";
             throw new UserAbortException(msg);
         }
@@ -64,18 +64,18 @@ public class Balance extends Procedure {
         // Then get their account balances
         PreparedStatement balStmt0 = this.getPreparedStatement(conn, GetSavingsBalance, custId);
         ResultSet balRes0 = balStmt0.executeQuery();
-        if (balRes0.next() == false) {
+        if (!balRes0.next()) {
             String msg = String.format("No %s for customer #%d",
-                                       SmallBankConstants.TABLENAME_SAVINGS, 
+                                       SmallBankConstants.TABLENAME_SAVINGS,
                                        custId);
             throw new UserAbortException(msg);
         }
-        
+
         PreparedStatement balStmt1 = this.getPreparedStatement(conn, GetCheckingBalance, custId);
         ResultSet balRes1 = balStmt1.executeQuery();
-        if (balRes1.next() == false) {
+        if (!balRes1.next()) {
             String msg = String.format("No %s for customer #%d",
-                                       SmallBankConstants.TABLENAME_CHECKING, 
+                                       SmallBankConstants.TABLENAME_CHECKING,
                                        custId);
             throw new UserAbortException(msg);
         }

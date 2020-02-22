@@ -469,7 +469,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
                 if (is_airport) {
                     // Skip any airport that does not have flights
                     int col_code_idx = catalog_tbl.getColumnByName("AP_CODE").getIndex();
-                    if (this.profile.hasFlights((String) tuple[col_code_idx]) == false) {
+                    if (!this.profile.hasFlights((String) tuple[col_code_idx])) {
                         if (LOG.isTraceEnabled()) {
                             LOG.trace(String.format("Skipping AIRPORT '%s' because it does not have any flights", tuple[col_code_idx]));
                         }
@@ -752,7 +752,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
 
         protected boolean hasNext() {
             boolean has_next = (this.last_id < this.total);
-            if (has_next == false) {
+            if (!has_next) {
                 this.callbackFinished();
             }
             return (has_next);
@@ -913,7 +913,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
             // IMPORTANT: Add one to all of the airlines so that we don't get
             // trapped
             // in an infinite loop
-            assert (SEATSLoader.this.flights_per_airline.isEmpty() == false);
+            assert (!SEATSLoader.this.flights_per_airline.isEmpty());
             SEATSLoader.this.flights_per_airline.putAll();
             this.airline_rand = new FlatHistogram<String>(SEATSLoader.this.rng, SEATSLoader.this.flights_per_airline);
             if (LOG.isTraceEnabled()) {
@@ -1038,7 +1038,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
             for (; this.outer_ctr < (this.num_airports - 1); this.outer_ctr++) {
                 this.outer_airport = SEATSLoader.this.airport_locations.get(this.outer_ctr);
                 Pair<Double, Double> outer_location = SEATSLoader.this.airport_locations.getValue(this.outer_ctr);
-                if (SEATSLoader.this.profile.hasFlights(this.outer_airport) == false) {
+                if (!SEATSLoader.this.profile.hasFlights(this.outer_airport)) {
                     continue;
                 }
 
@@ -1048,7 +1048,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
                     assert (this.outer_ctr != inner_ctr);
                     this.inner_airport = SEATSLoader.this.airport_locations.get(inner_ctr);
                     Pair<Double, Double> inner_location = SEATSLoader.this.airport_locations.getValue(inner_ctr);
-                    if (SEATSLoader.this.profile.hasFlights(this.inner_airport) == false) {
+                    if (!SEATSLoader.this.profile.hasFlights(this.inner_airport)) {
                         continue;
                     }
                     this.distance = DistanceUtil.distance(outer_location, inner_location);
@@ -1283,14 +1283,14 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
                         // Generate a composite FlightId
                         this.flight_id = new FlightId(this.airline_id, SEATSLoader.this.profile.getAirportId(this.depart_airport), SEATSLoader.this.profile.getAirportId(this.arrive_airport),
                                 this.start_date, this.depart_time);
-                        if (this.todays_flights.contains(this.flight_id) == false) {
+                        if (!this.todays_flights.contains(this.flight_id)) {
                             break;
                         }
                     } // WHILE
                     if (LOG.isTraceEnabled()) {
                         LOG.trace(String.format("%s [remaining=%d, dayIdx=%d]", this.flight_id, remaining, this.day_idx));
                     }
-                    assert (this.todays_flights.contains(this.flight_id) == false) : this.flight_id;
+                    assert (!this.todays_flights.contains(this.flight_id)) : this.flight_id;
 
                     this.todays_flights.add(this.flight_id);
                     SEATSLoader.this.addFlightId(this.flight_id);
@@ -1475,7 +1475,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
                         return_flight = null;
 
                         // Always book returning customers first
-                        if (returning_customers.isEmpty() == false) {
+                        if (!returning_customers.isEmpty()) {
                             return_flight = CollectionUtil.pop(returning_customers);
                             customer_id = return_flight.getCustomerId();
                         }
@@ -1490,7 +1490,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
                         else {
                             customer_id = SEATSLoader.this.profile.getRandomCustomerId();
                         }
-                        if (flight_customer_ids.contains(customer_id) == false) {
+                        if (!flight_customer_ids.contains(customer_id)) {
                             break;
                         }
                         tries--;
@@ -1520,7 +1520,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
                         }
                     }
                     assert (customer_id != null) : "Null customer id on " + flight_id;
-                    assert (flight_customer_ids.contains(customer_id) == false) : flight_id + " already contains " + customer_id;
+                    assert (!flight_customer_ids.contains(customer_id)) : flight_id + " already contains " + customer_id;
                     flight_customer_ids.add(customer_id);
 
                     if (LOG.isTraceEnabled()) {
@@ -1566,7 +1566,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
                 LOG.trace("hasNext() called");
             }
             this.current = null;
-            while (this.done == false || this.queue.isEmpty() == false) {
+            while (!this.done || !this.queue.isEmpty()) {
                 if (this.error != null) {
                     throw new RuntimeException("Failed to generate Reservation records", this.error);
                 }

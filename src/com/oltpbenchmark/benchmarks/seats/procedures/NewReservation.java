@@ -120,7 +120,7 @@ public class NewReservation extends Procedure {
         PreparedStatement stmt = this.getPreparedStatement(conn, GetFlight, f_id);
         ResultSet results = stmt.executeQuery();
         found = results.next();
-        if (found == false) {
+        if (!found) {
             results.close();
             throw new UserAbortException(ErrorType.INVALID_FLIGHT_ID +
                                          String.format(" Invalid flight #%d", f_id));
@@ -155,7 +155,7 @@ public class NewReservation extends Procedure {
         results = stmt.executeQuery();
         found = results.next();
         results.close();
-        if (found == false) {
+        if (!found) {
             throw new UserAbortException(ErrorType.INVALID_CUSTOMER_ID +
                                          String.format(" Invalid customer id: %d / %s", c_id, new CustomerId(c_id)));
         }

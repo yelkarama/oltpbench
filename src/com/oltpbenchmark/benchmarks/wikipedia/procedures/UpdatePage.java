@@ -35,14 +35,14 @@ public class UpdatePage extends Procedure {
     // -----------------------------------------------------------------
     // STATEMENTS
     // -----------------------------------------------------------------
-    
+
 	public SQLStmt insertText = new SQLStmt(
         "INSERT INTO " + WikipediaConstants.TABLENAME_TEXT + " (" +
-        "old_page,old_text,old_flags" + 
+        "old_page,old_text,old_flags" +
         ") VALUES (" +
         "?,?,?" +
         ")"
-    ); 
+    );
 	public SQLStmt insertRevision = new SQLStmt(
         "INSERT INTO " + WikipediaConstants.TABLENAME_REVISION + " (" +
 		"rev_page, " +
@@ -65,7 +65,7 @@ public class UpdatePage extends Procedure {
         " WHERE page_id = ?"
     );
 	public SQLStmt insertRecentChanges = new SQLStmt(
-        "INSERT INTO " + WikipediaConstants.TABLENAME_RECENTCHANGES + " (" + 
+        "INSERT INTO " + WikipediaConstants.TABLENAME_RECENTCHANGES + " (" +
 	    "rc_timestamp, " +
 	    "rc_cur_time, " +
 	    "rc_namespace, " +
@@ -119,15 +119,15 @@ public class UpdatePage extends Procedure {
         " WHERE user_id = ?"
     );
 	public SQLStmt updateUserTouched = new SQLStmt(
-        "UPDATE " + WikipediaConstants.TABLENAME_USER + 
+        "UPDATE " + WikipediaConstants.TABLENAME_USER +
         "   SET user_touched = ?" +
         " WHERE user_id = ?"
     );
-	
+
     // -----------------------------------------------------------------
     // RUN
     // -----------------------------------------------------------------
-	
+
 	public void run(Connection conn, int textId, int pageId,
 	                                 String pageTitle, String pageText, int pageNamespace,
 	                                 int userId, String userIp, String userText,
@@ -138,7 +138,7 @@ public class UpdatePage extends Procedure {
 	    ResultSet rs = null;
 	    int param;
 	    final String timestamp = TimeUtil.getCurrentTimeString14();
-	    
+
 	    // INSERT NEW TEXT
 		ps = this.getPreparedStatementReturnKeys(conn, insertText, new int[]{1});
 		param = 1;
@@ -147,7 +147,7 @@ public class UpdatePage extends Procedure {
 		ps.setString(param++, "utf-8");  //This is an error
 //		ps.execute();
 		execute(conn, ps);
-		
+
 		rs = ps.getGeneratedKeys();
 		adv = rs.next();
 		assert(adv) : "Problem inserting new tuples in table text";
@@ -170,7 +170,7 @@ public class UpdatePage extends Procedure {
 		ps.setInt(param++, revisionId);   // rev_parent_id // this is an error
 //	    ps.execute();
 		execute(conn, ps);
-		
+
 		rs = ps.getGeneratedKeys();
 		adv = rs.next();
 		int nextRevId = rs.getInt(1);
@@ -217,7 +217,7 @@ public class UpdatePage extends Procedure {
 //		int count = ps.executeUpdate();
 //		assert(count == 1);
         execute(conn, ps);
-        
+
 		// REMOVED
 		// sql="INSERT INTO `cu_changes` () VALUES ();";
 		// st.addBatch(sql);
@@ -240,7 +240,7 @@ public class UpdatePage extends Procedure {
 		// UPDATING WATCHLIST: txn3 (not always, only if someone is watching the
 		// page, might be part of txn2)
 		// =====================================================================
-		if (wlUser.isEmpty() == false) {
+		if (!wlUser.isEmpty()) {
 
 			// NOTE: this commit is skipped if none is watching the page, and
 			// the transaction merge with the following one
@@ -263,7 +263,7 @@ public class UpdatePage extends Procedure {
 			// the transaction merge with the following one
 			conn.commit();
 
-			// ===================================================================== 
+			// =====================================================================
 			// UPDATING USER AND LOGGING STUFF: txn4 (might still be part of
 			// txn2)
 			// =====================================================================
@@ -282,7 +282,7 @@ public class UpdatePage extends Procedure {
 
 		// This is always executed, sometimes as a separate transaction,
 		// sometimes together with the previous one
-		
+
 		ps = this.getPreparedStatement(conn, insertLogging);
 		param = 1;
 		ps.setString(param++, timestamp);
@@ -300,15 +300,15 @@ public class UpdatePage extends Procedure {
 		ps.setInt(param++, userId);
 //		ps.executeUpdate();
 		execute(conn, ps);
-		
+
 		ps = this.getPreparedStatement(conn, updateUserTouched);
 		param = 1;
 		ps.setString(param++, timestamp);
 		ps.setInt(param++, userId);
-//		ps.executeUpdate();	    		
+//		ps.executeUpdate();
 		execute(conn, ps);
-	}	
-	
+	}
+
 	public void execute(Connection conn, PreparedStatement p) throws SQLException{
 	      boolean successful = false;
 			while (!successful) {

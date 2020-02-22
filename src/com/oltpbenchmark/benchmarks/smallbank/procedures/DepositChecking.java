@@ -40,23 +40,23 @@ import java.sql.SQLException;
  * @author pavlo
  */
 public class DepositChecking extends Procedure {
-    
+
     public final SQLStmt GetAccount = new SQLStmt(
         "SELECT * FROM " + SmallBankConstants.TABLENAME_ACCOUNTS +
         " WHERE name = ?"
     );
-    
+
     public final SQLStmt UpdateCheckingBalance = new SQLStmt(
-        "UPDATE " + SmallBankConstants.TABLENAME_CHECKING + 
+        "UPDATE " + SmallBankConstants.TABLENAME_CHECKING +
         "   SET bal = bal + ? " +
         " WHERE custid = ?"
     );
-    
+
     public void run(Connection conn, String custName, double amount) throws SQLException {
         // First convert the custName to the custId
         PreparedStatement stmt0 = this.getPreparedStatement(conn, GetAccount, custName);
         ResultSet r0 = stmt0.executeQuery();
-        if (r0.next() == false) {
+        if (!r0.next()) {
             String msg = "Invalid account '" + custName + "'";
             throw new UserAbortException(msg);
         }
@@ -68,7 +68,7 @@ public class DepositChecking extends Procedure {
         assert(status == 1) :
             String.format("Failed to update %s for customer #%d [amount=%.2f]",
                           SmallBankConstants.TABLENAME_CHECKING, custId, amount);
-        
+
         return;
     }
 }

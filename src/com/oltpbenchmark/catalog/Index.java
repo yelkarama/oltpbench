@@ -24,12 +24,12 @@ import java.util.*;
 
 public class Index extends AbstractCatalogObject {
     private static final long serialVersionUID = 1l;
-    
+
     private final Table catalog_tbl;
     private final SortedMap<Integer, IndexColumn> columns = new TreeMap<Integer, Index.IndexColumn>();
     private final int type;
     private final boolean unique;
-    
+
     private static class IndexColumn {
         final String name;
         final SortDirectionType dir;
@@ -42,27 +42,27 @@ public class Index extends AbstractCatalogObject {
             return this.name + " / " + this.dir;
         }
     } // CLASS
-    
+
     public Index(Table catalog_tbl, String name, int type, boolean unique) {
         super(name);
         this.catalog_tbl = catalog_tbl;
         this.type = type;
         this.unique = unique;
     }
-    
+
     public Table getTable() {
         return (this.catalog_tbl);
     }
-    
+
     public String fullName() {
         return String.format("%s.%s", this.catalog_tbl.getName(), this.name);
     }
-    
+
     public void addColumn(String colName, SortDirectionType colOrder, int colPosition) {
-        assert(this.columns.containsKey(colPosition) == false);
+        assert(!this.columns.containsKey(colPosition));
         this.columns.put(colPosition, new IndexColumn(colName, colOrder));
     }
-    
+
     /**
      * Get the number of columns that are part of this index
      * @return
@@ -82,40 +82,40 @@ public class Index extends AbstractCatalogObject {
         } // FOR
         return (colNames);
     }
-    
+
     public String getColumnName(int position) {
         IndexColumn idx_col = this.columns.get(position);
         return (idx_col != null ? idx_col.name : null);
     }
-    
+
     public SortDirectionType getColumnDirection(int position) {
         IndexColumn idx_col = this.columns.get(position);
         return (idx_col != null ? idx_col.dir : null);
     }
-    
-    
+
+
     public int getType() {
         return this.type;
     }
     public boolean isUnique() {
         return this.unique;
     }
-    
+
 
     public String debug() {
         Map<String, Object> m = new ListOrderedMap<String, Object>();
         m.put("Name", this.name);
         m.put("Type", this.type);
         m.put("Is Unique", this.unique);
-        
+
         Map<String, Object> inner = new ListOrderedMap<String, Object>();
         for (int i = 0, cnt = this.columns.size(); i < cnt; i++) {
             IndexColumn idx_col = this.columns.get(i);
             inner.put(String.format("[%02d]", i), idx_col);
         } // FOR
         m.put("Columns", inner);
-        
+
         return (StringUtil.formatMaps(m));
     }
-    
+
 }

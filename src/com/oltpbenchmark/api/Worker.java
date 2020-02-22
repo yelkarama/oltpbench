@@ -365,7 +365,7 @@ public abstract class Worker<T extends BenchmarkModule> implements Runnable {
                 if (next == null) {
                     next = transactionTypes.getType(pieceOfWork.getType());
                 }
-                assert (next.isSupplemental() == false) : "Trying to select a supplemental transaction " + next;
+                assert (!next.isSupplemental()) : "Trying to select a supplemental transaction " + next;
 
                 try {
                     // For Postgres, we have to create a savepoint in order

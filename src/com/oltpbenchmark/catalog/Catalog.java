@@ -142,7 +142,7 @@ public final class Catalog {
             LOG.debug(String.format("ORIG:%s -> CATALOG:%s", internal_table_name, table_name));
 
             String table_type = table_rs.getString(4);
-            if (table_type.equalsIgnoreCase("TABLE") == false) continue;
+            if (!table_type.equalsIgnoreCase("TABLE")) continue;
             Table catalog_tbl = new Table(table_name);
 
             // COLUMNS
@@ -186,7 +186,7 @@ public final class Catalog {
                 //       a zero for this value, then we'll just length of the pkey_cols map
                 if (col_idx == 0) col_idx = pkey_cols.size();
                 LOG.debug(String.format("PKEY[%02d]: %s.%s", col_idx, table_name, col_name));
-                assert(pkey_cols.containsKey(col_idx) == false);
+                assert(!pkey_cols.containsKey(col_idx));
                 pkey_cols.put(col_idx, col_name);
             } // WHILE
             pkey_rs.close();
@@ -199,7 +199,7 @@ public final class Catalog {
             while (idx_rs.next()) {
                 if (LOG.isDebugEnabled())
                     LOG.debug(SQLUtil.debug(idx_rs));
-                boolean idx_unique = (idx_rs.getBoolean(4) == false);
+                boolean idx_unique = (!idx_rs.getBoolean(4));
                 String idx_name = idx_rs.getString(6);
                 int idx_type = idx_rs.getShort(7);
                 int idx_col_pos = idx_rs.getInt(8) - 1;
@@ -284,14 +284,14 @@ public final class Catalog {
         } catch(IOException ioe) {
             throw new RuntimeException(ioe);
         }
-        assert(ddlContents.isEmpty() == false);
+        assert(!ddlContents.isEmpty());
         Matcher m = p.matcher(ddlContents);
         while (m.find()) {
             String tableName = m.group(1).trim();
             origTableNames.put(tableName.toUpperCase(), tableName);
 //            origTableNames.put(tableName, tableName);
         } // WHILE
-        assert(origTableNames.isEmpty() == false) :
+        assert(!origTableNames.isEmpty()) :
             "Failed to extract original table names for " + this.benchmark.getBenchmarkName();
 
         if (LOG.isDebugEnabled())

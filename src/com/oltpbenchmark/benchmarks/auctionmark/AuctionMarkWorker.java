@@ -175,7 +175,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
         NewCommentResponse(NewCommentResponse.class, new AuctionMarkParamGenerator() {
             @Override
             public boolean canGenerateParam(AuctionMarkWorker client) {
-                return (client.profile.pending_commentResponses.isEmpty() == false);
+                return (!client.profile.pending_commentResponses.isEmpty());
             }
         }),
         // ====================================================================
@@ -308,7 +308,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
         // set this on the first call to runOnce(). This will account for start a bunch of
         // clients on multiple nodes but then having to wait until they're all up and running
         // before starting the actual benchmark run.
-        if (profile.hasClientStartTime() == false) profile.setAndGetClientStartTime();
+        if (!profile.hasClientStartTime()) profile.setAndGetClientStartTime();
 
         // Always update the current timestamp
         profile.updateAndGetCurrentTime();
@@ -317,7 +317,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
 
         // Always check if we need to want to run CLOSE_AUCTIONS
         // We only do this from the first client
-        if (AuctionMarkConstants.CLOSE_AUCTIONS_SEPARATE_THREAD == false &&
+        if (!AuctionMarkConstants.CLOSE_AUCTIONS_SEPARATE_THREAD &&
             closeAuctions_flag.compareAndSet(true, false)) {
             txn = Transaction.CloseAuctions;
             TransactionTypes txnTypes = this.getWorkloadConfiguration().getTransTypes();
@@ -327,7 +327,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
             txn = Transaction.get(txnType.getProcedureClass());
             assert(txn != null) :
                 "Failed to get Transaction handle for " + txnType.getProcedureClass().getSimpleName();
-            if (txn.canExecute(this) == false) {
+            if (!txn.canExecute(this)) {
                 if (LOG.isDebugEnabled())
                     LOG.warn("Unable to execute " + txn + " because it is not ready");
                 return (TransactionStatus.RETRY_DIFFERENT);
@@ -585,7 +585,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
         // Some NewBids will be for items that have already ended.
         // This will simulate somebody trying to bid at the very end but failing
         if ((has_waiting || has_completed) &&
-            (profile.rng.number(1, 100) <= AuctionMarkConstants.PROB_NEWBID_CLOSED_ITEM || has_available == false)) {
+            (profile.rng.number(1, 100) <= AuctionMarkConstants.PROB_NEWBID_CLOSED_ITEM || !has_available)) {
             if (has_waiting) {
                 itemInfo = profile.getRandomWaitForPurchaseItem();
                 assert(itemInfo != null) : "Failed to get WaitForPurchase itemInfo [" + profile.getWaitForPurchaseItemsCount() + "]";
@@ -606,7 +606,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
         else {
             assert(has_available || has_ending);
             // 50% of NewBids will be for items that are ending soon
-            if ((has_ending && profile.rng.number(1, 100) <= AuctionMarkConstants.PROB_NEWBID_CLOSED_ITEM) || has_available == false) {
+            if ((has_ending && profile.rng.number(1, 100) <= AuctionMarkConstants.PROB_NEWBID_CLOSED_ITEM) || !has_available) {
                 itemInfo = profile.getRandomEndingSoonItem(true);
             }
             if (itemInfo == null) {

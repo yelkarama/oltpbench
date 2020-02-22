@@ -64,7 +64,7 @@ public class Table extends AbstractCatalogObject {
     // ----------------------------------------------------------
 
     public void addColumn(Column col) {
-        assert(this.columns.contains(col) == false) : "Duplicate column '" + col + "'";
+        assert(!this.columns.contains(col)) : "Duplicate column '" + col + "'";
         this.columns.add(col);
     }
 
@@ -114,7 +114,7 @@ public class Table extends AbstractCatalogObject {
      * @param index
      */
     public void addIndex(Index index) {
-        assert(this.indexes.contains(index) == false) : "Duplicate index '" + index + "'";
+        assert(!this.indexes.contains(index)) : "Duplicate index '" + index + "'";
         this.indexes.add(index);
     }
 
@@ -178,7 +178,7 @@ public class Table extends AbstractCatalogObject {
 
     @Override
     public boolean equals(Object object) {
-        if ((object instanceof Table) == false) return (false);
+        if (!(object instanceof Table)) return (false);
 
         Table table2 = (Table)object;
         return (this.name.equals(table2.name) &&

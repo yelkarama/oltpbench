@@ -144,7 +144,7 @@ public class NewBid extends Procedure {
         // If we fail to get back an item, then we know that the auction is closed
         stmt = this.getPreparedStatement(conn, getItem, item_id, seller_id); // , currentTime);
         results = stmt.executeQuery();
-        if (results.next() == false) {
+        if (!results.next()) {
             results.close();
             throw new UserAbortException("Invalid item " + item_id);
         }

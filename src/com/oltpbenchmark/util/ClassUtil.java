@@ -217,7 +217,7 @@ public abstract class ClassUtil {
             for (int i = 0; i < params.length; i++) {
                 List<Class<?>> cSuper = ClassUtil.getSuperClasses(cTypes[i]);
                 if (LOG.isDebugEnabled()) LOG.debug("  SUPER[" + cTypes[i].getSimpleName() + "] => " + cSuper);
-                if (CollectionUtils.intersection(paramSuper[i], cSuper).isEmpty() == false) {
+                if (!CollectionUtils.intersection(paramSuper[i], cSuper).isEmpty()) {
                     return ((Constructor<T>)c);
                 }
             } // FOR (param)

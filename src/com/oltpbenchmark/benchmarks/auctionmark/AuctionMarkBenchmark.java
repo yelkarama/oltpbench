@@ -93,7 +93,7 @@ public class AuctionMarkBenchmark extends BenchmarkModule {
 	    File f = new File(String.format("%s%stable.%s.csv", data_dir.getAbsolutePath(),
 	                                                        File.separator,
 	                                                        catalog_tbl.getName().toLowerCase()));
-	    if (f.exists() == false) f = new File(f.getAbsolutePath() + ".gz");
+	    if (!f.exists()) f = new File(f.getAbsolutePath() + ".gz");
 	    return (f);
 	}
 }

@@ -125,7 +125,7 @@ public class Histogram<X> implements JSONSerializable {
         return (this);
     }
     public boolean hasDebugLabels() {
-        return (this.debug_names != null && this.debug_names.isEmpty() == false);
+        return (this.debug_names != null && !this.debug_names.isEmpty());
     }
 
 
@@ -192,7 +192,7 @@ public class Histogram<X> implements JSONSerializable {
      */
     @SuppressWarnings("unchecked")
     private synchronized void calculateInternalValues() {
-        if (this.dirty == false) return;
+        if (!this.dirty) return;
 
         // New Min/Max Counts
         // The reason we have to loop through and check every time is that our

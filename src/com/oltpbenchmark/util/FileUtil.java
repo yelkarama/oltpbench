@@ -126,7 +126,7 @@ public abstract class FileUtil {
             if (p == null)
                 continue;
             File f = new File(p);
-            if (f.exists() == false) {
+            if (!f.exists()) {
                 f.mkdirs();
             }
         } // FOR
@@ -151,7 +151,7 @@ public abstract class FileUtil {
 
     public static File getTempFile(String prefix, String suffix, boolean deleteOnExit) {
         File tempFile;
-        if (suffix != null && suffix.startsWith(".") == false)
+        if (suffix != null && !suffix.startsWith("."))
             suffix = "." + suffix;
         if (prefix == null)
             prefix = "hstore";

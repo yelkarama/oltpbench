@@ -138,11 +138,11 @@ public class DBWorkload {
         if (argsLine.hasOption("h")) {
             printUsage(options);
             return;
-        } else if (argsLine.hasOption("c") == false) {
+        } else if (!argsLine.hasOption("c")) {
             LOG.error("Missing Configuration file");
             printUsage(options);
             return;
-        } else if (argsLine.hasOption("b") == false) {
+        } else if (!argsLine.hasOption("b")) {
             LOG.fatal("Missing Benchmark Class to load");
             printUsage(options);
             return;
@@ -487,7 +487,7 @@ public class DBWorkload {
             assert (wrkld.getNumTxnTypes() >= 0);
             assert (xmlConfig != null);
         }
-        assert(benchList.isEmpty() == false);
+        assert(!benchList.isEmpty());
         assert(benchList.get(0) != null);
 
         // Export StatementDialects
@@ -607,7 +607,7 @@ public class DBWorkload {
           .append("\n")
           .append(r.getTransactionErrorHistogram());
 
-        if (r.getTransactionAbortMessageHistogram().isEmpty() == false)
+        if (!r.getTransactionAbortMessageHistogram().isEmpty())
             sb.append("\n\n")
               .append(StringUtil.bold("User Aborts:"))
               .append("\n")

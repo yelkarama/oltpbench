@@ -150,7 +150,7 @@ public class SEATSProfile {
         this.catalog = benchmark.getCatalog();
         this.rng = rng;
         this.airline_data_dir = benchmark.getDataDir();
-        if (this.airline_data_dir.exists() == false) {
+        if (!this.airline_data_dir.exists()) {
             throw new RuntimeException("Unable to start benchmark. The data directory '" + this.airline_data_dir.getAbsolutePath() + "' does not exist");
         }
 
@@ -161,7 +161,7 @@ public class SEATSProfile {
             String codeCol = xref[1];
             String idCol = xref[2];
 
-            if (this.code_columns.containsKey(codeCol) == false) {
+            if (!this.code_columns.containsKey(codeCol)) {
                 this.code_columns.put(codeCol, idCol);
                 this.code_id_xref.put(idCol, new HashMap<String, Long>());
                 if (LOG.isDebugEnabled()) {
@@ -420,7 +420,7 @@ public class SEATSProfile {
     private Map<String, Long> getCodeXref(String col_name) {
         Map<String, Long> m = this.code_id_xref.get(col_name);
         assert (m != null) : "Invalid code xref mapping column '" + col_name + "'";
-        assert (m.isEmpty() == false) : "Empty code xref mapping for column '" + col_name + "'\n" + StringUtil.formatMaps(this.code_id_xref);
+        assert (!m.isEmpty()) : "Empty code xref mapping for column '" + col_name + "'\n" + StringUtil.formatMaps(this.code_id_xref);
         return (m);
     }
 
@@ -591,7 +591,7 @@ public class SEATSProfile {
      * @return
      */
     public FlightId getRandomFlightId() {
-        assert (this.cached_flight_ids.isEmpty() == false);
+        assert (!this.cached_flight_ids.isEmpty());
         if (LOG.isTraceEnabled()) {
             LOG.trace("Attempting to get a random FlightId");
         }

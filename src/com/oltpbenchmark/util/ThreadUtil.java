@@ -215,7 +215,7 @@ public abstract class ThreadUtil {
         }
         int max_threads = DEFAULT_NUM_THREADS;
         String prop = System.getProperty("hstore.max_threads");
-        if (prop != null && prop.startsWith("${") == false)
+        if (prop != null && !prop.startsWith("${"))
             max_threads = Integer.parseInt(prop);
         return (max_threads);
     }

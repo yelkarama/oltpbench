@@ -235,7 +235,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
             Map<String, Object> m = new ListOrderedMap<String, Object>();
             LOG.info("Starting WatchDogThread");
             boolean stop = false;
-            while (stop == false) {
+            while (!stop) {
                 try {
                     Thread.sleep(20000);
                 } catch (InterruptedException ex) {

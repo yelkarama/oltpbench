@@ -147,7 +147,7 @@ public class NewPurchase extends Procedure {
         // HACK: Check whether we have an ITEM_MAX_BID record. If not, we'll insert one
         stmt = this.getPreparedStatement(conn, getItemMaxBid, item_id, seller_id);
         results = stmt.executeQuery();
-        if (results.next() == false) {
+        if (!results.next()) {
             results.close();
             stmt = this.getPreparedStatement(conn, getMaxBid, item_id, seller_id);
             results = stmt.executeQuery();
@@ -172,7 +172,7 @@ public class NewPurchase extends Procedure {
         // At this point we should always have an ITEM_MAX_BID record
         stmt = this.getPreparedStatement(conn, getItemInfo, item_id, seller_id);
         results = stmt.executeQuery();
-        if (results.next() == false) {
+        if (!results.next()) {
             String msg = "No ITEM_MAX_BID is available record for item " + item_id;
             throw new UserAbortException(msg);
         }

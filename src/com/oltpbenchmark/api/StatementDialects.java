@@ -80,7 +80,7 @@ public class StatementDialects {
             LOG.warn(String.format("SKIP - No SQL dialect file was given.", this.xmlFile));
             return (false);
         }
-        else if (this.xmlFile.exists() == false) {
+        else if (!this.xmlFile.exists()) {
             LOG.warn(String.format("SKIP - The SQL dialect file '%s' does not exist", this.xmlFile));
             return (false);
         }
@@ -117,7 +117,7 @@ public class StatementDialects {
         for (DialectType dialect : dialects.getDialect()) {
             assert(this.dbType != null);
             assert(dialect != null);
-            if (dialect.getType().equalsIgnoreCase(this.dbType.name()) == false)
+            if (!dialect.getType().equalsIgnoreCase(this.dbType.name()))
                 continue;
 
             // For each Procedure in the XML file, go through its list of Statements
@@ -129,10 +129,10 @@ public class StatementDialects {
                 Map<String, String> procDialects = this.dialectsMap.get(procName);
                 for (StatementType statement : procedure.getStatement()) {
                     String stmtName = statement.getName();
-                    assert(stmtName.isEmpty() == false) :
+                    assert(!stmtName.isEmpty()) :
                         String.format("Invalid Statement for %s.%s", this.dbType, procName);
                     String stmtSQL = statement.getValue().trim();
-                    assert(stmtSQL.isEmpty() == false) :
+                    assert(!stmtSQL.isEmpty()) :
                         String.format("Invalid SQL for %s.%s.%s", this.dbType, procName, stmtName);
 
                     if (procDialects == null) {
@@ -161,7 +161,7 @@ public class StatementDialects {
      * @return A well-formed XML export of the SQL for the given Procedures
      */
     public String export(DatabaseType dbType, Collection<Procedure> procedures) {
-        assert(procedures.isEmpty() == false) : "No procedures passed";
+        assert(!procedures.isEmpty()) : "No procedures passed";
         Marshaller marshaller = null;
         JAXBContext jc = null;
 

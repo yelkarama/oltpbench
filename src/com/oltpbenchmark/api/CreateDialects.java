@@ -107,7 +107,7 @@ public class CreateDialects {
 
         // Primary Keys
         List<String> primaryKeys = catalog_tbl.getPrimaryKeyColumns();
-        if (primaryKeys.isEmpty() == false) {
+        if (!primaryKeys.isEmpty()) {
             inner = new StringBuilder();
             inner.append("PRIMARY KEY (")
                  .append(StringUtil.join(", ", primaryKeys))

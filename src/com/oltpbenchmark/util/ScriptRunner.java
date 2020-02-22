@@ -184,7 +184,7 @@ public class ScriptRunner {
 					}
 
 					// HACK
-					if (hasResults && sql.toUpperCase().startsWith("CREATE") == false) {
+					if (hasResults && !sql.toUpperCase().startsWith("CREATE")) {
     					ResultSet rs = statement.getResultSet();
     					if (hasResults && rs != null) {
     						ResultSetMetaData md = rs.getMetaData();

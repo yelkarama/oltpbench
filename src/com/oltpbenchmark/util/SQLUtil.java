@@ -398,7 +398,7 @@ public abstract class SQLUtil {
 
     	for (Column catalog_col : catalog_tbl.getColumns()) {
     	    if (excluded.contains(catalog_col.getIndex())) continue;
-    		if (first == false) {
+    		if (!first) {
     			if (show_cols) sb.append(", ");
     			values.append(", ");
     		}
@@ -412,7 +412,7 @@ public abstract class SQLUtil {
     	sb.append(" VALUES ");
     	first = true;
     	for (int i = 0; i < batchSize; i++) {
-    		if (first == false) sb.append(", ");
+    		if (!first) sb.append(", ");
     		sb.append("(").append(values.toString()).append(")");
     	} // FOR
 //    	sb.append(";");

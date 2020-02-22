@@ -103,7 +103,7 @@ public class UpdateReservation extends Procedure {
         results = stmt.executeQuery();
         found = results.next();
         results.close();
-        if (found == false) {
+        if (!found) {
             throw new UserAbortException(ErrorType.CUSTOMER_ALREADY_HAS_SEAT +
                                          String.format(" Customer %d does not have an existing reservation on flight #%d", c_id, f_id));
         }

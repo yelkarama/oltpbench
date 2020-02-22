@@ -83,7 +83,7 @@ public class FindFlights extends Procedure {
     public List<Object[]> run(Connection conn, long depart_aid, long arrive_aid, Timestamp start_date, Timestamp end_date, long distance) throws SQLException {
         try {
         final boolean debug = LOG.isDebugEnabled();
-        assert(start_date.equals(end_date) == false);
+        assert(!start_date.equals(end_date));
 
         final List<Long> arrive_aids = new ArrayList<Long>();
         arrive_aids.add(arrive_aid);

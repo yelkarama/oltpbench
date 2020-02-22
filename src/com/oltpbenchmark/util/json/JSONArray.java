@@ -913,7 +913,7 @@ public class JSONArray {
                 sb.append(JSONObject.valueToString(this.myArrayList.get(i),
                         indentFactor, newindent));
             }
-            if (intType == false) {
+            if (!intType) {
                 sb.append('\n');
                 for (i = 0; i < indent; i += 1) {
                     sb.append(' ');
