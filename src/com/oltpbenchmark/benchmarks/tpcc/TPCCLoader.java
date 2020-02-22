@@ -122,8 +122,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
         Table catalog_tbl = this.benchmark.getTableCatalog(tableName);
         assert(catalog_tbl != null);
         String sql = SQLUtil.getInsertSQL(catalog_tbl, this.getDatabaseType());
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        return stmt;
+        return conn.prepareStatement(sql);
     }
 
     protected void transRollback(Connection conn) {

@@ -144,7 +144,6 @@ public enum DatabaseType {
     }
 
     public static DatabaseType get(String name) {
-        DatabaseType ret = DatabaseType.name_lookup.get(name.toUpperCase());
-        return (ret);
+        return (DatabaseType.name_lookup.get(name.toUpperCase()));
     }
 }

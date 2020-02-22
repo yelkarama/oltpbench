@@ -1084,14 +1084,12 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
         private Timestamp getRandomStartTimestamp(Timestamp endDate) {
             long duration = ((long)profile.randomDuration.nextInt()) * AuctionMarkConstants.MILLISECONDS_IN_A_DAY;
             long lStartTimestamp = endDate.getTime() - duration;
-            Timestamp startTimestamp = new Timestamp(lStartTimestamp);
-            return startTimestamp;
+            return new Timestamp(lStartTimestamp);
         }
         private Timestamp getRandomEndTimestamp() {
             int timeDiff = profile.randomTimeDiff.nextInt();
-            Timestamp time = new Timestamp(profile.getLoaderStartTime().getTime() + (timeDiff * AuctionMarkConstants.MILLISECONDS_IN_A_SECOND));
-//            LOG.info(timeDiff + " => " + sdf.format(time.asApproximateJavaDate()));
-            return time;
+            //            LOG.info(timeDiff + " => " + sdf.format(time.asApproximateJavaDate()));
+            return new Timestamp(profile.getLoaderStartTime().getTime() + (timeDiff * AuctionMarkConstants.MILLISECONDS_IN_A_SECOND));
         }
         private Timestamp getRandomPurchaseTimestamp(Timestamp endDate) {
             long duration = profile.randomPurchaseDuration.nextInt();

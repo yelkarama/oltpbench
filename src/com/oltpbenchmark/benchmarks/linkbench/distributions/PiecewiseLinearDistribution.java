@@ -63,8 +63,7 @@ public abstract class PiecewiseLinearDistribution implements ProbabilityDistribu
     }
 
     public int compareTo(Point obj) {
-      Point p = obj;
-      return this.value - p.value;
+        return this.value - obj.value;
     }
 
     public String toString() {
@@ -176,8 +175,7 @@ public abstract class PiecewiseLinearDistribution implements ProbabilityDistribu
      */
     long result = right_points[idx] % (maxid1 - startid1);
     right_points[idx] = (result + 1) % (maxid1 - startid1);
-    long id1 = startid1 + result;
-    return id1;
+      return startid1 + result;
   }
 
   /**

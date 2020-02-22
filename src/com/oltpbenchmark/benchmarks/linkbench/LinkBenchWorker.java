@@ -314,8 +314,6 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
         link.data = linkUpDataGen.fill(rng,
                             new byte[(int)linkDataSize.choose(rng)]);
         // no inverses for now
-        boolean found1 = proc.run(conn, link, true);
-        boolean found = found1;
     }
     private void countLink() throws SQLException{
         //yes, updateLink uses addlLink procedure ..

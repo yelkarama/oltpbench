@@ -217,8 +217,7 @@ public class ID2Chooser {
     }
     assert(shuffled >= startid1 && shuffled < maxid1);
     sameShuffle = shuffled == id1;
-    long nlinks = linkDist.getNlinks(shuffled);
-    return nlinks;
+    return linkDist.getNlinks(shuffled);
   }
 
   // return a new id2 that satisfies 3 conditions:
