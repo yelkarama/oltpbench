@@ -121,7 +121,6 @@ public final class Catalog {
 
     /**
      * Construct the set of Table objects from a given Connection handle
-     * @param conn
      * @return
      * @throws SQLException
      * @see http://docs.oracle.com/javase/6/docs/api/java/sql/DatabaseMetaData.html

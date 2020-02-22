@@ -46,8 +46,6 @@ public final class BenchmarkState {
 	 * @param numThreads
 	 *            number of threads involved in the test: including the
 	 *            master thread.
-	 * @param rateLimited
-	 * @param queueLimit
 	 */
 	public BenchmarkState(int numThreads) {
 		startBarrier = new CountDownLatch(numThreads);

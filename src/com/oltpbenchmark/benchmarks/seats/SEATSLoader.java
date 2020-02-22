@@ -703,7 +703,6 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
          * Constructor
          *
          * @param catalog_tbl
-         * @param table_file
          * @throws Exception
          */
         public ScalingDataIterable(Table catalog_tbl, long total) {

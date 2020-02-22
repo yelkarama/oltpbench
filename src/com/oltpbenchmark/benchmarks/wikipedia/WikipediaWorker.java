@@ -114,9 +114,6 @@ public class WikipediaWorker extends Worker<WikipediaBenchmark> {
      *
      * @parama userIp contains the user's IP address in dotted quad form for
      *         IP-based access control
-     * @param userId
-     *            the logged in user's identifer. If negative, it is an
-     *            anonymous access.
      * @param nameSpace
      * @param pageTitle
      * @return article (return a Class containing the information we extracted,

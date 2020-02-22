@@ -301,7 +301,6 @@ public abstract class SQLUtil {
 
     /**
      * Return the COUNT(*) SQL to calculate the number of records
-     * @param table
      * @return SQL for select count execution
      */
     public static String getCountSQL(DatabaseType dbType, Table catalog_tbl) {
@@ -311,7 +310,6 @@ public abstract class SQLUtil {
     /**
      * Return the COUNT() SQL to calculate the number of records.
      * Will use the col parameter as the column that is counted
-     * @param table
      * @param col
      * @return SQL for select count execution
      */
@@ -374,7 +372,6 @@ public abstract class SQLUtil {
      * Automatically generate the 'INSERT' SQL string for this table
      *
      * @param catalog_tbl
-     * @param db_type
      * @param batchSize
      *            the number of sets of parameters
      *            that should be included in the insert

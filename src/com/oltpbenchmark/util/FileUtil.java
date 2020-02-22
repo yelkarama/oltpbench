@@ -333,7 +333,6 @@ public abstract class FileUtil {
      * Find the path to a directory below our current location in the source
      * tree Throws a RuntimeException if we go beyond our repository checkout
      *
-     * @param dirName
      * @return
      * @throws IOException
      */

@@ -75,7 +75,6 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
     /**
      * Constructor
      *
-     * @param args
      */
     public AuctionMarkLoader(AuctionMarkBenchmark benchmark) {
         super(benchmark);
@@ -300,7 +299,6 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
 
         /**
          * Constructor
-         * @param catalog_tbl
          */
         public AbstractTableGenerator(String tableName, String...dependencies) throws SQLException {
             super();

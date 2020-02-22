@@ -77,7 +77,6 @@ public class Link {
 
   /**
    * Clone an existing link
-   * @param l
    */
   public Link clone() {
     Link l = new Link();

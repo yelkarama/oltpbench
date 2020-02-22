@@ -136,7 +136,6 @@ public abstract class BenchmarkModule {
     protected abstract Loader<? extends BenchmarkModule> makeLoaderImpl() throws SQLException;
 
     /**
-     * @param txns
      * @return
      */
     protected abstract Package getProcedurePackageImpl();
@@ -163,7 +162,6 @@ public abstract class BenchmarkModule {
     /**
      * Return the URL handle to the DDL used to load the benchmark's database
      * schema.
-     * @param conn
      * @throws SQLException
      */
     public URL getDatabaseDDL(DatabaseType db_type) {
@@ -404,8 +402,6 @@ public abstract class BenchmarkModule {
 
     /**
      * Return a mapping from TransactionTypes to Procedure invocations
-     * @param txns
-     * @param pkg
      * @return
      */
     public Map<TransactionType, Procedure> getProcedures() {

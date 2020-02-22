@@ -16,7 +16,7 @@
 
 /*
  * JPA Performance Benchmark - http://www.jpab.org
- * Copyright ObjectDB Software Ltd. All Rights Reserved. 
+ * Copyright ObjectDB Software Ltd. All Rights Reserved.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
@@ -64,7 +64,7 @@ public abstract class Test {
 
 	/** Action types for the doAction function */
 	public enum ActionType {
-		RETRIEVE, UPDATE, DELETE 
+		RETRIEVE, UPDATE, DELETE
 	}
 
 	//--------------//
@@ -104,18 +104,18 @@ public abstract class Test {
 
 	/**
 	 * Gets the test name.
-	 * 
+	 *
 	 * @return the short name of the test class.
 	 */
 	public final String getName() {
 		return getClass().toString();
 	}
-	
+
 	// Thread Count:
 
 	/**
 	 * Sets the number of concurrent threads for this test.
-	 * 
+	 *
 	 * @param threadCount the number of concurrent threads
 	 */
 	public void setThreadCount(int threadCount) {
@@ -124,7 +124,7 @@ public abstract class Test {
 
 	/**
 	 * Gets the number of concurrent threads for this test.
-	 * 
+	 *
 	 * @return the number of concurrent threads for this test.
 	 */
 	public final int getThreadCount() {
@@ -135,7 +135,7 @@ public abstract class Test {
 
 	/**
 	 * Sets the transaction / retrieval size in entities.
-	 * 
+	 *
 	 * @param batchSize transaction / retrieval size in entities
 	 */
 	public void setBatchSize(int batchSize) {
@@ -144,7 +144,7 @@ public abstract class Test {
 
 	/**
 	 * Gets the transaction / retrieval size in entities.
-	 * 
+	 *
 	 * @return the transaction / retrieval size in entities.
 	 */
 	public final int getBatchSize() {
@@ -155,7 +155,7 @@ public abstract class Test {
 
 	/**
 	 * Sets the number of entity objects in the database.
-	 * 
+	 *
 	 * @param entityCount number of entity objects in the database
 	 */
 	public void setEntityCount(int entityCount) {
@@ -173,8 +173,7 @@ public abstract class Test {
 
 	/**
 	 * Increases the action count.
-	 * 
-	 * @param actionCount number to be added to the action count
+	 *
 	 */
 	protected final void increaseActionCount(int delta) {
 		actionCount.addAndGet(delta);
@@ -182,7 +181,7 @@ public abstract class Test {
 
 	/**
 	 * Gets the number of performed actions (since last reset).
-	 * 
+	 *
 	 * @return the number of performed actions (since last reset).
 	 */
 	public final int getActionCount() {
@@ -195,8 +194,8 @@ public abstract class Test {
 
 	/**
 	 * Builds an inventory of entity objects for persist.
-	 * 
-	 * @param entityCount size of the inventory (in objects) 
+	 *
+	 * @param entityCount size of the inventory (in objects)
 	 */
 	public void buildInventory(int entityCount) {
 		entityCount /= getGraphSize();
@@ -208,7 +207,7 @@ public abstract class Test {
 	}
 
 	/**
-	 * Clears unused inventory entity objects.  
+	 * Clears unused inventory entity objects.
 	 */
 	public void clearInventory() {
 		entityInventory.clear();
@@ -222,7 +221,7 @@ public abstract class Test {
 
 	/**
 	 * Persists a batch of entity objects.
-	 * 
+	 *
 	 * @param em a connection to the test database
 	 */
 	public final void persist(EntityManager em) {
@@ -231,7 +230,7 @@ public abstract class Test {
 
 	/**
 	 * Persists a batch of entity objects.
-	 * 
+	 *
 	 * @param em a connection to the test database
 	 */
 	final void persist(EntityManager em, int batchSize) {
@@ -263,7 +262,7 @@ public abstract class Test {
 
 	/**
 	 * Performs a retrieve/update/remove action on a batch of entity objects.
-	 * 
+	 *
 	 * @param em a connection to the test database
 	 * @param action one of RETRIEVE, UPDATE or DELETE
 	 */
@@ -280,7 +279,7 @@ public abstract class Test {
 			boolean isRandom = action != ActionType.DELETE;
 			List<TestEntity> entityList = retireveEntities(em, graphCount, isRandom);
 
-			// Repeat the action on all the entity objects: 
+			// Repeat the action on all the entity objects:
 			for (TestEntity entity : entityList) {
 				switch (action) {
 					case RETRIEVE:
@@ -319,16 +318,16 @@ public abstract class Test {
 
 	/**
 	 * Checks if this test includes queries.
-	 * 
+	 *
 	 * @return true - if it includes queries; false - if not.
 	 */
 	public boolean hasQueries() {
-		return true; // overridden by tests with no queries 
+		return true; // overridden by tests with no queries
 	}
 
     /**
      * Executes a query.
-     * 
+     *
      * @param em a connection to the test database
      */
     public void query(EntityManager em) {
@@ -361,21 +360,21 @@ public abstract class Test {
 
 	/**
 	 * Gets the type of the test main entity class.
-	 * 
+	 *
 	 * @return the type of the test main entity class.
 	 */
 	protected abstract Class getEntityClass();
 
 	/**
 	 * Gets the unqualified name of the test main entity class.
-	 * 
+	 *
 	 * @return the unqualified name of the test main entity class.
 	 */
 	public abstract String getEntityName();
 
 	/**
 	 * Gets the number of reachable objects from every root entity object.
-	 * 
+	 *
 	 * @return the number of reachable objects from every root entity object.
 	 */
 	protected int getGraphSize() {
@@ -386,25 +385,24 @@ public abstract class Test {
 
 	/**
 	 * Creates a new entity object (graph) for storing in the database.
-	 * 
+	 *
 	 * @return the new constructed entity object.
 	 */
 	protected abstract TestEntity newEntity();
 
 	/**
 	 * Retrieves entity object roots.
-	 * 
+	 *
 	 * @param em a connection to the database
 	 * @param count number of requested entity object roots
-	 * @param isRandom true - for random retrieval; false - for first returned 
-	 * @param the entity object roots.
+	 * @param isRandom true - for random retrieval; false - for first returned
 	 */
 	@SuppressWarnings("boxing")
 	protected List retireveEntities(
 			EntityManager em, int count, boolean isRandom) {
 		int maxFirstId = Math.max(entityCount - count, 1);
 		int firstId = LoaderUtil.randomNumber(1, maxFirstId, new Random());
-		Query query = em.createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.id >= :firstId"); 
+		Query query = em.createQuery("SELECT o FROM " + getEntityName() + " o WHERE o.id >= :firstId");
 		query.setParameter("firstId", firstId);
 		query.setMaxResults(count);
 		return query.getResultList();
@@ -416,12 +414,12 @@ public abstract class Test {
 
 	/**
 	 * Checks if a specified exception represents a lock failure.
-	 * 
+	 *
 	 * @param e an exception for check
 	 * @return true - if it does; false - if it does not.
 	 */
 	private static boolean isLockException(Throwable e) {
-		
+
 		if (e instanceof OptimisticLockException) {
 			return true;
 		}

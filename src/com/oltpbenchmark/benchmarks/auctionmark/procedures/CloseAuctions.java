@@ -78,9 +78,6 @@ public class CloseAuctions extends Procedure {
     // -----------------------------------------------------------------
 
     /**
-     * @param item_ids - Item Ids
-     * @param seller_ids - Seller Ids
-     * @param bid_ids - ItemBid Ids
      * @return
      */
     public List<Object[]> run(Connection conn, Timestamp[] benchmarkTimes,

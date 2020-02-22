@@ -84,8 +84,6 @@ public class ScriptRunner {
 	/**
 	 * Runs an SQL script (read in using the Reader parameter)
 	 *
-	 * @param reader
-	 *            - the source of the script
 	 */
 	public void runScript(URL resource) throws IOException, SQLException {
 		Reader reader = new InputStreamReader(resource.openStream());

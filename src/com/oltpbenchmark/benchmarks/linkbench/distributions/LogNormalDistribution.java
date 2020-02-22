@@ -43,7 +43,6 @@ public class LogNormalDistribution implements ProbabilityDistribution {
    * @param max
    * @param median the median value of the distribution
    * @param sigma the standard deviation of the natural log of the variable
-   * @param scale
    */
   public void init(long min, long max, double median, double sigma) {
     this.min = min;

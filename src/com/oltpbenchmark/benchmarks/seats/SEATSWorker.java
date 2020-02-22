@@ -460,7 +460,6 @@ public class SEATSWorker extends Worker<SEATSBenchmark> {
 
     /**
      * Execute one of the FindFlight transactions
-     * @param txn
      * @throws SQLException
      */
     private boolean executeFindFlights(FindFlights proc) throws SQLException {

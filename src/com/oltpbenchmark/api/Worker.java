@@ -352,7 +352,6 @@ public abstract class Worker<T extends BenchmarkModule> implements Runnable {
      * implementing worker should return the TransactionType handle that was
      * executed.
      *
-     * @param llr
      */
     protected final TransactionType doWork(boolean measure, SubmittedProcedure pieceOfWork) {
         TransactionType next = null;

@@ -96,7 +96,6 @@ public abstract class Procedure {
      * This will automatically call setObject for all the parameters you pass in
      * @param conn
      * @param stmt
-     * @param parameters
      * @return
      * @throws SQLException
      */
@@ -161,7 +160,6 @@ public abstract class Procedure {
 
     /**
      * Fetch the SQL from the dialect map
-     * @param dialectMap
      */
     protected final void loadSQLDialect(StatementDialects dialects) {
         assert(this.name_stmt_xref != null) :

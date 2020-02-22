@@ -218,7 +218,6 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
 
         /**
          * Constructor
-         * @param weight The execution frequency weight for this txn
          * @param generator
          */
         Transaction(Class<? extends Procedure> procClass, AuctionMarkParamGenerator generator) {
@@ -269,7 +268,6 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
 
     /**
      * Constructor
-     * @param args
      */
     public AuctionMarkWorker(int id, AuctionMarkBenchmark benchmark) {
         super(benchmark, id);
@@ -388,7 +386,6 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
      * For the given VoltTable that contains ITEM records, process the current
      * row of that table and update the benchmark profile based on item information
      * stored in that row.
-     * @param vt
      * @return
      * @see AuctionMarkConstants.ITEM_COLUMNS
      * @see CloseAuctions

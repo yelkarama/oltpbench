@@ -16,7 +16,7 @@
 
 /*
  * JPA Performance Benchmark - http://www.jpab.org
- * Copyright ObjectDB Software Ltd. All Rights Reserved. 
+ * Copyright ObjectDB Software Ltd. All Rights Reserved.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
@@ -47,7 +47,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
- * Tests using graphs (trees) of entity objects.  
+ * Tests using graphs (trees) of entity objects.
  */
 public class NodeTest extends Test {
 
@@ -57,37 +57,37 @@ public class NodeTest extends Test {
 
     /** The size of a single tree in nodes (entity objects) */
     private static final int GRAPH_SIZE = 100;
-    
+
     // Data Members:
 
     /** Last allocated tree ID - for generating primary keys */
-    private final AtomicInteger lastTreeId = new AtomicInteger(0); 
+    private final AtomicInteger lastTreeId = new AtomicInteger(0);
 
     // Test Methods:
 
 	/**
 	 * Checks if this test includes queries.
-	 * 
+	 *
 	 * @return true - if it includes queries; false - if not.
 	 */
 	@Override
 	public boolean hasQueries() {
-		return false; 
+		return false;
 	}
 
     /**
      * Gets the type of the benchmark main entity class.
-     * 
+     *
      * @return the type of the benchmark main entity class.
      */
     @Override
     protected Class getEntityClass() {
-        return Node.class; 
+        return Node.class;
     }
 
     /**
-     * Gets the number of reachable objects from every root entity object. 
-     * 
+     * Gets the number of reachable objects from every root entity object.
+     *
      * @return the number of reachable objects from every root entity object.
      */
     @Override
@@ -97,7 +97,7 @@ public class NodeTest extends Test {
 
 	/**
 	 * Creates a new entity object (graph) for storing in the database.
-	 * 
+	 *
 	 * @return the new constructed entity object.
 	 */
     @Override
@@ -123,12 +123,11 @@ public class NodeTest extends Test {
 
 	/**
 	 * Retrieves entity object roots.
-	 * 
+	 *
 	 * @param em a connection to the database
 	 * @param count number of requested entity object roots
-	 * @param isRandom true - for random retrieval; false - for first returned 
-	 * @param the entity object roots.
-	 */
+	 * @param isRandom true - for random retrieval; false - for first returned
+     */
 	@Override
 	@SuppressWarnings("boxing")
 	protected List retireveEntities(EntityManager em, int count,
@@ -137,7 +136,7 @@ public class NodeTest extends Test {
 		Query query = em.createQuery("SELECT o FROM " + getEntityName() +
 			" o WHERE MOD(o.id, :graphSize) = 1 AND o.id >= :firstId");
 		query.setParameter("graphSize", graphSize);
-		if (isRandom) {		
+		if (isRandom) {
 			int maxFirstId = Math.max(entityCount - count * graphSize, 1);
 			int firstId = LoaderUtil.randomNumber(1, maxFirstId, new Random());
 			query.setParameter("firstId", firstId);
@@ -154,8 +153,8 @@ public class NodeTest extends Test {
 		// TODO Auto-generated method stub
 		return "Node";
 	}
-	
-	public void run(EntityManager em) {	
+
+	public void run(EntityManager em) {
 		this.persist(em);
 		this.doAction(em, Test.ActionType.RETRIEVE);
 		if (this.hasQueries()) {

@@ -23,7 +23,7 @@
  *   Ippokratis Pandis (ipandis@us.ibm.com)
  *
  ***/
- 
+
 package com.oltpbenchmark.benchmarks.tpch;
 
 import com.oltpbenchmark.WorkloadConfiguration;
@@ -50,9 +50,8 @@ public class TPCHBenchmark extends BenchmarkModule {
 		return (Q1.class.getPackage());
 	}
 
-	
+
 	/**
-	 * @param Bool
 	 */
 	@Override
 	protected List<Worker<? extends BenchmarkModule>> makeWorkersImpl(boolean verbose) throws IOException {
@@ -71,4 +70,4 @@ public class TPCHBenchmark extends BenchmarkModule {
 		return new TPCHLoader(this);
 	}
 
-} 
+}

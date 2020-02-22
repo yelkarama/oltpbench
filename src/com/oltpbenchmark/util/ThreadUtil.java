@@ -277,7 +277,6 @@ public abstract class ThreadUtil {
      * then all threads will be fired off at the same time
      *
      * @param runnables
-     * @param max_concurrent
      * @throws Exception
      */
     private static final <R extends Runnable> void run(final Collection<R> runnables, final ExecutorService pool, final boolean stop_pool) {

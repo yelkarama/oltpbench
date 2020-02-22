@@ -44,8 +44,7 @@ public class CHBenCHmark extends BenchmarkModule {
 	}
 
 	/**
-	 * @param Bool
-	 */
+     */
 	@Override
 	protected List<Worker<? extends BenchmarkModule>> makeWorkersImpl(boolean verbose) throws IOException {
         // Drop any existing views from past benchmark executions

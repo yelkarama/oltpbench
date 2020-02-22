@@ -113,7 +113,6 @@ public abstract class JSONUtil {
 
     /**
      *
-     * @param <T>
      * @param object
      * @return
      */
@@ -169,7 +168,6 @@ public abstract class JSONUtil {
      * Load in a JSONSerialable stored in a file
      * @param <T>
      * @param object
-     * @param output_path
      * @throws Exception
      */
     public static <T extends JSONSerializable> void load(T object, String input_path) throws IOException {
@@ -303,7 +301,6 @@ public abstract class JSONUtil {
     /**
      * Read data from the given JSONObject and populate the given Map
      * @param json_object
-     * @param catalog_db
      * @param map
      * @param inner_classes
      * @throws Exception
@@ -353,7 +350,6 @@ public abstract class JSONUtil {
     /**
      * Read data from the given JSONArray and populate the given Collection
      * @param json_array
-     * @param catalog_db
      * @param collection
      * @param inner_classes
      * @throws Exception
@@ -400,7 +396,6 @@ public abstract class JSONUtil {
     /**
      *
      * @param json_object
-     * @param catalog_db
      * @param json_key
      * @param field_handle
      * @param object
@@ -461,7 +456,6 @@ public abstract class JSONUtil {
      * This will throw errors if a field is missing
      * @param <E>
      * @param json_object
-     * @param catalog_db
      * @param members
      * @throws JSONException
      */
@@ -475,7 +469,6 @@ public abstract class JSONUtil {
      * @param <E>
      * @param <T>
      * @param json_object
-     * @param catalog_db
      * @param object
      * @param base_class
      * @param ignore_missing
@@ -496,7 +489,6 @@ public abstract class JSONUtil {
      * @param <E>
      * @param <T>
      * @param json_object
-     * @param catalog_db
      * @param object
      * @param base_class
      * @param ignore_missing
@@ -553,7 +545,6 @@ public abstract class JSONUtil {
 
     /**
      * Return the proper serialization string for the given value
-     * @param field_name
      * @param field_class
      * @param field_value
      * @return
@@ -581,7 +572,6 @@ public abstract class JSONUtil {
      * For the given JSON string, figure out what kind of object it is and return it
      * @param json_value
      * @param field_class
-     * @param catalog_db
      * @return
      * @throws Exception
      */

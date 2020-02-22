@@ -26,16 +26,15 @@ public class RandomGenerator extends Random {
 
     /**
      * Constructor
-     * @param rand
      */
     public RandomGenerator(int seed) {
         super(seed);
     }
-    
+
     public Set<Integer> getRandomIntSet(int cnt, int max) {
         assert(cnt <= max);
         Set<Integer> ret = new HashSet<Integer>();
-        do { 
+        do {
             ret.add(this.nextInt(max));
         } while (ret.size() < cnt);
         return (ret);
@@ -55,7 +54,7 @@ public class RandomGenerator extends Random {
         assert minimum <= value && value <= maximum;
         return value;
     }
-    
+
     /**
      * Returns a random long value between minimum and maximum (inclusive)
      * @param minimum
@@ -65,7 +64,7 @@ public class RandomGenerator extends Random {
     public long number(long minimum, long maximum) {
         assert minimum <= maximum : String.format("%d <= %d", minimum, maximum);
         long range_size = (maximum - minimum) + 1;
-        
+
         // error checking and 2^x checking removed for simplicity.
         long bits, val;
         do {
@@ -77,9 +76,9 @@ public class RandomGenerator extends Random {
         assert(val <= maximum);
         return val;
     }
-    
+
     /**
-     * 
+     *
      * @param minimum
      * @param maximum
      * @param excluding
@@ -99,21 +98,21 @@ public class RandomGenerator extends Random {
         assert minimum <= num && num <= maximum && num != excluding;
         return num;
     }
-    
+
     /**
      * Returns a random int in a skewed gaussian distribution of the range
      * Note that the range is inclusive
      * A skew factor of 0.0 means that it's a uniform distribution
      * The greater the skew factor the higher the probability the selected random
      * value will be closer to the mean of the range
-     *  
+     *
      * @param minimum the minimum random number
      * @param maximum the maximum random number
      * @param skewFactor the factor to skew the stddev of the gaussian distribution
      */
     public int numberSkewed(int minimum, int maximum, double skewFactor) {
         // Calling number() when the skewFactor is zero will likely be faster
-        // than using our Gaussian distribution method below 
+        // than using our Gaussian distribution method below
         if (skewFactor == 0) return (this.number(minimum, maximum));
 
         assert minimum <= maximum;
@@ -130,7 +129,7 @@ public class RandomGenerator extends Random {
     }
 
     /**
-     * 
+     *
      * @param decimal_places
      * @param minimum
      * @param maximum
@@ -147,10 +146,10 @@ public class RandomGenerator extends Random {
 
         int int_min = (int)(minimum * multiplier + 0.5);
         int int_max = (int)(maximum * multiplier + 0.5);
-        
+
         return (double)this.number(int_min, int_max) / (double) multiplier;
     }
-    
+
     /** @returns a random alphabetic string with length in range [minimum_length, maximum_length].
      */
     public String astring(int minimum_length, int maximum_length) {
@@ -165,7 +164,7 @@ public class RandomGenerator extends Random {
     }
 
     /**
-     * 
+     *
      * @param minimum_length
      * @param maximum_length
      * @param base

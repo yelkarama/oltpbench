@@ -55,7 +55,6 @@ public final class SQLStmt {
      * Each occurrence of the pattern "??" will be replaced by a string
      * of repeated ?'s
      * @param sql
-     * @param substitutions
      */
     public final void setSQL(String sql) {
         this.orig_sql = sql;
