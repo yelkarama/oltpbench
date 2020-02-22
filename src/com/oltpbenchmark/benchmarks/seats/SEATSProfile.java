@@ -341,7 +341,7 @@ public class SEATSProfile {
         } // SYNCH
     }
 
-    private final void loadConfigProfile(ResultSet vt) throws SQLException {
+    private void loadConfigProfile(ResultSet vt) throws SQLException {
         boolean adv = vt.next();
         assert (adv);
         int col = 1;
@@ -359,7 +359,7 @@ public class SEATSProfile {
         }
     }
 
-    private final void loadConfigHistograms(ResultSet vt) throws SQLException {
+    private void loadConfigHistograms(ResultSet vt) throws SQLException {
         while (vt.next()) {
             int col = 1;
             String name = vt.getString(col++);
@@ -383,7 +383,7 @@ public class SEATSProfile {
         }
     }
 
-    private final void loadCodeXref(ResultSet vt, String codeCol, String idCol) throws SQLException {
+    private void loadCodeXref(ResultSet vt, String codeCol, String idCol) throws SQLException {
         Map<String, Long> m = this.code_id_xref.get(idCol);
         while (vt.next()) {
             int col = 1;
@@ -396,7 +396,7 @@ public class SEATSProfile {
         }
     }
 
-    private final void loadCachedFlights(ResultSet vt) throws SQLException {
+    private void loadCachedFlights(ResultSet vt) throws SQLException {
         int limit = 1;
         while (vt.next() && limit++ < SEATSConstants.CACHE_LIMIT_FLIGHT_IDS) {
             int col = 1;

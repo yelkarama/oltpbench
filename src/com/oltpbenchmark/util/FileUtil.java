@@ -340,7 +340,7 @@ public abstract class FileUtil {
         return (FileUtil.find(fileName, new File(".").getCanonicalFile(), false).getCanonicalFile());
     }
 
-    private static final File find(String name, File current, boolean isdir) throws IOException {
+    private static File find(String name, File current, boolean isdir) throws IOException {
         LOG.debug("Find Current Location = " + current);
         boolean has_svn = false;
         for (File file : current.listFiles()) {

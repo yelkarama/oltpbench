@@ -382,7 +382,7 @@ public class AuctionMarkProfile {
 
     }
 
-    private final void initializeUserIdGenerator(int clientId) {
+    private void initializeUserIdGenerator(int clientId) {
         assert(this.users_per_itemCount != null);
         assert(!this.users_per_itemCount.isEmpty());
         this.userIdGenerator = new UserIdGenerator(this.users_per_itemCount,
@@ -390,7 +390,7 @@ public class AuctionMarkProfile {
                                                    (clientId < 0 ? null : clientId));
     }
 
-    private static final void loadConfigProfile(AuctionMarkProfile profile, ResultSet vt) throws SQLException {
+    private static void loadConfigProfile(AuctionMarkProfile profile, ResultSet vt) throws SQLException {
         boolean adv = vt.next();
         assert(adv) :
             String.format("Failed to get data from %s\n%s",
@@ -405,7 +405,7 @@ public class AuctionMarkProfile {
             LOG.debug(String.format("Loaded %s data", AuctionMarkConstants.TABLENAME_CONFIG_PROFILE));
     }
 
-    private static final void loadItemCategoryCounts(AuctionMarkProfile profile, ResultSet vt) throws SQLException {
+    private static void loadItemCategoryCounts(AuctionMarkProfile profile, ResultSet vt) throws SQLException {
         while (vt.next()) {
             int col = 1;
             long i_c_id = vt.getLong(col++);
@@ -417,7 +417,7 @@ public class AuctionMarkProfile {
                                     profile.items_per_category.getValueCount(), AuctionMarkConstants.TABLENAME_ITEM));
     }
 
-    private static final void loadItems(AuctionMarkProfile profile, ResultSet vt) throws SQLException {
+    private static void loadItems(AuctionMarkProfile profile, ResultSet vt) throws SQLException {
         int ctr = 0;
         while (vt.next()) {
             int col = 1;
@@ -438,7 +438,7 @@ public class AuctionMarkProfile {
                                     ctr, AuctionMarkConstants.TABLENAME_ITEM));
     }
 
-    private static final void loadPendingItemComments(AuctionMarkProfile profile, ResultSet vt) throws SQLException {
+    private static void loadPendingItemComments(AuctionMarkProfile profile, ResultSet vt) throws SQLException {
         while (vt.next()) {
             int col = 1;
             long ic_id = vt.getLong(col++);
@@ -452,7 +452,7 @@ public class AuctionMarkProfile {
                                     profile.pending_commentResponses.size(), AuctionMarkConstants.TABLENAME_ITEM_COMMENT));
     }
 
-    private static final void loadGlobalAttributeGroups(AuctionMarkProfile profile, ResultSet vt) throws SQLException {
+    private static void loadGlobalAttributeGroups(AuctionMarkProfile profile, ResultSet vt) throws SQLException {
         while (vt.next()) {
             int col = 1;
             long gag_id = vt.getLong(col++);

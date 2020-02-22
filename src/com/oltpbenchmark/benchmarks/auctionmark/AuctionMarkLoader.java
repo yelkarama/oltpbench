@@ -620,7 +620,7 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
             this.currentCounter--;
             return (this.populateRow(t, row, this.currentCounter));
         }
-        private final T getNext() {
+        private T getNext() {
             T last = this.current;
             if (this.current == null || this.currentCounter == 0) {
                 while (this.currentCounter == 0) {

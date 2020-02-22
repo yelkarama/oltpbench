@@ -279,7 +279,7 @@ public abstract class ThreadUtil {
      * @param runnables
      * @throws Exception
      */
-    private static final <R extends Runnable> void run(final Collection<R> runnables, final ExecutorService pool, final boolean stop_pool) {
+    private static <R extends Runnable> void run(final Collection<R> runnables, final ExecutorService pool, final boolean stop_pool) {
         final long start = System.currentTimeMillis();
         final int num_threads = runnables.size();
         final CountDownLatch latch = new CountDownLatch(num_threads);
