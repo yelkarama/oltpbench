@@ -20,7 +20,7 @@ import java.util.Random;
 
 public interface DataGenerator {
 
-  public void init(Properties props, String keyPrefix);
+  void init(Properties props, String keyPrefix);
 
   /**
    * Fill the provided array with randomly generated data
@@ -28,5 +28,5 @@ public interface DataGenerator {
    * @return the argument, as a convenience so that an array can be
    *    constructed and filled in a single statement
    */
-  public byte[] fill(Random rng, byte data[]);
+  byte[] fill(Random rng, byte[] data);
 }

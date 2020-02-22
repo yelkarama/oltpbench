@@ -34,11 +34,11 @@ import com.oltpbenchmark.benchmarks.auctionmark.util.AuctionMarkUtil;
  * @author visawee
  */
 public class UpdateItem extends Procedure {
-	
+
     // -----------------------------------------------------------------
     // STATEMENTS
     // -----------------------------------------------------------------
-    
+
     public final SQLStmt updateItem = new SQLStmt(
         "UPDATE " + AuctionMarkConstants.TABLENAME_ITEM +
         "   SET i_description = ?, " +
@@ -46,7 +46,7 @@ public class UpdateItem extends Procedure {
         " WHERE i_id = ? AND i_u_id = ? "
         // "   AND i_status = " + ItemStatus.OPEN.ordinal()
     );
-    
+
     public final SQLStmt deleteItemAttribute = new SQLStmt(
         "DELETE FROM " + AuctionMarkConstants.TABLENAME_ITEM_ATTRIBUTE +
         " WHERE ia_id = ? AND ia_i_id = ? AND ia_u_id = ?"
@@ -56,14 +56,14 @@ public class UpdateItem extends Procedure {
         "SELECT MAX(ia_id) FROM " + AuctionMarkConstants.TABLENAME_ITEM_ATTRIBUTE +
         " WHERE ia_i_id = ? AND ia_u_id = ?"
     );
-    
+
     public final SQLStmt insertItemAttribute = new SQLStmt(
         "INSERT INTO " + AuctionMarkConstants.TABLENAME_ITEM_ATTRIBUTE + " (" +
-            "ia_id," + 
-            "ia_i_id," + 
-            "ia_u_id," + 
-            "ia_gav_id," + 
-            "ia_gag_id" + 
+            "ia_id," +
+            "ia_i_id," +
+            "ia_u_id," +
+            "ia_gav_id," +
+            "ia_gag_id" +
         ") VALUES (?, ?, ?, ?, ?)"
     );
 
@@ -77,17 +77,17 @@ public class UpdateItem extends Procedure {
 	 * A small percentage of the transactions will be for auctions that are
 	 * uneditable (1.0%?); when this occurs, the transaction will abort.
 	 */
-    public boolean run(Connection conn, Timestamp benchmarkTimes[],
+    public boolean run(Connection conn, Timestamp[] benchmarkTimes,
                        long item_id, long seller_id, String description,
-                       boolean delete_attribute, long add_attribute[]) throws SQLException {
+                       boolean delete_attribute, long[] add_attribute) throws SQLException {
         final Timestamp currentTime = AuctionMarkUtil.getProcTimestamp(benchmarkTimes);
-        
+
         PreparedStatement stmt = this.getPreparedStatement(conn, updateItem, description, currentTime, item_id, seller_id);
         int updated = stmt.executeUpdate();
         if (updated == 0) {
             throw new UserAbortException("Unable to update closed auction");
         }
-        
+
         // DELETE ITEM_ATTRIBUTE
         if (delete_attribute) {
             // Only delete the first (if it even exists)
@@ -101,7 +101,7 @@ public class UpdateItem extends Procedure {
             long gag_id = add_attribute[0];
             long gav_id = add_attribute[1];
             long ia_id = -1;
-            
+
             stmt = this.getPreparedStatement(conn, getMaxItemAttributeId, item_id, seller_id);
             ResultSet results = stmt.executeQuery();
             if (results.next()) {
@@ -116,8 +116,8 @@ public class UpdateItem extends Procedure {
             updated = stmt.executeUpdate();
             assert(updated == 1);
         }
-        
+
         return (true);
-    }	
-	
+    }
+
 }

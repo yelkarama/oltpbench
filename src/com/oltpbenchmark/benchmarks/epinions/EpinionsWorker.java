@@ -38,11 +38,11 @@ import com.oltpbenchmark.types.TransactionStatus;
 import com.oltpbenchmark.util.TextGenerator;
 
 public class EpinionsWorker extends Worker<EpinionsBenchmark> {
-	
+
 	private static final Logger LOG = Logger.getLogger(EpinionsWorker.class);
 
-    private ArrayList<String> user_ids;
-    private ArrayList<String> item_ids;
+    private final ArrayList<String> user_ids;
+    private final ArrayList<String> item_ids;
     private final Random rand = new Random(System.currentTimeMillis());
 
     public EpinionsWorker(EpinionsBenchmark benchmarkModule, int id, ArrayList<String> user_ids, ArrayList<String> item_ids) {
@@ -53,7 +53,7 @@ public class EpinionsWorker extends Worker<EpinionsBenchmark> {
 
     @Override
     protected TransactionStatus executeWork(TransactionType nextTrans) throws UserAbortException, SQLException {
-        
+
     	boolean successful = false;
 		while (!successful) {
 			try {

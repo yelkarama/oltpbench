@@ -29,21 +29,21 @@ import com.oltpbenchmark.util.FileUtil;
 
 public class CategoryParser {
     private static final Logger LOG = Logger.getLogger(CategoryParser.class);
-	
+
 	Map<String, Category> _categoryMap;
 	private int _nextCategoryID;
 	String _fileName;
 
 	public CategoryParser(File file) {
-	
+
 		_categoryMap = new TreeMap<String, Category>();
 		_nextCategoryID = 0;
-		
-		
+
+
 		try {
 			BufferedReader br = FileUtil.getReader(file);
 			String strLine;
-			while ((strLine = br.readLine()) != null) {		
+			while ((strLine = br.readLine()) != null) {
 				extractCategory(strLine);
 				//System.out.println(strLine);
 			}
@@ -60,7 +60,7 @@ public class CategoryParser {
 		for(int i=0; i<=4; i++){
 			if(!tokens[i].trim().isEmpty()){
 				sb.append(tokens[i].trim())
-				  .append("/");	
+				  .append("/");
 			} else {
 				break;
 			}
@@ -69,22 +69,22 @@ public class CategoryParser {
 		if(categoryName.length() > 0){
 			categoryName = categoryName.substring(0, categoryName.length() - 1);
 		}
-		
+
 		addNewCategory(categoryName, itemCount, true);
 	}
-	
+
 	public Category addNewCategory(String fullCategoryName, int itemCount, boolean isLeaf){
 		Category category = null;
 		Category parentCategory = null;
-		
+
 		String categoryName = fullCategoryName;
 		String parentCategoryName = "";
 		Integer parentCategoryID = null;
-		
+
 		if(categoryName.indexOf('/') != -1){
 			int separatorIndex = fullCategoryName.lastIndexOf('/');
 			parentCategoryName = fullCategoryName.substring(0, separatorIndex);
-			categoryName = fullCategoryName.substring(separatorIndex + 1, fullCategoryName.length());
+			categoryName = fullCategoryName.substring(separatorIndex + 1);
 		}
 		/*
 		System.out.println("parentCat name = " + parentCategoryName);
@@ -95,29 +95,29 @@ public class CategoryParser {
 		} else if(!parentCategoryName.isEmpty()){
 			parentCategory = addNewCategory(parentCategoryName, 0, false);
 		}
-		
+
 		if(parentCategory!=null){
-			parentCategoryID = parentCategory.getCategoryID();	
+			parentCategoryID = parentCategory.getCategoryID();
 		}
-		
+
 		category = new Category(_nextCategoryID++,
 		        categoryName,
-				parentCategoryID, 
-				itemCount, 
+				parentCategoryID,
+				itemCount,
 				isLeaf);
-		
+
 		_categoryMap.put(fullCategoryName, category);
-		
+
 		return category;
 	}
-	
+
 	public Map<String, Category> getCategoryMap(){
 		return _categoryMap;
 	}
-	
-	public static void main(String args[]) throws Exception {	
+
+	public static void main(String[] args) throws Exception {
 		CategoryParser ebp = new CategoryParser(new File("bin/edu/brown/benchmark/auctionmark/data/categories.txt"));
-		
+
 		for (String key : ebp.getCategoryMap().keySet()){
 			LOG.info(key + " : " + ebp.getCategoryMap().get(key).getCategoryID() + " : " + ebp.getCategoryMap().get(key).getParentCategoryID() + " : " + ebp.getCategoryMap().get(key).getItemCount());
 		}

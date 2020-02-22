@@ -38,8 +38,8 @@ import com.oltpbenchmark.types.DatabaseType;
 
 public abstract class SQLUtil {
     private static final Logger LOG = Logger.getLogger(SQLUtil.class);
-    
-    private static final DateFormat timestamp_formats[] = new DateFormat[] {
+
+    private static final DateFormat[] timestamp_formats = new DateFormat[] {
         new SimpleDateFormat("yyyy-MM-dd"),
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"),
@@ -53,7 +53,7 @@ public abstract class SQLUtil {
      */
     public static Integer getInteger(Object obj) {
         if (obj == null) return (null);
-        
+
         if (obj instanceof Integer || obj.getClass().equals(int.class)) {
             return (Integer)obj;
         }
@@ -62,7 +62,7 @@ public abstract class SQLUtil {
         }
         return (null);
     }
-    
+
     /**
      * Return a long from the given object
      * Handles the different cases from the various DBMSs
@@ -71,7 +71,7 @@ public abstract class SQLUtil {
      */
     public static Long getLong(Object obj) {
         if (obj == null) return (null);
-        
+
         if (obj instanceof Long) {
             return (Long)obj;
         }
@@ -83,7 +83,7 @@ public abstract class SQLUtil {
         }
         return (null);
     }
-    
+
     /**
      * Return a double from the given object
      * Handles the different cases from the various DBMSs
@@ -92,7 +92,7 @@ public abstract class SQLUtil {
      */
     public static Double getDouble(Object obj) {
         if (obj == null) return (null);
-        
+
         if (obj instanceof Double || obj.getClass().equals(double.class)) {
             return (Double)obj;
         }
@@ -104,7 +104,7 @@ public abstract class SQLUtil {
         }
         return (null);
     }
-    
+
     /**
      * Return a double from the given object
      * Handles the different cases from the various DBMSs
@@ -113,7 +113,7 @@ public abstract class SQLUtil {
      */
     public static Timestamp getTimestamp(Object obj) {
         if (obj == null) return (null);
-        
+
         if (obj instanceof Timestamp) {
             return (Timestamp)obj;
         }
@@ -132,11 +132,11 @@ public abstract class SQLUtil {
 //                throw new RuntimeException("Failed to get timestamp from '" + obj + "'", ex);
 //            }
 //        }
-        
+
         Long timestamp = SQLUtil.getLong(obj);
         return (timestamp != null ? new Timestamp(timestamp) : null);
     }
-    
+
     /**
      * Return the internal sequence name for the given Column
      * @param dbType
@@ -146,7 +146,7 @@ public abstract class SQLUtil {
     public static String getSequenceName(DatabaseType dbType, Column catalog_col) {
         Table catalog_tbl = catalog_col.getTable();
         assert(catalog_tbl != null);
-        
+
         switch (dbType) {
             case POSTGRES:
                 return String.format("pg_get_serial_sequence('%s', '%s')",
@@ -156,7 +156,7 @@ public abstract class SQLUtil {
         } // SWITCH
         return (null);
     }
-    
+
     /**
      * Returns true if the given exception is because of a duplicate key error
      * @param ex
@@ -168,18 +168,16 @@ public abstract class SQLUtil {
             return (true);
         } else if (ex instanceof SQLException) {
             SQLException sqlEx = (SQLException)ex;
-            
+
             // POSTGRES
-            if (sqlEx.getSQLState().contains("23505")) {
-                return (true);
-            }
+            return sqlEx.getSQLState().contains("23505");
         }
         return (false);
     }
-    
+
     /**
      * Simple pretty-print debug method for the current row
-     * in the given ResultSet 
+     * in the given ResultSet
      * @param rs
      * @return
      * @throws SQLException
@@ -187,17 +185,17 @@ public abstract class SQLUtil {
     public static String debug(ResultSet rs) throws SQLException {
         ResultSetMetaData rs_md = rs.getMetaData();
         int num_cols = rs_md.getColumnCount();
-        Object data[] = new Object[num_cols];
+        Object[] data = new Object[num_cols];
         for (int i = 0; i < num_cols; i++) {
             data[i] = rs.getObject(i+1);
         } // FOR
-        
+
         return (String.format("ROW[%02d] -> [%s]", rs.getRow(), StringUtil.join(",", data)));
     }
-    
+
     /**
      * For the given string representation of a value, convert it to the proper
-     * object based on its sqlType 
+     * object based on its sqlType
      * @param sqlType
      * @param value
      * @return
@@ -296,7 +294,7 @@ public abstract class SQLUtil {
                 return (false);
         }
     }
-    
+
     /**
      * Returns true if the given sqlType identifier should always
      * be included in the DML with its corresponding column size
@@ -307,7 +305,7 @@ public abstract class SQLUtil {
     public static boolean needsColumnSize(int sqlType) {
         return isStringType(sqlType);
     }
-    
+
     /**
      * Return the COUNT(*) SQL to calculate the number of records
      * @param table
@@ -352,7 +350,7 @@ public abstract class SQLUtil {
     public static String getInsertSQL(Table catalog_tbl, boolean escape_names, int...exclude_columns) {
         return getInsertSQL(catalog_tbl, false, escape_names, 1, exclude_columns);
     }
-    
+
     /**
      * Automatically generate the 'INSERT' SQL string for this table
      * with a batch size of 1
@@ -394,20 +392,20 @@ public abstract class SQLUtil {
     	StringBuilder sb = new StringBuilder();
     	sb.append("INSERT INTO ")
     	  .append(escape_names ? catalog_tbl.getEscapedName() : catalog_tbl.getName());
-    	
+
     	StringBuilder values = new StringBuilder();
     	boolean first;
-    	
+
     	// Column Names
     	// XXX: Disabled because of case issues with HSQLDB
     	if (show_cols) sb.append(" (");
     	first = true;
-    	
+
     	// These are the column offset that we want to exclude
     	Set<Integer> excluded = new HashSet<Integer>();
     	for (int ex : exclude_columns)
     	    excluded.add(ex);
-    	
+
     	for (Column catalog_col : catalog_tbl.getColumns()) {
     	    if (excluded.contains(catalog_col.getIndex())) continue;
     		if (first == false) {
@@ -419,7 +417,7 @@ public abstract class SQLUtil {
     		first = false;
     	} // FOR
     	if (show_cols) sb.append(")");
-    	
+
     	// Values
     	sb.append(" VALUES ");
     	first = true;
@@ -428,7 +426,7 @@ public abstract class SQLUtil {
     		sb.append("(").append(values.toString()).append(")");
     	} // FOR
 //    	sb.append(";");
-    	
+
     	return (sb.toString());
     }
 

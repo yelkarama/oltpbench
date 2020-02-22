@@ -19,8 +19,8 @@ package com.oltpbenchmark.benchmarks.tatp;
 
 public abstract class TATPConstants {
 
-    public static final long DEFAULT_NUM_SUBSCRIBERS = 100000l; 
-    
+    public static final long DEFAULT_NUM_SUBSCRIBERS = 100000l;
+
     public static final int SUB_NBR_PADDING_SIZE = 15;
 
     public static final int BATCH_SIZE = 1000;
@@ -43,8 +43,8 @@ public abstract class TATPConstants {
     public static final String TABLENAME_ACCESS_INFO = "ACCESS_INFO";
     public static final String TABLENAME_SPECIAL_FACILITY = "SPECIAL_FACILITY";
     public static final String TABLENAME_CALL_FORWARDING = "CALL_FORWARDING";
- 
-    public static final String TABLENAMES[] = {
+
+    public static final String[] TABLENAMES = {
         TABLENAME_SUBSCRIBER,
         TABLENAME_ACCESS_INFO,
         TABLENAME_SPECIAL_FACILITY,

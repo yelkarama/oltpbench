@@ -48,7 +48,7 @@ public class TraceReader {
         }
     }
 
-    private LinkedList<TraceElement> tracedProcedures = new LinkedList<TraceElement>();
+    private final LinkedList<TraceElement> tracedProcedures = new LinkedList<TraceElement>();
     private String tracefileName;
     private int currentPhaseId;
     private long phaseStartTime;

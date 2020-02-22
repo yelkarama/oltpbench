@@ -1,7 +1,7 @@
 /*
  * Slightly modified version of the com.ibatis.common.jdbc.ScriptRunner class
  * from the iBATIS Apache project. Only removed dependency on Resource class
- * and a constructor 
+ * and a constructor
  */
 /*
  *  Copyright 2004 Clinton Begin
@@ -39,10 +39,10 @@ public class ScriptRunner {
 
 	private static final String DEFAULT_DELIMITER = ";";
 
-	private Connection connection;
+	private final Connection connection;
 
-	private boolean stopOnError;
-	private boolean autoCommit;
+	private final boolean stopOnError;
+	private final boolean autoCommit;
 
 	private PrintWriter logWriter = new PrintWriter(System.out);
 	private PrintWriter errorLogWriter = new PrintWriter(System.err);
@@ -67,7 +67,7 @@ public class ScriptRunner {
 
 	/**
 	 * Setter for logWriter property
-	 * 
+	 *
 	 * @param logWriter
 	 *            - the new value of the logWriter property
 	 */
@@ -77,7 +77,7 @@ public class ScriptRunner {
 
 	/**
 	 * Setter for errorLogWriter property
-	 * 
+	 *
 	 * @param errorLogWriter
 	 *            - the new value of the errorLogWriter property
 	 */
@@ -87,7 +87,7 @@ public class ScriptRunner {
 
 	/**
 	 * Runs an SQL script (read in using the Reader parameter)
-	 * 
+	 *
 	 * @param reader
 	 *            - the source of the script
 	 */
@@ -115,7 +115,7 @@ public class ScriptRunner {
 	/**
 	 * Runs an SQL script (read in using the Reader parameter) using the
 	 * connection passed in
-	 * 
+	 *
 	 * @param conn
 	 *            - the connection to use for the script
 	 * @param reader
@@ -149,8 +149,8 @@ public class ScriptRunner {
 						&& trimmedLine.endsWith(getDelimiter())
 						|| fullLineDelimiter
 						&& trimmedLine.equals(getDelimiter())) {
-					command.append(line.substring(0, line
-							.lastIndexOf(getDelimiter())));
+					command.append(line, 0, line
+							.lastIndexOf(getDelimiter()));
 					command.append(" ");
 					Statement statement = conn.createStatement();
 
@@ -188,7 +188,7 @@ public class ScriptRunner {
 					if (autoCommit && !conn.getAutoCommit()) {
 						conn.commit();
 					}
-					
+
 					// HACK
 					if (hasResults && sql.toUpperCase().startsWith("CREATE") == false) {
     					ResultSet rs = statement.getResultSet();

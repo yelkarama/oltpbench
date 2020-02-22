@@ -78,7 +78,7 @@ public class SILoader extends Loader<SIBenchmark> {
             stmt.addBatch();
 
             if (++batch >= SIConstants.configCommitCount) {
-                int result[] = stmt.executeBatch();
+                int[] result = stmt.executeBatch();
                 assert (result != null);
                 conn.commit();
                 batch = 0;

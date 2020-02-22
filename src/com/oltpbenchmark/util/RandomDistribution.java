@@ -21,9 +21,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -54,7 +54,7 @@ public class RandomDistribution {
         protected final double mean;
         protected final long range_size;
         private Histogram<Long> history;
-      
+
         public DiscreteRNG(Random random, long min, long max) {
             if (min >= max) throw new IllegalArgumentException("Invalid range [" + min + " >= " + max + "]");
             this.random = random;
@@ -63,9 +63,9 @@ public class RandomDistribution {
             this.range_size = (max - min) + 1;
             this.mean = this.range_size / 2.0;
         }
-        
+
         protected abstract long nextLongImpl();
-        
+
         /**
          * Enable keeping track of the values that the RNG generates
          */
@@ -73,11 +73,11 @@ public class RandomDistribution {
             assert(this.history == null) : "Trying to enable history tracking more than once";
             this.history = new Histogram<Long>();
         }
-        
+
         public boolean isHistoryEnabled() {
             return (this.history != null);
         }
-        
+
         /**
          * Return the histogram of the values that have been generated
          * @return
@@ -86,7 +86,7 @@ public class RandomDistribution {
             assert(this.history != null) : "Trying to get value history but tracking wasn't enabled";
             return (this.history);
         }
-        
+
         /**
          * Return the count for the number of values that have been generated
          * Only works if history tracking is enabled
@@ -95,45 +95,45 @@ public class RandomDistribution {
         public long getSampleCount() {
             return (this.history.getSampleCount());
         }
-        
+
         public long getRange() {
             return this.range_size;
         }
-        
+
         public double getMean() {
             return this.mean;
         }
-      
+
         public long getMin() {
             return this.min;
         }
-      
+
         public long getMax() {
             return this.max;
         }
-        
+
         public Random getRandom() {
             return (this.random);
         }
-        
+
         public Set<Integer> getRandomIntSet(int cnt) {
             assert(cnt < this.range_size);
             Set<Integer> ret = new HashSet<Integer>();
-            do { 
+            do {
                 ret.add(this.nextInt());
             } while (ret.size() < cnt);
             return (ret);
         }
-        
+
         public Set<Integer> getRandomLongSet(int cnt) {
             assert(cnt < this.range_size);
             Set<Integer> ret = new HashSet<Integer>();
-            do { 
+            do {
                 ret.add(this.nextInt());
             } while (ret.size() < cnt);
             return (ret);
         }
-        
+
         public double calculateMean(int num_samples) {
             long total = 0l;
             for (int i = 0; i < num_samples; i++) {
@@ -141,7 +141,7 @@ public class RandomDistribution {
             } // FOR
             return (total / (double)num_samples);
         }
-      
+
         /**
          * Get the next random number as an int
          * @return the next random number.
@@ -163,13 +163,13 @@ public class RandomDistribution {
             if (this.history != null) this.history.put(val);
             return (val);
         }
-        
+
         @Override
         public String toString() {
             return String.format("%s[min=%d, max=%d]", this.getClass().getSimpleName(), this.min, this.max);
         }
-        
-        
+
+
         public static long nextLong(Random rng, long n) {
             // error checking and 2^x checking removed for simplicity.
             long bits, val;
@@ -190,19 +190,19 @@ public class RandomDistribution {
         /**
          * Generate random integers from min (inclusive) to max (exclusive)
          * following even distribution.
-         * 
+         *
          * @param random
          *          The basic random number generator.
          * @param min
          *          Minimum integer
          * @param max
          *          maximum integer (exclusive).
-         * 
+         *
          */
         public Flat(Random random, long min, long max) {
             super(random, min, max);
         }
-    
+
         /**
          * @see DiscreteRNG#nextInt()
          */
@@ -220,7 +220,7 @@ public class RandomDistribution {
             return val;
         }
     }
-    
+
     /**
      * P(i)=1/(max-min)
      */
@@ -230,16 +230,16 @@ public class RandomDistribution {
         private final Histogram<T> histogram;
         private final SortedMap<Long, T> value_rle = new TreeMap<Long, T>();
         private Histogram<T> history;
-        
+
         /**
          * Generate a run-length of the values of the histogram
-         * 
+         *
          */
         public FlatHistogram(Random random, Histogram<T> histogram) {
-            super(random, 0, (int)histogram.getSampleCount());
+            super(random, 0, histogram.getSampleCount());
             this.histogram = histogram;
-            this.inner = new Flat(random, 0, (int)histogram.getSampleCount());
-            
+            this.inner = new Flat(random, 0, histogram.getSampleCount());
+
             long total = 0;
             for (T k : this.histogram.values()) {
                 long v = this.histogram.get(k);
@@ -247,24 +247,24 @@ public class RandomDistribution {
                 this.value_rle.put(total, k);
             } // FOR
         }
-        
+
         @Override
         public void enableHistory() {
             this.history = new Histogram<T>();
         }
-        
+
         @Override
         public boolean isHistoryEnabled() {
             return (this.history != null);
         }
-        
+
         public Histogram<T> getHistogramHistory() {
             if (this.history != null) {
                 return (this.history);
             }
             return (null);
         }
-        
+
         public T nextValue() {
             int idx = this.inner.nextInt();
             Long total = this.value_rle.tailMap((long)idx).firstKey();
@@ -274,7 +274,7 @@ public class RandomDistribution {
 //            assert(false) : "Went beyond our expected total '" + idx + "'";
 //            return (null);
         }
-        
+
         /**
          * @see DiscreteRNG#nextLong()
          */
@@ -293,11 +293,11 @@ public class RandomDistribution {
      */
     public static class Gaussian extends DiscreteRNG {
         private static final long serialVersionUID = 1L;
-        
+
         public Gaussian(Random random, long min, long max) {
             super(random, min, max);
         }
-    
+
         @Override
         protected long nextLongImpl() {
             int value = -1;
@@ -309,11 +309,11 @@ public class RandomDistribution {
         }
     }
 
-    
+
     /**
      * Zipf distribution. The ratio of the probabilities of integer i and j is
      * defined as follows:
-     * 
+     *
      * P(i)/P(j)=((j-min+1)/(i-min+1))^sigma.
      */
     public static class Zipf extends DiscreteRNG {
@@ -324,7 +324,7 @@ public class RandomDistribution {
 
         /**
          * Constructor
-         * 
+         *
          * @param r
          *          The random number generator.
          * @param min
@@ -340,7 +340,7 @@ public class RandomDistribution {
 
         /**
          * Constructor.
-         * 
+         *
          * @param r
          *          The random number generator.
          * @param min
@@ -416,16 +416,16 @@ public class RandomDistribution {
 
     /**
      * Binomial distribution.
-     * 
+     *
      * P(k)=select(n, k)*p^k*(1-p)^(n-k) (k = 0, 1, ..., n)
-     * 
+     *
      * P(k)=select(max-min-1, k-min)*p^(k-min)*(1-p)^(k-min)*(1-p)^(max-k-1)
      */
     public static final class Binomial extends DiscreteRNG {
         private static final long serialVersionUID = 1L;
         private final double[] v;
         private final long n;
-    
+
         private static double select(long n, long k) {
           double ret = 1.0;
           for (long i = k + 1; i <= n; ++i) {
@@ -433,7 +433,7 @@ public class RandomDistribution {
           }
           return ret;
         }
-    
+
         private static double power(double p, long k) {
             return Math.exp(k * Math.log(p));
         }
@@ -441,7 +441,7 @@ public class RandomDistribution {
         /**
          * Generate random integers from min (inclusive) to max (exclusive)
          * following Binomial distribution.
-         * 
+         *
          * @param random
          *          The basic random number generator.
          * @param min
@@ -450,7 +450,7 @@ public class RandomDistribution {
          *          maximum integer (exclusive).
          * @param p
          *          parameter.
-         * 
+         *
          */
         public Binomial(Random random, long min, long max, double p) {
             super(random, min, max);

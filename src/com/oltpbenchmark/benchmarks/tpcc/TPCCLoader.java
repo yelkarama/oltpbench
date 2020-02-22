@@ -66,27 +66,27 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
             numWarehouses = 1;
         }
     }
-    
+
     private int numWarehouses = 0;
     private static final int FIRST_UNPROCESSED_O_ID = 2101;
-    
+
     @Override
     public List<LoaderThread> createLoaderThreads() throws SQLException {
         List<LoaderThread> threads = new ArrayList<LoaderThread>();
         final CountDownLatch itemLatch = new CountDownLatch(1);
-        
+
         // ITEM
-        // This will be invoked first and executed in a single thread. 
+        // This will be invoked first and executed in a single thread.
         threads.add(new LoaderThread() {
             @Override
             public void load(Connection conn) throws SQLException {
                 loadItems(conn, TPCCConfig.configItemCount);
-                itemLatch.countDown();                
+                itemLatch.countDown();
             }
         });
-        
+
         // WAREHOUSES
-        // We use a separate thread per warehouse. Each thread will load 
+        // We use a separate thread per warehouse. Each thread will load
         // all of the tables that depend on that warehouse. They all have
         // to wait until the ITEM table is loaded first though.
         for (int w = 1; w <= numWarehouses; w++) {
@@ -101,21 +101,21 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
                         ex.printStackTrace();
                         throw new RuntimeException(ex);
                     }
-                    
+
                     if (LOG.isDebugEnabled()) LOG.debug("Starting to load WAREHOUSE " + w_id);
-                    
+
                     // WAREHOUSE
                     loadWarehouse(conn, w_id);
-                    
+
                     // STOCK
                     loadStock(conn, w_id, TPCCConfig.configItemCount);
-                    
+
                     // DISTRICT
                     loadDistricts(conn, w_id, TPCCConfig.configDistPerWhse);
-                    
+
                     // CUSTOMER
                     loadCustomers(conn, w_id, TPCCConfig.configDistPerWhse, TPCCConfig.configCustPerDist);
-                    
+
                     // ORDERS
                     loadOrders(conn, w_id, TPCCConfig.configDistPerWhse, TPCCConfig.configCustPerDist);
                 }
@@ -124,7 +124,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
         } // FOR
         return (threads);
     }
-    
+
     private PreparedStatement getInsertStatement(Connection conn, String tableName) throws SQLException {
         Table catalog_tbl = this.benchmark.getTableCatalog(tableName);
         assert(catalog_tbl != null);
@@ -156,7 +156,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
         int len = 0;
         int startORIGINAL = 0;
         boolean fail = false;
-        
+
         try {
             PreparedStatement itemPrepStmt = getInsertStatement(conn, TPCCConstants.TABLENAME_ITEM);
 
@@ -167,7 +167,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
                 item.i_id = i;
                 item.i_name = TPCCUtil.randomStr(TPCCUtil.randomNumber(14, 24,
                         benchmark.rng()));
-                item.i_price = (double) (TPCCUtil.randomNumber(100, 10000, benchmark.rng()) / 100.0);
+                item.i_price = TPCCUtil.randomNumber(100, 10000, benchmark.rng()) / 100.0;
 
                 // i_data
                 randPct = TPCCUtil.randomNumber(1, 100, benchmark.rng());
@@ -225,7 +225,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
         } finally {
             if (fail) {
                 LOG.debug("Rolling back changes from last batch");
-                transRollback(conn);    
+                transRollback(conn);
             }
         }
 
@@ -243,12 +243,12 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
             warehouse.w_ytd = 300000;
 
             // random within [0.0000 .. 0.2000]
-            warehouse.w_tax = (double) ((TPCCUtil.randomNumber(0, 2000, benchmark.rng())) / 10000.0);
+            warehouse.w_tax = (TPCCUtil.randomNumber(0, 2000, benchmark.rng())) / 10000.0;
 			warehouse.w_name = TPCCUtil.randomStr(TPCCUtil.randomNumber(6, 10, benchmark.rng()));
 			warehouse.w_street_1 = TPCCUtil.randomStr(TPCCUtil.randomNumber(10, 20, benchmark.rng()));
 			warehouse.w_street_2 = TPCCUtil.randomStr(TPCCUtil.randomNumber(10, 20, benchmark.rng()));
 			warehouse.w_city = TPCCUtil.randomStr(TPCCUtil.randomNumber(10, 20, benchmark.rng()));
-			warehouse.w_state = TPCCUtil.randomStr(3).toUpperCase(); 
+			warehouse.w_state = TPCCUtil.randomStr(3).toUpperCase();
 			warehouse.w_zip = "123456789";
 
 			int idx = 1;
@@ -659,7 +659,7 @@ public class TPCCLoader extends Loader<TPCCBenchmark> {
 							    newOrderBatch = 0;
 							}
 							orlnPrepStmt.executeBatch();
-							
+
 							ordrPrepStmt.clearBatch();
 							nworPrepStmt.clearBatch();
 							orlnPrepStmt.clearBatch();

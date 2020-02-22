@@ -104,7 +104,7 @@ public class JSONArray {
     /**
      * The arrayList where the JSONArray's properties are kept.
      */
-    private ArrayList<Object> myArrayList;
+    private final ArrayList<Object> myArrayList;
 
 
     /**
@@ -195,12 +195,12 @@ public class JSONArray {
         this.myArrayList = new ArrayList<Object>();
         if(collection != null) {
             for (Iterator<?> iter = collection.iterator(); iter.hasNext();) {
-                this.myArrayList.add(new JSONObject(iter.next(),includeSuperClass));    
+                this.myArrayList.add(new JSONObject(iter.next(),includeSuperClass));
             }
         }
     }
 
-    
+
     /**
      * Construct a JSONArray from an array
      * @throws JSONException If not an array.
@@ -220,7 +220,7 @@ public class JSONArray {
     /**
      * Construct a JSONArray from an array with a bean.
      * The array should have Java Beans.
-     * 
+     *
      * @throws JSONException If not an array.
      */
     public JSONArray(Object array,boolean includeSuperClass) throws JSONException {
@@ -235,8 +235,8 @@ public class JSONArray {
         }
     }
 
-    
-    
+
+
     /**
      * Get the object value associated with an index.
      * @param index
@@ -891,7 +891,7 @@ public class JSONArray {
         } else {
             int newindent = indent + indentFactor;
             //sb.append('\n');
-            
+
             boolean intType = false;
             for (i = 0; i < len; i += 1) {
                 if (this.myArrayList.get(i).getClass() != Integer.class) {

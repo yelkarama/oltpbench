@@ -29,19 +29,19 @@ import com.oltpbenchmark.util.json.JSONStringer;
  * @author pavlo
  */
 public abstract class CompositeId implements Comparable<CompositeId>, JSONSerializable {
-    
+
     private transient int hashCode = -1;
-    
-    protected static final long[] compositeBitsPreCompute(int offset_bits[]) {
-        long pows[] = new long[offset_bits.length];
+
+    protected static final long[] compositeBitsPreCompute(int[] offset_bits) {
+        long[] pows = new long[offset_bits.length];
         for (int i = 0; i < offset_bits.length; i++) {
             pows[i] = (long)(Math.pow(2, offset_bits[i]) - 1l);
         } // FOR
         return (pows);
     }
-    
-    protected final long encode(int offset_bits[], long offset_pows[]) {
-        long values[] = this.toArray();
+
+    protected final long encode(int[] offset_bits, long[] offset_pows) {
+        long[] values = this.toArray();
         assert(values.length == offset_bits.length);
         long id = 0;
         int offset = 0;
@@ -54,16 +54,16 @@ public abstract class CompositeId implements Comparable<CompositeId>, JSONSerial
             assert(values[i] < max_value) :
                 String.format("%s value at position %d is %d. Max value is %d\n%s",
                               this.getClass().getSimpleName(), i, values[i], max_value, this);
-            
+
             id = (i == 0 ? values[i] : id | values[i]<<offset);
             offset += offset_bits[i];
         } // FOR
         this.hashCode = (int)(id ^ (id >>> 32)); // From Long.hashCode()
         return (id);
     }
-    
-    protected final long[] decode(long composite_id, int offset_bits[], long offset_pows[]) {
-        long values[] = new long[offset_bits.length];
+
+    protected final long[] decode(long composite_id, int[] offset_bits, long[] offset_pows) {
+        long[] values = new long[offset_bits.length];
         int offset = 0;
         for (int i = 0; i < values.length; i++) {
             values[i] = (composite_id>>offset & offset_pows[i]);
@@ -71,16 +71,16 @@ public abstract class CompositeId implements Comparable<CompositeId>, JSONSerial
         } // FOR
         return (values);
     }
-    
+
     public abstract long encode();
     public abstract void decode(long composite_id);
     public abstract long[] toArray();
-    
+
     @Override
     public int compareTo(CompositeId o) {
         return Math.abs(this.hashCode()) - Math.abs(o.hashCode());
     }
-    
+
     @Override
     public int hashCode() {
         if (this.hashCode == -1) {
@@ -89,11 +89,11 @@ public abstract class CompositeId implements Comparable<CompositeId>, JSONSerial
         }
         return (this.hashCode);
     }
-    
+
     // -----------------------------------------------------------------
     // SERIALIZATION
     // -----------------------------------------------------------------
-    
+
     @Override
     public void load(String input_path) throws IOException {
         JSONUtil.load(this, input_path);

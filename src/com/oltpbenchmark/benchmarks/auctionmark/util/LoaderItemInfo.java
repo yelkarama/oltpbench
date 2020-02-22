@@ -33,8 +33,8 @@ import com.oltpbenchmark.util.StringUtil;
 
 public class LoaderItemInfo extends ItemInfo {
     private final List<Bid> bids = new ArrayList<Bid>();
-    private Histogram<UserId> bidderHistogram = new Histogram<UserId>();
-    
+    private final Histogram<UserId> bidderHistogram = new Histogram<UserId>();
+
     public short numImages;
     public short numAttributes;
     public short numComments;
@@ -57,7 +57,7 @@ public class LoaderItemInfo extends ItemInfo {
         this.sellerId = null;
         this.lastBidderId = null;
     }
-    
+
     public int getBidCount() {
         return (this.bids.size());
     }
@@ -76,7 +76,7 @@ public class LoaderItemInfo extends ItemInfo {
     public Histogram<UserId> getBidderHistogram() {
         return bidderHistogram;
     }
-    
+
     @Override
     public String toString() {
         Class<?> hints_class = this.getClass();
@@ -93,7 +93,7 @@ public class LoaderItemInfo extends ItemInfo {
         } // FOR
         return (StringUtil.formatMaps(m));
     }
-    
+
     public class Bid {
         public final long id;
         public final UserId bidderId;
@@ -110,7 +110,7 @@ public class LoaderItemInfo extends ItemInfo {
             this.createDate = null;
             this.updateDate = null;
         }
-        
+
         public LoaderItemInfo getLoaderItemInfo() {
             return (LoaderItemInfo.this);
         }

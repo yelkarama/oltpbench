@@ -60,15 +60,15 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
     // -----------------------------------------------------------------
     // INTERNAL DATA MEMBERS
     // -----------------------------------------------------------------
-    
+
     protected final AuctionMarkProfile profile;
-    
+
     private final AtomicBoolean closeAuctions_flag = new AtomicBoolean();
-    
+
     private final Thread closeAuctions_checker;
 
-    protected static final Map<Long, Integer> ip_id_cntrs = new HashMap<Long, Integer>(); 
-    
+    protected static final Map<Long, Integer> ip_id_cntrs = new HashMap<Long, Integer>();
+
     // --------------------------------------------------------------------
     // CLOSE_AUCTIONS CHECKER
     // --------------------------------------------------------------------
@@ -79,14 +79,14 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
         @Override
         public void run() {
             Thread.currentThread().setName(this.getClass().getSimpleName());
-            
-            TransactionTypes txnTypes = AuctionMarkWorker.this.getWorkloadConfiguration().getTransTypes(); 
+
+            TransactionTypes txnTypes = AuctionMarkWorker.this.getWorkloadConfiguration().getTransTypes();
             TransactionType txnType = txnTypes.getType(CloseAuctions.class);
             assert(txnType != null) : txnTypes;
-            
+
             Procedure proc = AuctionMarkWorker.this.getProcedure(txnType);
             assert(proc != null);
-            
+
             long sleepTime = AuctionMarkConstants.CLOSE_AUCTIONS_INTERVAL / AuctionMarkConstants.TIME_SCALE_FACTOR;
             while (true) {
                 if (LOG.isDebugEnabled())
@@ -99,7 +99,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
                     throw new RuntimeException(ex);
                 }
 //                assert(AuctionMarkWorker.this.closeAuctions_flag.get() == false);
-                
+
                 if (AuctionMarkConstants.CLOSE_AUCTIONS_SEPARATE_THREAD) {
                     if (LOG.isDebugEnabled())
                         LOG.debug(String.format("Executing %s in separate thread", txnType));
@@ -116,7 +116,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
             } // WHILE
         }
     }
-    
+
     // --------------------------------------------------------------------
     // TXN PARAMETER GENERATOR
     // --------------------------------------------------------------------
@@ -130,9 +130,9 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
          * @param client
          * @return
          */
-        public boolean canGenerateParam(AuctionMarkWorker client);
+        boolean canGenerateParam(AuctionMarkWorker client);
     }
-    
+
     // --------------------------------------------------------------------
     // BENCHMARK TRANSACTIONS
     // --------------------------------------------------------------------
@@ -147,7 +147,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
 //                    // If we've never checked before, then we'll want to do that now
 //                    if (client.profile.hasLastCloseAuctionsTime() == false) return (true);
 //
-//                    // Otherwise 
+//                    // Otherwise
 //                    return (run);
 //                }
                 return (false); // Use CloseAuctionsChecker
@@ -233,22 +233,22 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
             public boolean canGenerateParam(AuctionMarkWorker client) {
                 return (client.profile.getAvailableItemsCount() > 0);
             }
-        }), 
+        }),
         ;
-        
+
         /**
          * Constructor
-         * @param weight The execution frequency weight for this txn 
+         * @param weight The execution frequency weight for this txn
          * @param generator
          */
-        private Transaction(Class<? extends Procedure> procClass, AuctionMarkParamGenerator generator) {
+        Transaction(Class<? extends Procedure> procClass, AuctionMarkParamGenerator generator) {
             this.procClass = procClass;
             this.generator = generator;
         }
 
         public final Class<? extends Procedure> procClass;
         public final AuctionMarkParamGenerator generator;
-        
+
         protected static final Map<Class<? extends Procedure>, Transaction> class_lookup = new HashMap<Class<? extends Procedure>, Transaction>();
         protected static final Map<Integer, Transaction> idx_lookup = new HashMap<Integer, Transaction>();
         protected static final Map<String, Transaction> name_lookup = new HashMap<String, Transaction>();
@@ -259,7 +259,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
                 Transaction.class_lookup.put(vt.procClass, vt);
             }
         }
-        
+
         public static Transaction get(Integer idx) {
             assert(idx >= 0);
             return (Transaction.idx_lookup.get(idx));
@@ -271,7 +271,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
         public static Transaction get(String name) {
             return (Transaction.name_lookup.get(name));
         }
-        
+
         /**
          * This will return true if we can call a new transaction for this procedure
          * A txn can be called if we can generate all of the parameters we need
@@ -294,20 +294,20 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
     public AuctionMarkWorker(int id, AuctionMarkBenchmark benchmark) {
         super(benchmark, id);
         this.profile = new AuctionMarkProfile(benchmark, benchmark.getRandomGenerator());
-        
+
         boolean needCloseAuctions = (AuctionMarkConstants.CLOSE_AUCTIONS_ENABLE && id == 0);
         this.closeAuctions_flag.set(needCloseAuctions);
         if (needCloseAuctions) {
-            this.closeAuctions_checker = new CloseAuctionsChecker(); 
+            this.closeAuctions_checker = new CloseAuctionsChecker();
         } else {
             this.closeAuctions_checker = null;
         }
     }
-    
+
     protected AuctionMarkProfile getProfile() {
         return (this.profile);
     }
-    
+
     @Override
     protected void initialize() {
         // Load BenchmarkProfile
@@ -320,7 +320,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
         if (LOG.isDebugEnabled())
             LOG.debug(String.format("AuctionMarkProfile %03d\n%s", this.getId(), profile));
     }
-    
+
     @Override
     protected TransactionStatus executeWork(TransactionType txnType) throws UserAbortException, SQLException {
         // We need to subtract the different between this and the profile's start time,
@@ -331,37 +331,37 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
         // clients on multiple nodes but then having to wait until they're all up and running
         // before starting the actual benchmark run.
         if (profile.hasClientStartTime() == false) profile.setAndGetClientStartTime();
-      
+
         // Always update the current timestamp
         profile.updateAndGetCurrentTime();
-          
-        Transaction txn = null; 
-        
+
+        Transaction txn = null;
+
         // Always check if we need to want to run CLOSE_AUCTIONS
         // We only do this from the first client
         if (AuctionMarkConstants.CLOSE_AUCTIONS_SEPARATE_THREAD == false &&
             closeAuctions_flag.compareAndSet(true, false)) {
             txn = Transaction.CloseAuctions;
-            TransactionTypes txnTypes = this.getWorkloadConfiguration().getTransTypes(); 
+            TransactionTypes txnTypes = this.getWorkloadConfiguration().getTransTypes();
             txnType = txnTypes.getType(txn.procClass);
             assert(txnType != null) : txnTypes;
         } else {
             txn = Transaction.get(txnType.getProcedureClass());
             assert(txn != null) :
-                "Failed to get Transaction handle for " + txnType.getProcedureClass().getSimpleName(); 
+                "Failed to get Transaction handle for " + txnType.getProcedureClass().getSimpleName();
             if (txn.canExecute(this) == false) {
                 if (LOG.isDebugEnabled())
                     LOG.warn("Unable to execute " + txn + " because it is not ready");
                 return (TransactionStatus.RETRY_DIFFERENT);
             }
         }
-        
+
         // Get the Procedure handle
         Procedure proc = this.getProcedure(txnType);
         assert(proc != null);
         if (LOG.isTraceEnabled())
             LOG.trace(txnType + " -> " + txn + " -> " + txnType.getProcedureClass() + " -> " + proc);
-        
+
         boolean ret = false;
         switch (txn) {
             case CloseAuctions:
@@ -395,19 +395,19 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
                 ret = executeUpdateItem((UpdateItem)proc);
                 break;
             default:
-                assert(false) : "Unexpected transaction: " + txn; 
+                assert(false) : "Unexpected transaction: " + txn;
         } // SWITCH
 //        assert(ret);
         if (ret && LOG.isDebugEnabled())
             LOG.debug("Executed a new invocation of " + txn);
-        
+
         return (TransactionStatus.SUCCESS);
     }
-    
+
     /**
      * For the given VoltTable that contains ITEM records, process the current
      * row of that table and update the benchmark profile based on item information
-     * stored in that row. 
+     * stored in that row.
      * @param vt
      * @return
      * @see AuctionMarkConstants.ITEM_COLUMNS
@@ -419,7 +419,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
      * @see NewPurchase
      */
     @SuppressWarnings("unused")
-    public ItemId processItemRecord(Object row[]) {
+    public ItemId processItemRecord(Object[] row) {
         int col = 0;
         ItemId i_id = new ItemId(SQLUtil.getLong(row[col++]));  // i_id
         long i_u_id = SQLUtil.getLong(row[col++]);              // i_u_id
@@ -428,102 +428,102 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
         long i_num_bids = SQLUtil.getLong(row[col++]);          // i_num_bids
         Timestamp i_end_date = SQLUtil.getTimestamp(row[col++]);// i_end_date
         if (i_end_date == null) throw new RuntimeException("DJELLEL IS THE MAN! --> " + row[col-1] + " / " + row[col-1].getClass());
-        
+
         Integer temp = SQLUtil.getInteger(row[col++]);
         if (temp == null) throw new RuntimeException("DJELLEL IS STILL THE MAN! --> " + row[col-1] + " / " + row[col-1].getClass());
         ItemStatus i_status = ItemStatus.get(temp); // i_status
-        
+
         ItemInfo itemInfo = new ItemInfo(i_id, i_current_price, i_end_date, (int)i_num_bids);
         itemInfo.status = i_status;
-        
+
         UserId sellerId = new UserId(i_u_id);
         assert (i_id.getSellerId().equals(sellerId));
-         
+
         ItemStatus qtype = profile.addItemToProperQueue(itemInfo, false);
-    
+
         return (i_id);
     }
-    
+
     public Timestamp[] getTimestampParameterArray() {
         return new Timestamp[] { profile.getLoaderStartTime(),
                                  profile.getClientStartTime() };
     }
-    
+
     // ----------------------------------------------------------------
     // CLOSE_AUCTIONS
     // ----------------------------------------------------------------
-    
+
     protected boolean executeCloseAuctions(CloseAuctions proc) throws SQLException {
         if (LOG.isDebugEnabled())
             LOG.debug("Executing " + proc);
-        Timestamp benchmarkTimes[] = this.getTimestampParameterArray();
+        Timestamp[] benchmarkTimes = this.getTimestampParameterArray();
         Timestamp startTime = profile.getLastCloseAuctionsTime();
         Timestamp endTime = profile.updateAndGetLastCloseAuctionsTime();
-        
+
         List<Object[]> results = proc.run(conn, benchmarkTimes, startTime, endTime);
         conn.commit();
-        
+
         assert(null != results);
-        for (Object row[] : results) {
+        for (Object[] row : results) {
             ItemId itemId = this.processItemRecord(row);
             assert(itemId != null);
         } // WHILE
         profile.updateItemQueues();
-        
+
         if (LOG.isDebugEnabled())
             LOG.debug("Finished " + proc);
         return (true);
     }
-    
+
     // ----------------------------------------------------------------
     // GetItem
     // ----------------------------------------------------------------
-    
+
     protected boolean executeGetItem(GetItem proc) throws SQLException {
-        Timestamp benchmarkTimes[] = this.getTimestampParameterArray();
+        Timestamp[] benchmarkTimes = this.getTimestampParameterArray();
         ItemInfo itemInfo = profile.getRandomAvailableItemId();
-        
-        Object results[][] = proc.run(conn, benchmarkTimes, itemInfo.itemId.encode(),
+
+        Object[][] results = proc.run(conn, benchmarkTimes, itemInfo.itemId.encode(),
                                                             itemInfo.getSellerId().encode());
         conn.commit();
-        
+
         // The first row will have our item data that we want
         // We don't care about the user information...
         ItemId itemId = this.processItemRecord(results[0]);
         assert(itemId != null);
-        
+
         return (true);
     }
-    
+
     // ----------------------------------------------------------------
     // GetUserInfo
     // ----------------------------------------------------------------
-    
+
     protected boolean executeGetUserInfo(GetUserInfo proc) throws SQLException {
-        Timestamp benchmarkTimes[] = this.getTimestampParameterArray();
+        Timestamp[] benchmarkTimes = this.getTimestampParameterArray();
         UserId userId = profile.getRandomBuyerId();
         int rand;
-        
+
         // USER_FEEDBACK records
         rand = profile.rng.number(0, 100);
-        boolean get_feedback = (rand <= AuctionMarkConstants.PROB_GETUSERINFO_INCLUDE_FEEDBACK); 
+        boolean get_feedback = (rand <= AuctionMarkConstants.PROB_GETUSERINFO_INCLUDE_FEEDBACK);
 
         // ITEM_COMMENT records
         rand = profile.rng.number(0, 100);
         boolean get_comments = (rand <= AuctionMarkConstants.PROB_GETUSERINFO_INCLUDE_COMMENTS);
-        
+
         // Seller ITEM records
         rand = profile.rng.number(0, 100);
-        boolean get_seller_items = (rand <= AuctionMarkConstants.PROB_GETUSERINFO_INCLUDE_SELLER_ITEMS); 
+        boolean get_seller_items = (rand <= AuctionMarkConstants.PROB_GETUSERINFO_INCLUDE_SELLER_ITEMS);
 
         // Buyer ITEM records
         rand = profile.rng.number(0, 100);
         boolean get_buyer_items = (rand <= AuctionMarkConstants.PROB_GETUSERINFO_INCLUDE_BUYER_ITEMS);
-        
+
         // USER_WATCH records
         rand = profile.rng.number(0, 100);
-        boolean get_watched_items = (rand <= AuctionMarkConstants.PROB_GETUSERINFO_INCLUDE_WATCHED_ITEMS); 
-        
+        boolean get_watched_items = (rand <= AuctionMarkConstants.PROB_GETUSERINFO_INCLUDE_WATCHED_ITEMS);
+
         List<Object[]>[] results = proc.run(conn, benchmarkTimes, userId.encode(),
                                                                   get_feedback,
                                                                   get_comments,
@@ -531,30 +531,30 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
                                                                   get_buyer_items,
                                                                   get_watched_items);
         conn.commit();
-        
+
         List<Object[]> vt = null;
         int idx = 0;
-      
+
         // USER
         vt = results[idx++];
         assert(vt != null);
         assert(vt.size() > 0) :
             "Failed to find user information for " + userId + " / " + userId.encode();
-          
+
         // USER_FEEDBACK
         if (get_feedback) {
             vt = results[idx];
             assert(vt != null);
         }
         idx++;
-        
+
         // ITEM_COMMENTS
         if (get_comments) {
             vt = results[idx];
             assert(vt != null);
-            Long vals[] = new Long[3];
-            int cols[] = { AuctionMarkConstants.ITEM_COLUMNS.length + 1, 1, 2 };
-            for (Object row[] : vt) {
+            Long[] vals = new Long[3];
+            int[] cols = { AuctionMarkConstants.ITEM_COLUMNS.length + 1, 1, 2 };
+            for (Object[] row : vt) {
                 boolean valid = true;
                 for (int i = 0; i < cols.length; i++) {
                     if (row[i] == null) {
@@ -574,37 +574,37 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
             } // FOR
         }
         idx++;
-      
+
         // ITEM Result Tables
         for ( ; idx < results.length; idx++) {
             vt = results[idx];
             if (vt == null) continue;
-            for (Object row[] : vt) {
+            for (Object[] row : vt) {
                 ItemId itemId = this.processItemRecord(row);
                 assert(itemId != null);
             } // FOR
         } // FOR
-        
+
         return (true);
     }
-    
+
     // ----------------------------------------------------------------
     // NewBid
     // ----------------------------------------------------------------
-    
+
     protected boolean executeNewBid(NewBid proc) throws SQLException {
-        Timestamp benchmarkTimes[] = this.getTimestampParameterArray();
+        Timestamp[] benchmarkTimes = this.getTimestampParameterArray();
         ItemInfo itemInfo = null;
         UserId sellerId;
         UserId buyerId;
         double bid;
         double maxBid;
-        
+
         boolean has_available = (profile.getAvailableItemsCount() > 0);
         boolean has_ending = (profile.getEndingSoonItemsCount() > 0);
         boolean has_waiting = (profile.getWaitForPurchaseItemsCount() > 0);
-        boolean has_completed = (profile.getCompleteItemsCount() > 0); 
-        
+        boolean has_completed = (profile.getCompleteItemsCount() > 0);
+
         // Some NewBids will be for items that have already ended.
         // This will simulate somebody trying to bid at the very end but failing
         if ((has_waiting || has_completed) &&
@@ -618,13 +618,13 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
             }
             sellerId = itemInfo.getSellerId();
             buyerId = profile.getRandomBuyerId(sellerId);
-            
+
             // The bid/maxBid do not matter because they won't be able to actually
             // update the auction
             bid = profile.rng.nextDouble();
             maxBid = bid + 100;
         }
-        
+
         // Otherwise we want to generate information for a real bid
         else {
             assert(has_available || has_ending);
@@ -638,64 +638,64 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
             if (itemInfo == null) {
                 itemInfo = profile.getRandomItem();
             }
-            
+
             sellerId = itemInfo.getSellerId();
             buyerId = profile.getRandomBuyerId(sellerId);
-            
+
             double currentPrice = itemInfo.getCurrentPrice();
             bid = profile.rng.fixedPoint(2, currentPrice, currentPrice * (1 + (AuctionMarkConstants.ITEM_BID_PERCENT_STEP / 2)));
             maxBid = profile.rng.fixedPoint(2, bid, (bid * (1 + (AuctionMarkConstants.ITEM_BID_PERCENT_STEP / 2))));
         }
 
-        Object results[] = proc.run(conn, benchmarkTimes, itemInfo.itemId.encode(),
+        Object[] results = proc.run(conn, benchmarkTimes, itemInfo.itemId.encode(),
                                                           sellerId.encode(),
                                                           buyerId.encode(),
                                                           maxBid,
                                                           itemInfo.endDate);
         conn.commit();
-        
+
         ItemId itemId = this.processItemRecord(results);
         assert(itemId != null);
-    
+
         return (true);
     }
-    
+
     // ----------------------------------------------------------------
     // NewComment
     // ----------------------------------------------------------------
-    
+
     protected boolean executeNewComment(NewComment proc) throws SQLException {
-        Timestamp benchmarkTimes[] = this.getTimestampParameterArray();
+        Timestamp[] benchmarkTimes = this.getTimestampParameterArray();
         ItemInfo itemInfo = profile.getRandomCompleteItem();
         UserId sellerId = itemInfo.getSellerId();
         UserId buyerId = profile.getRandomBuyerId(sellerId);
         String question = profile.rng.astring(AuctionMarkConstants.ITEM_COMMENT_LENGTH_MIN,
                                               AuctionMarkConstants.ITEM_COMMENT_LENGTH_MAX);
-        
-        Object results[] = proc.run(conn, benchmarkTimes,
+
+        Object[] results = proc.run(conn, benchmarkTimes,
                                           itemInfo.itemId.encode(),
                                           sellerId.encode(),
                                           buyerId.encode(),
                                           question);
         conn.commit();
         assert(results != null);
-        
+
         profile.pending_commentResponses.add(new ItemCommentResponse(SQLUtil.getLong(results[0]),
                                                                      SQLUtil.getLong(results[1]),
                                                                      SQLUtil.getLong(results[2])));
         return (true);
     }
-    
+
     // ----------------------------------------------------------------
     // NewCommentResponse
     // ----------------------------------------------------------------
-    
+
     protected boolean executeNewCommentResponse(NewCommentResponse proc) throws SQLException {
-        Timestamp benchmarkTimes[] = this.getTimestampParameterArray();
+        Timestamp[] benchmarkTimes = this.getTimestampParameterArray();
         int idx = profile.rng.nextInt(profile.pending_commentResponses.size());
         ItemCommentResponse cr = profile.pending_commentResponses.remove(idx);
         assert(cr != null);
-        
+
         long commentId = cr.commentId.longValue();
         ItemId itemId = new ItemId(cr.itemId.longValue());
         UserId sellerId = itemId.getSellerId();
@@ -708,22 +708,22 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
                                        commentId,
                                        response);
         conn.commit();
-        
+
         return (true);
     }
-    
+
     // ----------------------------------------------------------------
     // NewFeedback
     // ----------------------------------------------------------------
-    
+
     protected boolean executeNewFeedback(NewFeedback proc) throws SQLException {
-        Timestamp benchmarkTimes[] = this.getTimestampParameterArray();
+        Timestamp[] benchmarkTimes = this.getTimestampParameterArray();
         ItemInfo itemInfo = profile.getRandomCompleteItem();
         UserId sellerId = itemInfo.getSellerId();
         UserId buyerId = profile.getRandomBuyerId(sellerId);
-        long rating = (long) profile.rng.number(-1, 1);
+        long rating = profile.rng.number(-1, 1);
         String feedback = profile.rng.astring(10, 80);
-        
+
         long user_id;
         long from_id;
         if (profile.rng.nextBoolean()) {
@@ -733,7 +733,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
             user_id = buyerId.encode();
             from_id = sellerId.encode();
         }
-        
+
         proc.run(conn, benchmarkTimes, user_id,
                                        itemInfo.itemId.encode(),
                                        sellerId.encode(),
@@ -741,16 +741,16 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
                                        rating,
                                        feedback);
         conn.commit();
-        
+
         return (true);
     }
-    
+
     // ----------------------------------------------------------------
     // NewItem
     // ----------------------------------------------------------------
 
     protected boolean executeNewItem(NewItem proc) throws SQLException {
-        Timestamp benchmarkTimes[] = this.getTimestampParameterArray();
+        Timestamp[] benchmarkTimes = this.getTimestampParameterArray();
         UserId sellerId = profile.getRandomSellerId(this.getId());
         ItemId itemId = profile.getNextItemId(sellerId);
 
@@ -784,7 +784,7 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
 
         long duration = profile.randomDuration.nextInt();
 
-        Object results[] = null;
+        Object[] results = null;
         try {
             long itemIdEncoded = itemId.encode();
             results = proc.run(conn, benchmarkTimes, itemIdEncoded, sellerId.encode(),
@@ -796,19 +796,19 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
             throw ex;
         }
         conn.commit();
-                       
+
         itemId = this.processItemRecord(results);
         assert(itemId != null);
-        
+
         return (true);
     }
 
     // ----------------------------------------------------------------
     // NewPurchase
     // ----------------------------------------------------------------
-    
+
     protected boolean executeNewPurchase(NewPurchase proc) throws SQLException {
-        Timestamp benchmarkTimes[] = this.getTimestampParameterArray();
+        Timestamp[] benchmarkTimes = this.getTimestampParameterArray();
         ItemInfo itemInfo = profile.getRandomWaitForPurchaseItem();
         long encodedItemId = itemInfo.itemId.encode();
         UserId sellerId = itemInfo.getSellerId();
@@ -818,11 +818,11 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
 	if (ip_id_cnt == null) {
 	    ip_id_cnt = new Integer(0);
 	}
-	
+
         long ip_id = AuctionMarkUtil.getUniqueElementId(encodedItemId,
                                                         ip_id_cnt.intValue());
 	ip_id_cntrs.put(encodedItemId, (ip_id_cnt < 127) ? ip_id_cnt + 1 : 0);
-        
+
         // Whether the buyer will not have enough money
         if (itemInfo.hasCurrentPrice()) {
             if (profile.rng.number(1, 100) < AuctionMarkConstants.PROB_NEWPURCHASE_NOT_ENOUGH_MONEY) {
@@ -832,35 +832,35 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
                 itemInfo.status = ItemStatus.CLOSED;
             }
         }
-        
-        Object results[] = proc.run(conn, benchmarkTimes, encodedItemId,
+
+        Object[] results = proc.run(conn, benchmarkTimes, encodedItemId,
                                                           sellerId.encode(),
                                                           ip_id,
 				                          buyer_credit);
         conn.commit();
-        
+
         ItemId itemId = this.processItemRecord(results);
         assert(itemId != null);
-        
+
         return (true);
     }
-    
+
     // ----------------------------------------------------------------
     // UpdateItem
     // ----------------------------------------------------------------
-    
+
     protected boolean executeUpdateItem(UpdateItem proc) throws SQLException {
-        Timestamp benchmarkTimes[] = this.getTimestampParameterArray();
+        Timestamp[] benchmarkTimes = this.getTimestampParameterArray();
         ItemInfo itemInfo = profile.getRandomAvailableItemId();
         UserId sellerId = itemInfo.getSellerId();
         String description = profile.rng.astring(50, 255);
-        
+
         boolean delete_attribute = false;
-        long add_attribute[] = {
+        long[] add_attribute = {
             -1,
             -1
         };
-        
+
         // Delete ITEM_ATTRIBUTE
         if (profile.rng.number(1, 100) < AuctionMarkConstants.PROB_UPDATEITEM_DELETE_ATTRIBUTE) {
             delete_attribute = true;
@@ -872,14 +872,14 @@ public class AuctionMarkWorker extends Worker<AuctionMarkBenchmark> {
             add_attribute[0] = gav_id.getGlobalAttributeGroup().encode();
             add_attribute[1] = gav_id.encode();
         }
-        
+
         proc.run(conn, benchmarkTimes, itemInfo.itemId.encode(),
                                        sellerId.encode(),
                                        description,
                                        delete_attribute,
                                        add_attribute);
         conn.commit();
-        
+
         return (true);
     }
 }

@@ -43,7 +43,7 @@ public class GetUserInfo extends Procedure {
     // -----------------------------------------------------------------
     // STATEMENTS
     // -----------------------------------------------------------------
-    
+
     public final SQLStmt getUser = new SQLStmt(
         "SELECT u_id, u_rating, u_created, u_balance, u_sattr0, u_sattr1, u_sattr2, u_sattr3, u_sattr4, r_name " +
           "FROM " + AuctionMarkConstants.TABLENAME_USERACCT + ", " +
@@ -62,20 +62,20 @@ public class GetUserInfo extends Procedure {
     public final SQLStmt getItemComments = new SQLStmt(
         "SELECT " + AuctionMarkConstants.ITEM_COLUMNS_STR + ", " +
         "       ic_id, ic_i_id, ic_u_id, ic_buyer_id, ic_question, ic_created " +
-        "  FROM " + AuctionMarkConstants.TABLENAME_ITEM + ", " + 
+        "  FROM " + AuctionMarkConstants.TABLENAME_ITEM + ", " +
                     AuctionMarkConstants.TABLENAME_ITEM_COMMENT +
-        " WHERE i_u_id = ? AND i_status = ? "+ 
+        " WHERE i_u_id = ? AND i_status = ? "+
         "   AND i_id = ic_i_id AND i_u_id = ic_u_id AND ic_response IS NULL " +
         " ORDER BY ic_created DESC LIMIT 25 "
     );
-    
+
     public final SQLStmt getSellerItems = new SQLStmt(
         "SELECT " + AuctionMarkConstants.ITEM_COLUMNS_STR +
          " FROM " + AuctionMarkConstants.TABLENAME_ITEM + " " +
          "WHERE i_u_id = ? " +
          "ORDER BY i_end_date DESC LIMIT 25 "
     );
-    
+
     public final SQLStmt getBuyerItems = new SQLStmt(
         "SELECT " + AuctionMarkConstants.ITEM_COLUMNS_STR +
          " FROM " + AuctionMarkConstants.TABLENAME_USERACCT_ITEM + ", " +
@@ -84,7 +84,7 @@ public class GetUserInfo extends Procedure {
            "AND ui_i_id = i_id AND ui_i_u_id = i_u_id " +
          "ORDER BY i_end_date DESC LIMIT 25 "
     );
-    
+
     public final SQLStmt getWatchedItems = new SQLStmt(
         "SELECT " + AuctionMarkConstants.ITEM_COLUMNS_STR + ", uw_u_id, uw_created " +
           "FROM " + AuctionMarkConstants.TABLENAME_USERACCT_WATCH + ", " +
@@ -97,9 +97,9 @@ public class GetUserInfo extends Procedure {
     // -----------------------------------------------------------------
     // RUN METHOD
     // -----------------------------------------------------------------
-    
+
     /**
-     * 
+     *
      * @param conn
      * @param benchmarkTimes
      * @param user_id
@@ -111,7 +111,7 @@ public class GetUserInfo extends Procedure {
      * @return
      * @throws SQLException
      */
-    public List<Object[]>[] run(Connection conn, Timestamp benchmarkTimes[],
+    public List<Object[]>[] run(Connection conn, Timestamp[] benchmarkTimes,
                                 long user_id,
                                 boolean get_feedback,
                                 boolean get_comments,
@@ -119,10 +119,10 @@ public class GetUserInfo extends Procedure {
                                 boolean get_buyer_items,
                                 boolean get_watched_items) throws SQLException {
         final boolean debug = LOG.isDebugEnabled();
-        
-        ResultSet results[] = new ResultSet[6];
+
+        ResultSet[] results = new ResultSet[6];
         int result_idx = 0;
-        
+
         // The first VoltTable in the output will always be the user's information
         if (debug) LOG.debug("Grabbing USER record: " + user_id);
         PreparedStatement stmt = this.getPreparedStatement(conn, getUser, user_id);
@@ -132,10 +132,10 @@ public class GetUserInfo extends Procedure {
         if (get_feedback) {
             if (debug) LOG.debug("Grabbing USER_FEEDBACK records: " + user_id);
             stmt = this.getPreparedStatement(conn, getUserFeedback, user_id);
-            results[result_idx] = stmt.executeQuery(); 
+            results[result_idx] = stmt.executeQuery();
         }
         result_idx++;
-        
+
         // And any pending ITEM_COMMENTS that need a response
         if (get_comments) {
             if (debug) LOG.debug("Grabbing ITEM_COMMENT records: " + user_id);
@@ -143,7 +143,7 @@ public class GetUserInfo extends Procedure {
             results[result_idx] = stmt.executeQuery();
         }
         result_idx++;
-        
+
         // The seller's items
         if (get_seller_items) {
             if (debug) LOG.debug("Grabbing seller's ITEM records: " + user_id);
@@ -163,7 +163,7 @@ public class GetUserInfo extends Procedure {
             results[result_idx] = stmt.executeQuery();
         }
         result_idx++;
-        
+
         // The buyer's watched items
         if (get_watched_items) {
             if (debug) LOG.debug("Grabbing buyer's USER_WATCH records: " + user_id);
@@ -173,14 +173,14 @@ public class GetUserInfo extends Procedure {
         result_idx++;
 
         @SuppressWarnings("unchecked")
-        List<Object[]> final_results[] = new List[results.length];
+        List<Object[]>[] final_results = new List[results.length];
         for (result_idx = 0; result_idx < results.length; result_idx++) {
-            List<Object[]> inner = null; 
+            List<Object[]> inner = null;
             if (results[result_idx] != null) {
                 inner = new ArrayList<Object[]>();
                 int num_cols = results[result_idx].getMetaData().getColumnCount();
                 while (results[result_idx].next()) {
-                    Object row[] = new Object[num_cols];
+                    Object[] row = new Object[num_cols];
                     for (int i = 0; i < num_cols; i++) {
                         row[i] = results[result_idx].getObject(i+1);
                     } // FOR
@@ -190,7 +190,7 @@ public class GetUserInfo extends Procedure {
             }
             final_results[result_idx] = inner;
         } // FOR
-        
+
         return (final_results);
     }
 }

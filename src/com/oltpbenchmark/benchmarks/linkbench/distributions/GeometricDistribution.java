@@ -46,8 +46,8 @@ public class GeometricDistribution implements ProbabilityDistribution {
   public void init(long min, long max, Properties props, String keyPrefix) {
     double parsedP = ConfigUtil.getDouble(props, keyPrefix + PROB_PARAM_KEY);
 
-    double scaleVal = 1.0;;
-    if (props.containsKey(LinkBenchConstants.PROB_MEAN)) {
+    double scaleVal = 1.0;
+      if (props.containsKey(LinkBenchConstants.PROB_MEAN)) {
       scaleVal = (max - min) * ConfigUtil.getDouble(props,
                             keyPrefix + LinkBenchConstants.PROB_MEAN);
     }

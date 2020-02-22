@@ -38,7 +38,7 @@ public class WikipediaBenchmark extends BenchmarkModule {
 
     protected final FlatHistogram<Integer> commentLength;
     protected final FlatHistogram<Integer> minorEdit;
-    private final FlatHistogram<Integer> revisionDeltas[];
+    private final FlatHistogram<Integer>[] revisionDeltas;
 
     @SuppressWarnings("unchecked")
     public WikipediaBenchmark(WorkloadConfiguration workConf) {
@@ -61,7 +61,7 @@ public class WikipediaBenchmark extends BenchmarkModule {
      * @param orig_text
      * @return
      */
-    protected char[] generateRevisionText(char orig_text[]) {
+    protected char[] generateRevisionText(char[] orig_text) {
         // Figure out how much we are going to change
         // If the delta is greater than the length of the original
         // text, then we will just cut our length in half.

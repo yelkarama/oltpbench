@@ -30,8 +30,8 @@ import com.oltpbenchmark.types.TransactionStatus;
 public class SIWorker extends Worker<SIBenchmark> {
 
     private static Random updateRecordIdGenerator = null;
-    private int recordCount;
-    
+    private final int recordCount;
+
     public SIWorker(SIBenchmark benchmarkModule, int id, int init_record_count) {
         super(benchmarkModule, id);
         synchronized (SIWorker.class) {
@@ -46,7 +46,7 @@ public class SIWorker extends Worker<SIBenchmark> {
     @Override
     protected TransactionStatus executeWork(TransactionType nextTrans) throws UserAbortException, SQLException {
         Class<? extends Procedure> procClass = nextTrans.getProcedureClass();
-        
+
         if (procClass.equals(MinRecord.class)) {
             minRecord();
         } else if (procClass.equals(UpdateRecord.class)) {

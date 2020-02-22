@@ -145,7 +145,7 @@ public class JSONObject {
     /**
      * The map where the JSONObject's properties are kept.
      */
-    private Map<String, Object> map;
+    private final Map<String, Object> map;
 
 
     /**
@@ -350,7 +350,7 @@ public class JSONObject {
                     }else if (result instanceof Collection) { //List or Set
                         map.put(key, new JSONArray((Collection<?>)result,includeSuperClass));
                     }else if (result instanceof Map) {
-                        map.put(key, new JSONObject((Map<?,?>)result,includeSuperClass));
+                        map.put(key, new JSONObject(result,includeSuperClass));
                     }else if (isStandardProperty(result.getClass())) { //Primitives, String and Wrapper
                         map.put(key, result);
                     }else{
@@ -392,7 +392,7 @@ public class JSONObject {
      * @param names An array of strings, the names of the fields to be obtained
      * from the object.
      */
-    public JSONObject(Object object, String names[]) {
+    public JSONObject(Object object, String[] names) {
         this();
         Class<?> c = object.getClass();
         for (int i = 0; i < names.length; i += 1) {
@@ -645,7 +645,7 @@ public class JSONObject {
         String[] names = new String[length];
         int j = 0;
         while (i.hasNext()) {
-            names[j] = (String)i.next();
+            names[j] = i.next();
             j += 1;
         }
         return names;
@@ -1449,7 +1449,7 @@ public class JSONObject {
             return value.toString();
         }
         if (value instanceof Map) {
-            return new JSONObject((Map<?,?>)value).toString();
+            return new JSONObject(value).toString();
         }
         if (value instanceof Collection) {
             return new JSONArray((Collection<?>)value).toString();
@@ -1503,7 +1503,7 @@ public class JSONObject {
             return ((JSONArray)value).toString(indentFactor, indent);
         }
         if (value instanceof Map) {
-            return new JSONObject((Map<?,?>)value).toString(indentFactor, indent);
+            return new JSONObject(value).toString(indentFactor, indent);
         }
         if (value instanceof Collection) {
             return new JSONArray((Collection<?>)value).toString(indentFactor, indent);

@@ -35,42 +35,42 @@ import org.apache.log4j.Logger;
 public class WorkloadState {
     private static final int RATE_QUEUE_LIMIT = 10000;
     private static final Logger LOG = Logger.getLogger(ThreadBench.class);
-    
-    private LinkedList<SubmittedProcedure> workQueue = new LinkedList<SubmittedProcedure>();
-    private BenchmarkState benchmarkState;
+
+    private final LinkedList<SubmittedProcedure> workQueue = new LinkedList<SubmittedProcedure>();
+    private final BenchmarkState benchmarkState;
     private int workersWaiting = 0;
     private int workersWorking = 0;
-    private int num_terminals;
+    private final int num_terminals;
     private int workerNeedSleep;
-    
+
     private List<Phase> works = new ArrayList<Phase>();
-    private Iterator<Phase> phaseIterator;
+    private final Iterator<Phase> phaseIterator;
     private Phase currentPhase = null;
-    private long phaseStartNs = 0;
+    private final long phaseStartNs = 0;
     private TraceReader traceReader = null;
-    
+
     public WorkloadState(BenchmarkState benchmarkState, List<Phase> works, int num_terminals, TraceReader traceReader) {
         this.benchmarkState = benchmarkState;
         this.works = works;
         this.num_terminals = num_terminals;
         this.workerNeedSleep = num_terminals;
         this.traceReader = traceReader;
-        
+
         phaseIterator = works.iterator();
     }
-    
+
     /**
     * Add a request to do work.
-    * 
+    *
     * @throws QueueLimitException
     */
    public void addToQueue(int amount, boolean resetQueues) throws QueueLimitException {
        synchronized (this) {
             if (resetQueues)
                 workQueue.clear();
-    
+
             assert amount > 0;
-    
+
             // Only use the work queue if the phase is enabled and rate limited.
             if (traceReader != null && currentPhase != null) {
                 if (benchmarkState.getState() != State.WARMUP) {
@@ -106,7 +106,7 @@ public class WorkloadState {
             return traceReader.getPhaseComplete() && workQueue.size() == 0 && workersWorking == 0;
         }
    }
-   
+
    public void signalDone() {
        int current = this.benchmarkState.signalDone();
        if (current == 0) {
@@ -117,7 +117,7 @@ public class WorkloadState {
            }
        }
    }
-   
+
    /** Called by ThreadPoolThreads when waiting for work. */
     public SubmittedProcedure fetchWork(int workerId) {
         synchronized(this) {
@@ -185,19 +185,19 @@ public class WorkloadState {
             --workersWorking;
        }
    }
-   
+
    public Phase getNextPhase() {
        if (phaseIterator.hasNext())
            return phaseIterator.next();
        return null;
    }
-   
+
    public Phase getCurrentPhase() {
        synchronized (benchmarkState){
            return currentPhase;
        }
    }
-   
+
    /*
     * Called by workers to ask if they should stay awake in this phase
     */
@@ -213,7 +213,7 @@ public class WorkloadState {
            }
        }
    }
-   
+
    public void switchToNextPhase() {
        synchronized(this) {
            this.currentPhase = this.getNextPhase();
@@ -244,11 +244,11 @@ public class WorkloadState {
             this.notifyAll();
        }
    }
-   
+
    /**
     * Delegates pre-start blocking to the global state handler
     */
-   
+
    public void blockForStart() {
        benchmarkState.blockForStart();
 
@@ -261,16 +261,16 @@ public class WorkloadState {
             }
         }
    }
-   
+
    /**
     * Delegates a global state query to the benchmark state handler
-    * 
+    *
     * @return global state
     */
    public State getGlobalState() {
        return benchmarkState.getState();
    }
-   
+
     public void signalLatencyComplete() {
         assert currentPhase.isSerial();
         benchmarkState.signalLatencyComplete();
@@ -289,5 +289,5 @@ public class WorkloadState {
    public long getTestStartNs() {
        return benchmarkState.getTestStartNs();
    }
-   
+
 }

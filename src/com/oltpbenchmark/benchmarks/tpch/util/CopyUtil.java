@@ -174,7 +174,7 @@ public class CopyUtil {
         }
 
         @Override
-        public int read(byte b[], int off, int len) throws IOException {
+        public int read(byte[] b, int off, int len) throws IOException {
             // identical to InputStream code, just that we want to use our read()
             if (b == null) {
                 throw new NullPointerException();

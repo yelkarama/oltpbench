@@ -40,13 +40,13 @@ import com.oltpbenchmark.util.RandomGenerator;
 
 public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 	private static final Logger LOG = Logger.getLogger(CHBenCHmarkLoader.class);
-	
+
 	private final static int configCommitCount = 1000; // commit every n records
 	private static final RandomGenerator ran = new RandomGenerator(0);
 	private static PreparedStatement regionPrepStmt;
 	private static PreparedStatement nationPrepStmt;
 	private static PreparedStatement supplierPrepStmt;
-	
+
 	private static Date now;
 	private static long lastTimeMS;
 
@@ -54,20 +54,20 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 	private static final int[] nationkeys = new int[62];
 	static {
 	    for (char i = 0; i < 10; i++) {
-	        nationkeys[i] = (char)('0') + i;
+	        nationkeys[i] = '0' + i;
 	    }
 	    for (char i = 0; i < 26; i++) {
-	        nationkeys[i + 10] = (char)('A') + i;
+	        nationkeys[i + 10] = 'A' + i;
 	    }
 	    for (char i = 0; i < 26; i++) {
-            nationkeys[i + 36] = (char)('a') + i;
+            nationkeys[i + 36] = 'a' + i;
         }
 	}
-	
+
 	public CHBenCHmarkLoader(CHBenCHmark benchmark) {
 		super(benchmark);
 	}
-	
+
 	@Override
 	public List<LoaderThread> createLoaderThreads() throws SQLException {
 		List<LoaderThread> threads = new ArrayList<LoaderThread>();
@@ -93,7 +93,7 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 		});
 		return (threads);
 	}
-	
+
    static void truncateTable(Connection conn, String strTable) throws SQLException {
 
         LOG.debug("Truncating '" + strTable + "' ...");
@@ -105,15 +105,15 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
             conn.rollback();
         }
    }
-	
+
 	static int loadRegions(Connection conn) throws SQLException {
-		
+
 		int k = 0;
 		int t = 0;
 		BufferedReader br = null;
-		
+
 		try {
-		    
+
 		    truncateTable(conn,"region");
 		    truncateTable(conn,"nation");
 		    truncateTable(conn,"supplier");
@@ -123,7 +123,7 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 					+ " ...");
 
 			Region region = new Region();
-			
+
 			File file = new File("src", "com/oltpbenchmark/benchmarks/chbenchmark/region_gen.tbl");
 			br = new BufferedReader(new FileReader(file));
 			String line = br.readLine();
@@ -174,7 +174,7 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 		} catch (SQLException se) {
 			LOG.debug(se.getMessage());
 			conn.rollback();
-		
+
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
 		}  catch (Exception e) {
@@ -193,13 +193,13 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 		return (k);
 
 	} // end loadRegions()
-	
+
 	static int loadNations(Connection conn) throws SQLException {
-		
+
 		int k = 0;
 		int t = 0;
 		BufferedReader br = null;
-		
+
 		try {
 
 			now = new java.util.Date();
@@ -207,7 +207,7 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 					+ " ...");
 
 			Nation nation = new Nation();
-			
+
 			File file = new File("src", "com/oltpbenchmark/benchmarks/chbenchmark/nation_gen.tbl");
 			br = new BufferedReader(new FileReader(file));
 			String line = br.readLine();
@@ -277,12 +277,12 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 		return (k);
 
 	} // end loadNations()
-	
+
 	static int loadSuppliers(Connection conn) throws SQLException {
-		
+
 		int k = 0;
 		int t = 0;
-		
+
 		try {
 
 			now = new java.util.Date();
@@ -290,7 +290,7 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 					+ " ...");
 
 			Supplier supplier = new Supplier();
-			
+
 			for (int index = 1; index <= 10000; index++) {
 				supplier.su_suppkey = index;
 				supplier.su_name = ran.astring(25, 25);
@@ -301,7 +301,7 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 				supplier.su_comment = ran.astring(51, 101);
 
 				k++;
-				
+
 				supplierPrepStmt.setLong(1, supplier.su_suppkey);
 				supplierPrepStmt.setString(2, supplier.su_name);
 				supplierPrepStmt.setString(3, supplier.su_address);
@@ -362,6 +362,6 @@ public class CHBenCHmarkLoader extends Loader<CHBenCHmark> {
 			LOG.debug(e.getMessage());
 		}
 		return totalRows;
-	}	
-	
+	}
+
 }

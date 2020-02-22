@@ -110,10 +110,10 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
 
     public SEATSLoader(SEATSBenchmark benchmark) {
     	super(benchmark);
-    	
+
     	this.rng = benchmark.getRandomGenerator(); // TODO: Sync with the base class rng
     	this.profile = new SEATSProfile(benchmark, this.rng);
-    	
+
     	if (LOG.isDebugEnabled()) LOG.debug("CONSTRUCTOR: " + SEATSLoader.class.getName());
     }
 
@@ -425,7 +425,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
 
     /**
      * The scaling tables are things that we will scale the number of tuples based
-     * on the given scaling factor at runtime 
+     * on the given scaling factor at runtime
      */
     protected void loadScalingTable(Connection conn, String table_name) {
         try {
@@ -486,9 +486,9 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
         try {
             String insert_sql = SQLUtil.getInsertSQL(catalog_tbl, this.getDatabaseType());
             PreparedStatement insert_stmt = conn.prepareStatement(insert_sql);
-            int sqlTypes[] = catalog_tbl.getColumnTypes();
+            int[] sqlTypes = catalog_tbl.getColumnTypes();
 
-            for (Object tuple[] : iterable) {
+            for (Object[] tuple : iterable) {
                 assert (tuple[0] != null) : "The primary key for " + catalog_tbl.getName() + " is null";
 
                 // AIRPORT
@@ -587,9 +587,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
             throw new RuntimeException("Failed to load table " + catalog_tbl.getName(), ex);
         }
 
-        if (is_airport) {
-            assert (this.profile.getAirportCount() == row_idx) : String.format("%d != %d", this.profile.getAirportCount(), row_idx);
-        }
+        assert !is_airport || (this.profile.getAirportCount() == row_idx) : String.format("%d != %d", this.profile.getAirportCount(), row_idx);
 
         // Record the number of tuples that we loaded for this table in the
         // profile
@@ -721,9 +719,9 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
      */
     protected abstract class ScalingDataIterable implements Iterable<Object[]> {
         private final Table catalog_tbl;
-        private final boolean special[];
+        private final boolean[] special;
         private final Object[] data;
-        private final int types[];
+        private final int[] types;
         protected long total;
         private long last_id = 0;
 
@@ -746,7 +744,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
          *            specialValue() to get their values
          * @throws Exception
          */
-        public ScalingDataIterable(Table catalog_tbl, long total, int special_columns[]) {
+        public ScalingDataIterable(Table catalog_tbl, long total, int[] special_columns) {
             this.catalog_tbl = catalog_tbl;
             this.total = total;
             this.data = new Object[this.catalog_tbl.getColumns().size()];
@@ -924,12 +922,12 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
     // ----------------------------------------------------------------
     protected class FrequentFlyerIterable extends ScalingDataIterable {
         private final Iterator<CustomerId> customer_id_iterator;
-        private final short ff_per_customer[];
+        private final short[] ff_per_customer;
         private final FlatHistogram<String> airline_rand;
 
         private int customer_idx = 0;
         private CustomerId last_customer_id = null;
-        private Collection<String> customer_airlines = new HashSet<String>();
+        private final Collection<String> customer_airlines = new HashSet<String>();
 
         public FrequentFlyerIterable(Table catalog_tbl, long num_customers) {
             super(catalog_tbl, num_customers, new int[] { 0, 1, 2 });
@@ -1141,7 +1139,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
         private final ListOrderedMap<Timestamp, Integer> flights_per_day = new ListOrderedMap<Timestamp, Integer>();
 
         private int day_idx = 0;
-        private Timestamp today;
+        private final Timestamp today;
         private Timestamp start_date;
 
         private FlightId flight_id;
@@ -1420,7 +1418,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
         private final Gaussian rand_returns = new Gaussian(SEATSLoader.this.rng, SEATSConstants.CUSTOMER_RETURN_FLIGHT_DAYS_MIN, SEATSConstants.CUSTOMER_RETURN_FLIGHT_DAYS_MAX);
 
         private final LinkedBlockingDeque<Object[]> queue = new LinkedBlockingDeque<Object[]>(100);
-        private Object current[] = null;
+        private Object[] current = null;
         private Throwable error = null;
 
         /**
@@ -1761,7 +1759,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
 
     public void setDistance(String airport0, String airport1, double distance) {
         short short_distance = (short) Math.round(distance);
-        for (String a[] : new String[][] { { airport0, airport1 }, { airport1, airport0 } }) {
+        for (String[] a : new String[][] { { airport0, airport1 }, { airport1, airport0 } }) {
             if (!this.airport_distances.containsKey(a[0])) {
                 this.airport_distances.put(a[0], new HashMap<String, Short>());
             }

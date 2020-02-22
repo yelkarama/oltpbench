@@ -47,7 +47,7 @@ import java.util.zip.GZIPOutputStream;
 public class ResultUploader {
     private static final Logger LOG = Logger.getLogger(ResultUploader.class);
 
-    private static String[] IGNORE_CONF = {
+    private static final String[] IGNORE_CONF = {
             "dbtype",
             "driver",
             "DBUrl",
@@ -57,7 +57,7 @@ public class ResultUploader {
             "uploadUrl"
     };
 
-    private static String[] BENCHMARK_KEY_FIELD = {
+    private static final String[] BENCHMARK_KEY_FIELD = {
             "isolation",
             "scalefactor",
             "terminals"
@@ -100,7 +100,7 @@ public class ResultUploader {
         this.collector = DBCollector.createCollector(dbType, dbUrl, username, password);
         assert(this.collector != null);
     }
-    
+
     public DBCollector getConfCollector() {
         return (this.collector);
     }
@@ -108,7 +108,7 @@ public class ResultUploader {
     public void writeDBParameters(PrintStream os) {
         this.collector.writeParameters(os);
     }
-    
+
     public void writeDBMetrics(PrintStream os) {
         this.collector.writeMetrics(os);
     }

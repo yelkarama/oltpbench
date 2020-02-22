@@ -33,12 +33,12 @@ public class TableDataIterable implements Iterable<Object[]> {
     private final File table_file;
     private final CSVReader reader;
     private final boolean auto_generate_first_column;
-    
-    private final int types[];
-    private final boolean fkeys[];
-    private final boolean nullable[];
+
+    private final int[] types;
+    private final boolean[] fkeys;
+    private final boolean[] nullable;
     private int line_ctr = 0;
-    
+
     /**
      * Constructor
      * @param table_file
@@ -50,7 +50,7 @@ public class TableDataIterable implements Iterable<Object[]> {
         this.catalog_tbl = catalog_tbl;
         this.table_file = table_file;
         this.auto_generate_first_column = auto_generate_first_column;
-        
+
         this.types = new int[this.catalog_tbl.getColumnCount()];
         this.fkeys = new boolean[this.catalog_tbl.getColumnCount()];
         this.nullable = new boolean[this.catalog_tbl.getColumnCount()];
@@ -60,21 +60,21 @@ public class TableDataIterable implements Iterable<Object[]> {
             this.fkeys[i] = (catalog_col.getForeignKey() != null);
             this.nullable[i] = catalog_col.isNullable();
         } // FOR
-        
+
         this.reader = new CSVReader(FileUtil.getReader(this.table_file));
-        
+
         // Throw away the first row if there is a header
         if (has_header) {
             this.reader.readNext();
             this.line_ctr++;
         }
     }
-    
-    
+
+
     public Iterator<Object[]> iterator() {
         return (new TableIterator());
     }
-    
+
     public class TableIterator implements Iterator<Object[]> {
         String[] next = null;
 
@@ -87,24 +87,24 @@ public class TableDataIterable implements Iterable<Object[]> {
                 }
             }
         }
-        
+
         @Override
         public boolean hasNext() {
             this.getNext();
             return (next != null);
         }
-        
+
         @Override
         public Object[] next() {
             this.getNext();
             if (next == null) return (next);
-            String row[] = null;
+            String[] row = null;
             synchronized (this) {
                 row = this.next;
                 this.next = null;
             } // SYNCH
-            
-            Object tuple[] = new Object[types.length];
+
+            Object[] tuple = new Object[types.length];
             int row_idx = 0;
             for (int col_idx = 0; col_idx < types.length; col_idx++) {
                 // Auto-generate first column
@@ -137,7 +137,7 @@ public class TableDataIterable implements Iterable<Object[]> {
             TableDataIterable.this.line_ctr++;
             return (tuple);
         }
-        
+
         @Override
         public void remove() {
             throw new RuntimeException("Unimplemented operation");

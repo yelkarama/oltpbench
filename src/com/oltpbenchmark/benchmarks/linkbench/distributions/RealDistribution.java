@@ -76,7 +76,7 @@ public class RealDistribution extends PiecewiseLinearDistribution {
   public static final int NODE_DELETE_SHUFFLER_GROUPS =
                                                     NODE_READ_SHUFFLER_GROUPS;
 
-  public static enum DistributionType {
+  public enum DistributionType {
     LINKS,
     LINK_READS,
     LINK_READS_UNCORR,

@@ -20,7 +20,7 @@ package com.oltpbenchmark.benchmarks.tatp;
 import java.util.Random;
 
 public abstract class TATPUtil {
-    
+
     public static final Random rand = new Random();
 
     public static byte isActive() {
@@ -30,7 +30,7 @@ public abstract class TATPUtil {
     public static Long getSubscriberId(long subscriberSize) {
         return (TATPUtil.number(1, subscriberSize));
     }
-    
+
     // modified from tpcc.RandomGenerator
     /**
      * @returns a random alphabetic string with length in range [minimum_length, maximum_length].
@@ -47,7 +47,7 @@ public abstract class TATPUtil {
         return randomString(minimum_length, maximum_length, '0', 10);
     }
 
-    // taken from tpcc.RandomGenerator 
+    // taken from tpcc.RandomGenerator
     public static String randomString(int minimum_length, int maximum_length, char base, int numCharacters) {
         int length = number(minimum_length, maximum_length).intValue();
         byte baseByte = (byte) base;
@@ -65,7 +65,7 @@ public abstract class TATPUtil {
         assert minimum <= value && value <= maximum;
         return value;
     }
-    
+
     public static String padWithZero(long n) {
         String str = Long.toString(n);
         char[] zeros = new char[TATPConstants.SUB_NBR_PADDING_SIZE - str.length()];
@@ -78,14 +78,14 @@ public abstract class TATPUtil {
      * Returns sub array of arr, with length in range [min_len, max_len].
      * Each element in arr appears at most once in sub array.
      */
-    public static int[] subArr(int arr[], int min_len, int max_len) {
+    public static int[] subArr(int[] arr, int min_len, int max_len) {
         assert min_len <= max_len && min_len >= 0;
         int sub_len = number(min_len, max_len).intValue();
         int arr_len = arr.length;
 
         assert sub_len <= arr_len;
 
-        int sub[] = new int[sub_len];
+        int[] sub = new int[sub_len];
         for (int i = 0; i < sub_len; i++) {
             int j = number(0, arr_len - 1).intValue();
             sub[i] = arr[j];
@@ -99,5 +99,5 @@ public abstract class TATPUtil {
 
         return sub;
     }
-    
+
 }

@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 import com.oltpbenchmark.types.State;
 
 public final class BenchmarkState {
-    
+
     private static final Logger LOG = Logger.getLogger(BenchmarkState.class);
 
 	private volatile State state = State.WARMUP;
@@ -38,12 +38,12 @@ public final class BenchmarkState {
 	}
 
 	private final CountDownLatch startBarrier;
-	private AtomicInteger notDoneCount;
+	private final AtomicInteger notDoneCount;
 
 	// Protected by this
 
 	/**
-	 * 
+	 *
 	 * @param numThreads
 	 *            number of threads involved in the test: including the
 	 *            master thread.
@@ -53,7 +53,7 @@ public final class BenchmarkState {
 	public BenchmarkState(int numThreads) {
 		startBarrier = new CountDownLatch(numThreads);
 		notDoneCount = new AtomicInteger(numThreads);
-	
+
 		assert numThreads > 0;
 
 		testStartNs = System.nanoTime();

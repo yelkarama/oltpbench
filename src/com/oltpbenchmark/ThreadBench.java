@@ -44,12 +44,12 @@ import com.oltpbenchmark.util.StringUtil;
 public class ThreadBench implements Thread.UncaughtExceptionHandler {
     private static final Logger LOG = Logger.getLogger(ThreadBench.class);
 
-    
+
     private static BenchmarkState testState;
     private final List<? extends Worker<? extends BenchmarkModule>> workers;
     private final ArrayList<Thread> workerThreads;
     // private File profileFile;
-    private List<WorkloadConfiguration> workConfs;
+    private final List<WorkloadConfiguration> workConfs;
     private List<WorkloadState> workStates;
     ArrayList<LatencyRecord.Sample> samples = new ArrayList<LatencyRecord.Sample>();
     private int intervalMonitor = 0;
@@ -212,10 +212,10 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
             assert(t != null);
             Worker<? extends BenchmarkModule> w = this.workers.get(i);
             assert(w != null);
-            
+
 
             // FIXME not sure this is the best solution... ensure we don't hang
-            // forever, however we might ignore 
+            // forever, however we might ignore
             // problems
             t.join(60000); // wait for 60second for threads
                                               // to terminate... hands otherwise
@@ -239,8 +239,8 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
             this.setDaemon(true);
         }
 
-        private boolean stop = false;
-        
+        private final boolean stop = false;
+
         @Override
         public void run() {
             Map<String, Object> m = new ListOrderedMap<String, Object>();
@@ -267,7 +267,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
         {
             this.setDaemon(true);
         }
-        
+
         /**
          * @param interval How long to wait between polling in milliseconds
          */
@@ -298,7 +298,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
             } // WHILE
         }
     } // CLASS
-    
+
     /*
      * public static Results runRateLimitedBenchmark(List<Worker> workers, File
      * profileFile) throws QueueLimitException, IOException { ThreadBench bench
@@ -361,7 +361,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
         }
 
         // Main Loop
-        while (true) {           
+        while (true) {
             // posting new work... and reseting the queue in case we have new
             // portion of the workload...
 
@@ -400,7 +400,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
                 TraceReader tr = workConfs.get(0).getTraceReader();
                 if (tr != null) {
                     // If a trace script is present, the phase complete iff the
-                    // trace reader has no more 
+                    // trace reader has no more
                     for (WorkloadConfiguration workConf : workConfs) {
                         phaseComplete = false;
                         tr = workConf.getTraceReader();
@@ -506,7 +506,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
             }
         } // WHILE (main loop)
         LOG.info("Attempting to stop worker threads and collect measurements");
-        
+
 
         try {
             int requests = finalizeWorkers(this.workerThreads);

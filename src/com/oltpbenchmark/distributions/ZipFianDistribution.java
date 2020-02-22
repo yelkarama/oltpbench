@@ -20,9 +20,9 @@ package com.oltpbenchmark.distributions;
 import java.util.Random;
 
 public class ZipFianDistribution {
-    private Random rnd = new Random(System.currentTimeMillis());
-    private int size;
-    private double skew;
+    private final Random rnd = new Random(System.currentTimeMillis());
+    private final int size;
+    private final double skew;
     private double bottom = 0;
 
     public ZipFianDistribution(int size, double skew) {

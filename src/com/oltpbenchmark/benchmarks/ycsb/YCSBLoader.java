@@ -40,7 +40,7 @@ public class YCSBLoader extends Loader<YCSBBenchmark> {
             LOG.debug("# of RECORDS:  " + this.num_record);
         }
     }
-    
+
     @Override
     public List<LoaderThread> createLoaderThreads() throws SQLException {
         List<LoaderThread> threads = new ArrayList<LoaderThread>();
@@ -64,7 +64,7 @@ public class YCSBLoader extends Loader<YCSBBenchmark> {
     private void loadRecords(Connection conn, int start, int stop) throws SQLException {
         Table catalog_tbl = this.benchmark.getTableCatalog("USERTABLE");
         assert (catalog_tbl != null);
-        
+
         String sql = SQLUtil.getInsertSQL(catalog_tbl, this.getDatabaseType());
         PreparedStatement stmt = conn.prepareStatement(sql);
         long total = 0;
@@ -77,7 +77,7 @@ public class YCSBLoader extends Loader<YCSBBenchmark> {
             stmt.addBatch();
             total++;
             if (++batch >= YCSBConstants.COMMIT_BATCH_SIZE) {
-                int result[] = stmt.executeBatch();
+                int[] result = stmt.executeBatch();
                 assert (result != null);
                 conn.commit();
                 batch = 0;
@@ -95,5 +95,5 @@ public class YCSBLoader extends Loader<YCSBBenchmark> {
         if (LOG.isDebugEnabled()) LOG.debug("Finished loading " + catalog_tbl.getName());
         return;
     }
-    
+
 }

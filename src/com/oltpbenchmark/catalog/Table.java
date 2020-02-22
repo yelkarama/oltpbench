@@ -31,17 +31,17 @@ import java.util.List;
  */
 public class Table extends AbstractCatalogObject {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final List<Column> columns = new ArrayList<Column>();
     private final List<IntegrityConstraint> constraints = new ArrayList<IntegrityConstraint>();
     private final List<String> primaryKeys = new ArrayList<String>();
     private final List<Index> indexes = new ArrayList<Index>();
-    
-    
+
+
     public Table(String tableName) {
     	super(tableName);
     }
-    
+
     public Table(Table srcTable) {
         this(srcTable.getName());
 
@@ -58,16 +58,16 @@ public class Table extends AbstractCatalogObject {
     public Table clone() {
         return new Table(this);
     }
-    
+
     // ----------------------------------------------------------
     // COLUMNS
     // ----------------------------------------------------------
-    
+
     public void addColumn(Column col) {
         assert(this.columns.contains(col) == false) : "Duplicate column '" + col + "'";
         this.columns.add(col);
     }
-    
+
     public int getColumnCount() {
         return this.columns.size();
     }
@@ -91,9 +91,9 @@ public class Table extends AbstractCatalogObject {
         } // FOR
         return -1;
     }
-    
+
     public int[] getColumnTypes() {
-        int types[] = new int[this.getColumnCount()];
+        int[] types = new int[this.getColumnCount()];
         for (Column catalog_col : this.getColumns()) {
             types[catalog_col.getIndex()] = catalog_col.getType();
         } // FOR
@@ -108,7 +108,7 @@ public class Table extends AbstractCatalogObject {
     // ----------------------------------------------------------
     // INDEXES
     // ----------------------------------------------------------
-    
+
     /**
      * Add a new Index for this table
      * @param index
@@ -117,11 +117,11 @@ public class Table extends AbstractCatalogObject {
         assert(this.indexes.contains(index) == false) : "Duplicate index '" + index + "'";
         this.indexes.add(index);
     }
-    
+
     public Collection<Index> getIndexes() {
         return (this.indexes);
     }
-    
+
     /**
      * Return the number of indexes for this table
      * @return
@@ -129,7 +129,7 @@ public class Table extends AbstractCatalogObject {
     public int getIndexCount() {
         return this.indexes.size();
     }
-    
+
     /**
      * Return a particular index based on its name
      * @param indexName
@@ -138,22 +138,22 @@ public class Table extends AbstractCatalogObject {
     public Index getIndex(String indexName) {
         for (Index catalog_idx : this.indexes) {
             if (catalog_idx.getName().equalsIgnoreCase(indexName)) {
-                return (catalog_idx); 
+                return (catalog_idx);
             }
         } // FOR
         return (null);
     }
-    
+
     // ----------------------------------------------------------
     // PRIMARY KEY INDEX
     // ----------------------------------------------------------
-    
-    
+
+
     public void setPrimaryKeyColumns(Collection<String> colNames) {
         this.primaryKeys.clear();
         this.primaryKeys.addAll(colNames);
     }
-    
+
     /**
      * Get the list of column names that are the primary keys for this table
      * @return
@@ -188,7 +188,7 @@ public class Table extends AbstractCatalogObject {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        
+
         sb.append(getName()).append(" (\n");
         for (int i = 0, cnt = this.columns.size(); i < cnt; i++) {
             sb.append("  ").append(this.columns.get(i)).append("\n");

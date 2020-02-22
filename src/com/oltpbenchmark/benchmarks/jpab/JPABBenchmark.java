@@ -36,7 +36,7 @@ public class JPABBenchmark extends BenchmarkModule {
 
     private EntityManagerFactory emf;
 
-    private JPABConfiguration jpabConf;
+    private final JPABConfiguration jpabConf;
 
     public JPABBenchmark(WorkloadConfiguration workConf) {
         super("jpab", workConf, false);

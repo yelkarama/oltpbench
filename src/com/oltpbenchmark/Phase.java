@@ -47,7 +47,7 @@ public class Phase {
     private final boolean timed;
     private final List<Double> weights;
     private final int num_weights;
-    private int activeTerminals;
+    private final int activeTerminals;
 
     Phase(String benchmarkName, int id, int t, int wt, int r, List<String> o, boolean rateLimited, boolean disabled,
             boolean serial, boolean timed, int activeTerminals, Arrival a) {
@@ -142,10 +142,10 @@ public class Phase {
     public List<Double> getWeights() {
         return (this.weights);
     }
-    
+
     /**
      * Computes the sum of weights. Usually needs to add up to 100%
-     * 
+     *
      * @return The total weight
      */
     public double totalWeight() {
@@ -154,11 +154,11 @@ public class Phase {
             total += d;
         return total;
     }
-    
+
     /**
      * This simply computes the next transaction by randomly selecting one based
      * on the weights of this phase.
-     * 
+     *
      * @return
      */
     public int chooseTransaction() {
@@ -212,7 +212,7 @@ public class Phase {
 
         return -1;
     }
-    
+
     /**
      * Returns a string for logging purposes when entering the phase
      */
@@ -236,7 +236,7 @@ public class Phase {
             inner.add("[Ratios=" + getWeights() + "]");
             inner.add("[ActiveWorkers=" + getActiveTerminals() + "]");
         }
-        
+
         return StringUtil.bold("PHASE START") + " :: " + StringUtil.join(" ", inner);
     }
 

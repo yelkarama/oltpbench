@@ -42,8 +42,8 @@ import com.oltpbenchmark.benchmarks.linkbench.utils.ConfigUtil;
 public class LinkBenchBenchmark extends BenchmarkModule {
 
     private static final Logger LOG = Logger.getLogger(LinkBenchBenchmark.class);
-    private LinkBenchConfiguration linkBenchConf;
-    private Properties props;
+    private final LinkBenchConfiguration linkBenchConf;
+    private final Properties props;
 
     public LinkBenchBenchmark(WorkloadConfiguration workConf) throws Exception {
         super("linkbench", workConf, true);

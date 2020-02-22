@@ -171,7 +171,7 @@ public class WikipediaWorker extends Worker<WikipediaBenchmark> {
 
         // Permute the original text of the article
         // Important: We have to make sure that we fill in the entire array
-        char newText[] = b.generateRevisionText(a.oldText.toCharArray());
+        char[] newText = b.generateRevisionText(a.oldText.toCharArray());
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("UPDATING: Page: id:" + a.pageId + " ns:" + nameSpace + " title" + pageTitle);

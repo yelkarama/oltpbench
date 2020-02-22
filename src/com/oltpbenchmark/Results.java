@@ -39,7 +39,7 @@ public final class Results {
     final Histogram<TransactionType> txnRetry = new Histogram<TransactionType>(true);
     final Histogram<TransactionType> txnErrors = new Histogram<TransactionType>(true);
     final Map<TransactionType, Histogram<String>> txnAbortMessages = new HashMap<TransactionType, Histogram<String>>();
-    
+
     public final List<LatencyRecord.Sample> latencySamples;
 
     public Results(long nanoSeconds, int measuredRequests, DistributionStatistics latencyDistribution, final List<LatencyRecord.Sample> latencySamples) {
@@ -88,7 +88,7 @@ public final class Results {
     public void writeCSV(int windowSizeSeconds, PrintStream out) {
         writeCSV(windowSizeSeconds, out, TransactionType.INVALID);
     }
-    
+
     public void writeCSV(int windowSizeSeconds, PrintStream out, TransactionType txType) {
         out.println("time(sec), throughput(req/sec), avg_lat(ms), min_lat(ms), 25th_lat(ms), median_lat(ms), 75th_lat(ms), 90th_lat(ms), 95th_lat(ms), 99th_lat(ms), max_lat(ms), tp (req/s) scaled");
         int i = 0;
@@ -101,13 +101,13 @@ public final class Results {
             i += 1;
         }
     }
-    
+
     public void writeCSV2(PrintStream out) {
         writeCSV2(1, out, TransactionType.INVALID);
     }
 
     public void writeCSV2(int windowSizeSeconds, PrintStream out, TransactionType txType) {
-    	String header[] = {
+    	String[] header = {
 	    	"Time (seconds)",
 	    	"Requests",
 	    	"Throughput (requests/second)",
@@ -159,7 +159,7 @@ public final class Results {
         double offset = x - y;
 
         // long startNs = latencySamples.get(0).startNs;
-        String header[] = {
+        String[] header = {
             "Transaction Type Index",
             "Transaction Name",
             "Start Time (microseconds)",
@@ -170,7 +170,7 @@ public final class Results {
         out.println(StringUtil.join(",", header));
         for (Sample s : latencySamples) {
             double startUs = ((double) s.startNs / (double) 1000000000);
-            String row[] = {
+            String[] row = {
                 Integer.toString(s.tranType),
                 // Important!
                 // The TxnType offsets start at 1!

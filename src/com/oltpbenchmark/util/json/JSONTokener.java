@@ -55,7 +55,7 @@ SOFTWARE.
 public class JSONTokener {
 
     private int index;
-    private Reader reader;
+    private final Reader reader;
     private char lastChar;
     private boolean useLastChar;
 
@@ -66,7 +66,7 @@ public class JSONTokener {
      * @param reader     A reader.
      */
     public JSONTokener(Reader reader) {
-        this.reader = reader.markSupported() ? 
+        this.reader = reader.markSupported() ?
                 reader : new BufferedReader(reader);
         this.useLastChar = false;
         this.index = 0;
@@ -127,7 +127,7 @@ public class JSONTokener {
         char nextChar = next();
         if (nextChar == 0) {
             return false;
-        } 
+        }
         back();
         return true;
     }
@@ -145,7 +145,7 @@ public class JSONTokener {
                 this.index += 1;
             }
             return this.lastChar;
-        } 
+        }
         int c;
         try {
             c = this.reader.read();
@@ -156,7 +156,7 @@ public class JSONTokener {
         if (c <= 0) { // End of stream
             this.lastChar = 0;
             return 0;
-        } 
+        }
         this.index += 1;
         this.lastChar = (char) c;
         return this.lastChar;

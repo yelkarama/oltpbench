@@ -36,16 +36,16 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
 /**
- * 
+ *
  * @author pavlo
  *
  */
 public abstract class ClassUtil {
     private static final Logger LOG = Logger.getLogger(ClassUtil.class);
-    
+
     private static final Class<?>[] EMPTY_ARRAY = new Class[]{};
-    
-    private static final Map<Class<?>, List<Class<?>>> CACHE_getSuperClasses = new HashMap<Class<?>, List<Class<?>>>(); 
+
+    private static final Map<Class<?>, List<Class<?>>> CACHE_getSuperClasses = new HashMap<Class<?>, List<Class<?>>>();
     private static final Map<Class<?>, Set<Class<?>>> CACHE_getInterfaceClasses = new HashMap<Class<?>, Set<Class<?>>>();
 
     /**
@@ -55,17 +55,17 @@ public abstract class ClassUtil {
      * @return     True of the object is an array.
      */
     public static boolean isArray(final Object obj) {
-        return (obj != null ? obj.getClass().isArray() : false);
+        return (obj != null && obj.getClass().isArray());
     }
-    
-    public static boolean[] isArray(final Object objs[]) {
-        boolean is_array[] = new boolean[objs.length];
+
+    public static boolean[] isArray(final Object[] objs) {
+        boolean[] is_array = new boolean[objs.length];
         for (int i = 0; i < objs.length; i++) {
             is_array[i] = ClassUtil.isArray(objs[i]);
         } // FOR
         return (is_array);
     }
-    
+
     /**
      * Convert a Enum array to a Field array
      * This assumes that the name of each Enum element corresponds to a data member in the clas
@@ -75,8 +75,8 @@ public abstract class ClassUtil {
      * @return
      * @throws NoSuchFieldException
      */
-    public static <E extends Enum<?>> Field[] getFieldsFromMembersEnum(Class<?> clazz, E members[]) throws NoSuchFieldException {
-        Field fields[] = new Field[members.length];
+    public static <E extends Enum<?>> Field[] getFieldsFromMembersEnum(Class<?> clazz, E[] members) throws NoSuchFieldException {
+        Field[] fields = new Field[members.length];
         for (int i = 0; i < members.length; i++) {
             fields[i] = clazz.getDeclaredField(members[i].name().toLowerCase());
         } // FOR
@@ -97,7 +97,7 @@ public abstract class ClassUtil {
         }
         return (generic_classes);
     }
-        
+
     private static void getGenericTypesImpl(ParameterizedType ptype, List<Class<?>> classes) {
         // list the actual type arguments
         for (Type t : ptype.getActualTypeArguments()) {
@@ -113,7 +113,7 @@ public abstract class ClassUtil {
         } // FOR
         return;
     }
-    
+
     /**
      * Return an ordered list of all the sub-classes for a given class
      * Useful when dealing with generics
@@ -133,7 +133,7 @@ public abstract class ClassUtil {
         }
         return (ret);
     }
-    
+
     /**
      * Get a set of all of the interfaces that the element_class implements
      * @param element_class
@@ -160,20 +160,20 @@ public abstract class ClassUtil {
         }
         return (ret);
     }
-    
+
     @SuppressWarnings("unchecked")
-    public static <T> T newInstance(String class_name, Object params[], Class<?> classes[]) {
+    public static <T> T newInstance(String class_name, Object[] params, Class<?>[] classes) {
         return ((T)ClassUtil.newInstance(ClassUtil.getClass(class_name), params, classes));
     }
 
-    
-    public static <T> T newInstance(Class<T> target_class, Object params[], Class<?> classes[]) {
+
+    public static <T> T newInstance(Class<T> target_class, Object[] params, Class<?>[] classes) {
 //        Class<?> const_params[] = new Class<?>[params.length];
 //        for (int i = 0; i < params.length; i++) {
 //            const_params[i] = params[i].getClass();
 //            System.err.println("[" + i + "] " + params[i] + " " + params[i].getClass());
 //        } // FOR
-        
+
         Constructor<T> constructor = ClassUtil.getConstructor(target_class, classes);
         T ret = null;
         try {
@@ -183,9 +183,9 @@ public abstract class ClassUtil {
         }
         return (ret);
     }
-    
+
     /**
-     * 
+     *
      * @param <T>
      * @param target_class
      * @param params
@@ -202,26 +202,26 @@ public abstract class ClassUtil {
             error = ex;
         }
         assert(error != null);
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("TARGET CLASS:  " + target_class);
             LOG.debug("TARGET PARAMS: " + Arrays.toString(params));
         }
-        
-        List<Class<?>> paramSuper[] = (List<Class<?>>[])new List[params.length]; 
+
+        List<Class<?>>[] paramSuper = (List<Class<?>>[])new List[params.length];
         for (int i = 0; i < params.length; i++) {
             paramSuper[i] = ClassUtil.getSuperClasses(params[i]);
             if (LOG.isDebugEnabled()) LOG.debug("  SUPER[" + params[i].getSimpleName() + "] => " + paramSuper[i]);
         } // FOR
-        
+
         for (Constructor<?> c : target_class.getConstructors()) {
-            Class<?> cTypes[] = c.getParameterTypes();
+            Class<?>[] cTypes = c.getParameterTypes();
             if (LOG.isDebugEnabled()) {
                 LOG.debug("CANDIDATE: " + c);
                 LOG.debug("CANDIDATE PARAMS: " + Arrays.toString(cTypes));
             }
             if (params.length != cTypes.length) continue;
-            
+
             for (int i = 0; i < params.length; i++) {
                 List<Class<?>> cSuper = ClassUtil.getSuperClasses(cTypes[i]);
                 if (LOG.isDebugEnabled()) LOG.debug("  SUPER[" + cTypes[i].getSimpleName() + "] => " + cSuper);
@@ -232,7 +232,7 @@ public abstract class ClassUtil {
         } // FOR (constructors)
         throw new RuntimeException("Failed to retrieve constructor for " + target_class.getSimpleName(), error);
     }
-    
+
     /** Create an object for the given class and initialize it from conf
     *
     * @param theClass class of which an object is created
@@ -260,9 +260,9 @@ public abstract class ClassUtil {
                                          throws ClassNotFoundException {
      return newInstance(getClass(className), expected);
    }
-    
+
     /**
-     * 
+     *
      * @param class_name
      * @return
      */
@@ -270,14 +270,14 @@ public abstract class ClassUtil {
         Class<?> target_class = null;
         try {
             ClassLoader loader = ClassLoader.getSystemClassLoader();
-            target_class = (Class<?>)loader.loadClass(class_name);
+            target_class = loader.loadClass(class_name);
         } catch (Exception ex) {
             throw new RuntimeException("Failed to retrieve class for " + class_name, ex);
         }
         return (target_class);
- 
+
     }
-    
+
     /**
      * Returns true if asserts are enabled. This assumes that
      * we're always using the default system ClassLoader

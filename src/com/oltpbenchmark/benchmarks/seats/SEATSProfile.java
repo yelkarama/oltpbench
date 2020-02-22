@@ -164,7 +164,7 @@ public class SEATSProfile {
         }
 
         // Tuple Code to Tuple Id Mapping
-        for (String xref[] : SEATSConstants.CODE_TO_ID_COLUMNS) {
+        for (String[] xref : SEATSConstants.CODE_TO_ID_COLUMNS) {
             assert (xref.length == 3);
             String tableName = xref[0];
             String codeCol = xref[1];
@@ -316,7 +316,7 @@ public class SEATSProfile {
 
             // Otherwise we have to go fetch everything again
             LoadConfig proc = worker.getProcedure(LoadConfig.class);
-            ResultSet results[] = proc.run(worker.getConnection());
+            ResultSet[] results = proc.run(worker.getConnection());
             int result_idx = 0;
 
             // CONFIG_PROFILE

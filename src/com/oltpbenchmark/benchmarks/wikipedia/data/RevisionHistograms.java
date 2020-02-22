@@ -283,17 +283,17 @@ public abstract class RevisionHistograms {
             this.put(255, 232);
         }
     };
-    
+
     /**
-     * 
+     *
      */
-    public static final int REVISION_DELTA_SIZES[] = { 1000, 10000, 100000 };
-    
+    public static final int[] REVISION_DELTA_SIZES = { 1000, 10000, 100000 };
+
     /**
-     * 
+     *
      */
     @SuppressWarnings("unchecked")
-    public static final Histogram<Integer> REVISION_DELTAS[] = (Histogram<Integer>[])new Histogram[] {
+    public static final Histogram<Integer>[] REVISION_DELTAS = (Histogram<Integer>[])new Histogram[] {
         new Histogram<Integer>() {
             {
                 this.put(-1000, 237);
@@ -1320,7 +1320,7 @@ public abstract class RevisionHistograms {
             }
         }
     };
-    
+
     /**
      * The histogram of the REV_MINOR_EDIT column
      */
@@ -1330,5 +1330,5 @@ public abstract class RevisionHistograms {
             this.put(1, 362171);
         }
     };
-    
+
 }

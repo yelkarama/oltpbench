@@ -46,7 +46,7 @@ public class ID2Chooser {
   private static final int MAX_UNIQ_ITERS = 100;
 
   private final long startid1;
-  private long maxid1;
+  private final long maxid1;
 
   /** if > 0, choose id2s in range [startid1, randomid2max) */
   private final long randomid2max;
@@ -121,7 +121,7 @@ public class ID2Chooser {
 
   public long[] chooseMultipleForOp(Random rng, long id1, long linkType,
       int nid2s, double pExisting) {
-    long id2s[] = new long[nid2s];
+    long[] id2s = new long[nid2s];
     long nlinks = calcLinkCount(id1, linkType);
     long range = calcID2Range(pExisting, nlinks);
     if (range <= nid2s && randomid2max == 0) {
@@ -236,7 +236,7 @@ public class ID2Chooser {
   }
 
   public long[] getLinkTypes() {
-    long res[] = new long[linkTypeCount];
+    long[] res = new long[linkTypeCount];
     // Just have link types in a sequence starting at the default one
     for (int i = 0; i < linkTypeCount; i++) {
       res[i] = LinkBenchConstants.DEFAULT_LINK_TYPE + i;

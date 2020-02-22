@@ -47,14 +47,14 @@ public class TPCCWorker extends Worker<TPCCBenchmark> {
 	// private boolean debugMessages;
 	private final Random gen = new Random();
 
-	private int numWarehouses;
+	private final int numWarehouses;
 
 	public TPCCWorker(TPCCBenchmark benchmarkModule, int id,
 			int terminalWarehouseID, int terminalDistrictLowerID,
 			int terminalDistrictUpperID, int numWarehouses)
 			throws SQLException {
 		super(benchmarkModule, id);
-		
+
 		this.terminalWarehouseID = terminalWarehouseID;
 		this.terminalDistrictLowerID = terminalDistrictLowerID;
 		this.terminalDistrictUpperID = terminalDistrictUpperID;

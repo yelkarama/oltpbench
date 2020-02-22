@@ -33,7 +33,7 @@ public class GetLinkList extends Procedure{
     private static final Logger LOG = Logger.getLogger(GetLinkList.class);
 
     private PreparedStatement stmt = null;
-    
+
     public final SQLStmt getLinkListsStmt = new SQLStmt(
             "select id1, id2, link_type," +
                     " visibility, data, time," +
@@ -51,18 +51,18 @@ public class GetLinkList extends Procedure{
             int offset, int limit) throws SQLException {
         if(stmt == null)
             stmt = this.getPreparedStatement(conn, getLinkListsStmt);
-        stmt.setLong(1, id1);          
-        stmt.setLong(2, link_type);          
-        stmt.setLong(3, minTimestamp);          
-        stmt.setLong(4, maxTimestamp);                   
+        stmt.setLong(1, id1);
+        stmt.setLong(2, link_type);
+        stmt.setLong(3, minTimestamp);
+        stmt.setLong(4, maxTimestamp);
         stmt.setLong(5, LinkBenchConstants.VISIBILITY_DEFAULT);
         stmt.setInt(6, offset);
         stmt.setInt(7, limit);
-        
+
         if (LOG.isTraceEnabled()) {
             LOG.trace("Query is " + stmt);
         }
-        
+
         ResultSet rs = stmt.executeQuery();
 
         // Find result set size
@@ -81,7 +81,7 @@ public class GetLinkList extends Procedure{
         }
 
         // Fetch the link data
-        Link links[] = new Link[count];
+        Link[] links = new Link[count];
         int i = 0;
         while (rs.next()) {
           Link l = createLinkFromRow(rs);

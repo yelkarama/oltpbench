@@ -33,17 +33,17 @@ import com.oltpbenchmark.benchmarks.auctionmark.util.AuctionMarkUtil;
  * @author pavlo
  */
 public class NewFeedback extends Procedure {
-    
+
     // -----------------------------------------------------------------
     // STATEMENTS
     // -----------------------------------------------------------------
-    
+
     public final SQLStmt checkUserFeedback = new SQLStmt(
-        "SELECT uf_i_id, uf_i_u_id, uf_from_id " + 
-        "  FROM " + AuctionMarkConstants.TABLENAME_USERACCT_FEEDBACK + " " + 
+        "SELECT uf_i_id, uf_i_u_id, uf_from_id " +
+        "  FROM " + AuctionMarkConstants.TABLENAME_USERACCT_FEEDBACK + " " +
         " WHERE uf_u_id = ? AND uf_i_id = ? AND uf_i_u_id = ? AND uf_from_id = ?"
     );
-	
+
     public final SQLStmt insertFeedback = new SQLStmt(
         "INSERT INTO " + AuctionMarkConstants.TABLENAME_USERACCT_FEEDBACK + "( " +
             "uf_u_id, " +
@@ -63,19 +63,19 @@ public class NewFeedback extends Procedure {
             "?"  + // UF_SATTR0
         ")"
     );
-    
+
     public final SQLStmt updateUser = new SQLStmt(
         "UPDATE " + AuctionMarkConstants.TABLENAME_USERACCT + " " +
            "SET u_rating = u_rating + ?, " +
            "    u_updated = ? " +
         " WHERE u_id = ?"
     );
-    
+
     // -----------------------------------------------------------------
     // RUN METHOD
     // -----------------------------------------------------------------
-    
-    public void run(Connection conn, Timestamp benchmarkTimes[],
+
+    public void run(Connection conn, Timestamp[] benchmarkTimes,
                     long user_id, long i_id, long seller_id, long from_id, long rating, String comment) throws SQLException {
         final Timestamp currentTime = AuctionMarkUtil.getProcTimestamp(benchmarkTimes);
 

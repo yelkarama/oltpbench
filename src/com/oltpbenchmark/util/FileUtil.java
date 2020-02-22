@@ -33,8 +33,8 @@ public abstract class FileUtil {
     private static final Logger LOG = Logger.getLogger(FileUtil.class);
 
     private static final Pattern EXT_SPLIT = Pattern.compile("\\.");
-    
-    
+
+
     /**
      * Join path components
      * @param args
@@ -59,19 +59,19 @@ public abstract class FileUtil {
      * Given a basename for a file, find the next possible filename if this file
      * already exists. For example, if the file test.res already exists, create
      * a file called, test.1.res
-     * 
+     *
      * @param basename
      * @return
      */
     public static String getNextFilename(String basename) {
-        
+
         if (!exists(basename))
             return basename;
-        
+
         File f = new File(basename);
         if (f != null && f.isFile()) {
-            String parts[] = EXT_SPLIT.split(basename);
-            
+            String[] parts = EXT_SPLIT.split(basename);
+
             // Check how many files already exist
             int counter = 1;
             String nextName = parts[0] + "." + counter + "." + parts[1];
@@ -81,7 +81,7 @@ public abstract class FileUtil {
             }
             return nextName;
         }
-        
+
 
         // Should we throw instead??
         return null;
@@ -108,7 +108,7 @@ public abstract class FileUtil {
 
     public static String getExtension(File f) {
         if (f != null && f.isFile()) {
-            String parts[] = EXT_SPLIT.split(f.getName());
+            String[] parts = EXT_SPLIT.split(f.getName());
             if (parts.length > 1) {
                 return (parts[parts.length - 1]);
             }
@@ -119,7 +119,7 @@ public abstract class FileUtil {
 
     /**
      * Create any directory in the list paths if it doesn't exist
-     * 
+     *
      * @param paths
      */
     public static void makeDirIfNotExists(String... paths) {
@@ -135,7 +135,7 @@ public abstract class FileUtil {
 
     /**
      * Return a File handle to a temporary file location
-     * 
+     *
      * @param ext
      *            the suffix of the filename
      * @param deleteOnExit
@@ -170,7 +170,7 @@ public abstract class FileUtil {
     /**
      * Unsafely create a temporary directory Yes I said that this was unsafe. I
      * don't care...
-     * 
+     *
      * @return
      */
     public static File getTempDirectory() {
@@ -198,7 +198,7 @@ public abstract class FileUtil {
     /**
      * Write the given string to a temporary file Will not delete the file after
      * the JVM exits
-     * 
+     *
      * @param content
      * @return
      */
@@ -209,7 +209,7 @@ public abstract class FileUtil {
     /**
      * Write the given string to a temporary file with the given extension as
      * the suffix Will not delete the file after the JVM exits
-     * 
+     *
      * @param content
      * @param ext
      * @return
@@ -222,7 +222,7 @@ public abstract class FileUtil {
      * Write the given string to a temporary file with the given extension as
      * the suffix If deleteOnExit is true, then the file will be removed when
      * the JVM exits
-     * 
+     *
      * @param content
      * @param ext
      * @param deleteOnExit
@@ -260,7 +260,7 @@ public abstract class FileUtil {
     /**
      * Creates a BufferedReader for the given input path Can handle both gzip
      * and plain text files
-     * 
+     *
      * @param path
      * @return
      * @throws IOException
@@ -272,7 +272,7 @@ public abstract class FileUtil {
     /**
      * Creates a BufferedReader for the given input path Can handle both gzip
      * and plain text files
-     * 
+     *
      * @param file
      * @return
      * @throws IOException
@@ -321,7 +321,7 @@ public abstract class FileUtil {
     /**
      * Find the path to a directory below our current location in the source
      * tree Throws a RuntimeException if we go beyond our repository checkout
-     * 
+     *
      * @param dirName
      * @return
      * @throws IOException
@@ -333,7 +333,7 @@ public abstract class FileUtil {
     /**
      * Find the path to a directory below our current location in the source
      * tree Throws a RuntimeException if we go beyond our repository checkout
-     * 
+     *
      * @param dirName
      * @return
      * @throws IOException
@@ -363,7 +363,7 @@ public abstract class FileUtil {
     /**
      * Returns a list of all the files in a directory whose name starts with the
      * provided prefix
-     * 
+     *
      * @param dir
      * @param filePrefix
      * @return

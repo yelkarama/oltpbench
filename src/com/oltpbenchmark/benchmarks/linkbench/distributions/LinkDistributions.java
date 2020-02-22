@@ -26,18 +26,18 @@ import com.oltpbenchmark.benchmarks.linkbench.utils.ConfigUtil;
 import com.oltpbenchmark.util.ClassUtil;
 
 public class LinkDistributions {
-  public static interface LinkDistribution {
-    public abstract long getNlinks(long id1);
+  public interface LinkDistribution {
+    long getNlinks(long id1);
 
     /**
      * Let caller know it should shuffle IDs
      * @return
      */
-    public boolean doShuffle();
+    boolean doShuffle();
   }
 
   public static class ProbLinkDistribution implements LinkDistribution {
-    private ProbabilityDistribution dist;
+    private final ProbabilityDistribution dist;
 
     public ProbLinkDistribution(ProbabilityDistribution dist) {
       this.dist = dist;
@@ -45,7 +45,7 @@ public class LinkDistributions {
 
     @Override
     public long getNlinks(long id1) {
-      return (long) Math.round( dist.expectedCount(id1));
+      return Math.round( dist.expectedCount(id1));
     }
 
     /** shuffle, otherwise ids will be in order of most to least ids */
@@ -58,7 +58,7 @@ public class LinkDistributions {
   /**
    * Built-in distributions
    */
-  public static enum LinkDistMode {
+  public enum LinkDistMode {
     REAL, // observed distribution
     CONST, // Constant value
     RECIPROCAL, // 1/x
@@ -72,11 +72,12 @@ public class LinkDistributions {
    */
   public static class ArithLinkDistribution implements LinkDistribution {
 
-    private LinkDistMode mode;
-    private long nlinks_config;
+    private final LinkDistMode mode;
+    private final long nlinks_config;
     private long nlinks_default;
 
-    private long minid1, maxid1;
+    private final long minid1;
+    private final long maxid1;
 
     public ArithLinkDistribution(long minid1, long maxid1, LinkDistMode mode,
         long nlinks_config, long nlinks_default) {

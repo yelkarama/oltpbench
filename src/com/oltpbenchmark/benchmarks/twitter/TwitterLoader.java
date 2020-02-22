@@ -160,7 +160,7 @@ public class TwitterLoader extends Loader<TwitterBenchmark> {
             batchSize++;
             total++;
             if ((batchSize % configCommitCount) == 0) {
-                int result[] = userInsert.executeBatch();
+                int[] result = userInsert.executeBatch();
                 assert (result != null);
                 conn.commit();
                 userInsert.clearBatch();

@@ -44,21 +44,21 @@ public class AccessDistributions {
      * @param previousId previous ID (for stateful generators)
      * @return
      */
-    public abstract long nextID(Random rng, long previousId);
+    long nextID(Random rng, long previousId);
 
     /**
      * A shuffler to shuffle the results, or
      * null if the results shouldn't be shuffled
      * @return
      */
-    public abstract InvertibleShuffler getShuffler();
+    InvertibleShuffler getShuffler();
   }
 
   public static class BuiltinAccessDistribution implements AccessDistribution {
-    private AccessDistMode mode;
+    private final AccessDistMode mode;
     protected long minid;
     protected long maxid;
-    private long config;
+    private final long config;
 
     /** Use to generate decent quality random longs in range */
     UniformDistribution uniform;
@@ -124,7 +124,7 @@ public class AccessDistributions {
 
   public static class ProbAccessDistribution implements AccessDistribution {
     private final ProbabilityDistribution dist;
-    private InvertibleShuffler shuffler;
+    private final InvertibleShuffler shuffler;
 
     public ProbAccessDistribution(ProbabilityDistribution dist,
                                   InvertibleShuffler shuffler) {
@@ -145,7 +145,7 @@ public class AccessDistributions {
 
   }
 
-  public static enum AccessDistMode {
+  public enum AccessDistMode {
     REAL, // Real empirical distribution
     ROUND_ROBIN, // Cycle through ids
     RECIPROCAL, // Pick with probability

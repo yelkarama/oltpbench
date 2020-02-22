@@ -47,24 +47,24 @@ public class NewBid extends Procedure {
 
     public final SQLStmt getItem = new SQLStmt(
         "SELECT i_initial_price, i_current_price, i_num_bids, i_end_date, i_status " +
-          "FROM " + AuctionMarkConstants.TABLENAME_ITEM + " " + 
+          "FROM " + AuctionMarkConstants.TABLENAME_ITEM + " " +
          "WHERE i_id = ? AND i_u_id = ? "
     );
-    
+
     public final SQLStmt getMaxBidId = new SQLStmt(
-        "SELECT MAX(ib_id) " + 
+        "SELECT MAX(ib_id) " +
         "  FROM " + AuctionMarkConstants.TABLENAME_ITEM_BID +
         " WHERE ib_i_id = ? AND ib_u_id = ? "
     );
-    
+
     public final SQLStmt getItemMaxBid = new SQLStmt(
-        "SELECT imb_ib_id, ib_bid, ib_max_bid, ib_buyer_id " + 
+        "SELECT imb_ib_id, ib_bid, ib_max_bid, ib_buyer_id " +
         "  FROM " + AuctionMarkConstants.TABLENAME_ITEM_MAX_BID + ", " +
                     AuctionMarkConstants.TABLENAME_ITEM_BID +
         " WHERE imb_i_id = ? AND imb_u_id = ? " +
         "   AND imb_ib_id = ib_id AND imb_ib_i_id = ib_i_id AND imb_ib_u_id = ib_u_id "
     );
-    
+
     public final SQLStmt updateItem = new SQLStmt(
         "UPDATE " + AuctionMarkConstants.TABLENAME_ITEM +
         "   SET i_num_bids = i_num_bids + 1, " +
@@ -72,9 +72,9 @@ public class NewBid extends Procedure {
         "       i_updated = ? " +
         " WHERE i_id = ? AND i_u_id = ? "
     );
-    
+
     public final SQLStmt updateItemMaxBid = new SQLStmt(
-        "UPDATE " + AuctionMarkConstants.TABLENAME_ITEM_MAX_BID + 
+        "UPDATE " + AuctionMarkConstants.TABLENAME_ITEM_MAX_BID +
         "   SET imb_ib_id = ?, " +
         "       imb_ib_i_id = ?, " +
         "       imb_ib_u_id = ?, " +
@@ -82,9 +82,9 @@ public class NewBid extends Procedure {
         " WHERE imb_i_id = ? " +
         "   AND imb_u_id = ?"
     );
-    
+
     public final SQLStmt updateBid = new SQLStmt(
-        "UPDATE " + AuctionMarkConstants.TABLENAME_ITEM_BID + 
+        "UPDATE " + AuctionMarkConstants.TABLENAME_ITEM_BID +
         "   SET ib_bid = ?, " +
         "       ib_max_bid = ?, " +
         "       ib_updated = ? " +
@@ -92,12 +92,12 @@ public class NewBid extends Procedure {
         "   AND ib_i_id = ? " +
         "   AND ib_u_id = ? "
     );
-    
+
     public final SQLStmt insertItemBid = new SQLStmt(
         "INSERT INTO " + AuctionMarkConstants.TABLENAME_ITEM_BID + " (" +
         "ib_id, " +
         "ib_i_id, " +
-        "ib_u_id, " + 
+        "ib_u_id, " +
         "ib_buyer_id, " +
         "ib_bid, " +
         "ib_max_bid, " +
@@ -135,7 +135,7 @@ public class NewBid extends Procedure {
         ")"
     );
 
-    public Object[] run(Connection conn, Timestamp benchmarkTimes[],
+    public Object[] run(Connection conn, Timestamp[] benchmarkTimes,
                         long item_id, long seller_id, long buyer_id, double newBid, Timestamp estimatedEndDate) throws SQLException {
         final Timestamp currentTime = AuctionMarkUtil.getProcTimestamp(benchmarkTimes);
         final boolean debug = LOG.isDebugEnabled();
@@ -144,7 +144,7 @@ public class NewBid extends Procedure {
 
         PreparedStatement stmt = null;
         ResultSet results = null;
-        
+
         // Check to make sure that we can even add a new bid to this item
         // If we fail to get back an item, then we know that the auction is closed
         stmt = this.getPreparedStatement(conn, getItem, item_id, seller_id); // , currentTime);
@@ -162,14 +162,14 @@ public class NewBid extends Procedure {
         results.close();
         long newBidId = 0;
         long newBidMaxBuyerId = buyer_id;
-        
+
 //        if (i_end_date.compareTo(currentTime) < 0 || i_status != ItemStatus.OPEN) {
 //            if (debug)
 //                LOG.debug(String.format("The auction for item %d has ended [status=%s]\nCurrentTime:\t%s\nActualEndDate:\t%s\nEstimatedEndDate:\t%s",
 //                                        item_id, i_status, currentTime, i_end_date, estimatedEndDate));
 //            throw new UserAbortException("Unable to bid on item: Auction has ended");
 //        }
-        
+
         // If we existing bids, then we need to figure out whether we are the new highest
         // bidder or if the existing one just has their max_bid bumped up
         if (i_num_bids > 0) {
@@ -181,7 +181,7 @@ public class NewBid extends Procedure {
             assert (advanceRow);
             newBidId = results.getLong(1) + 1;
             results.close();
-            
+
             // Get the current max bid record for this item
             stmt = this.getPreparedStatement(conn, getItemMaxBid, item_id, seller_id);
             results = stmt.executeQuery();
@@ -193,11 +193,11 @@ public class NewBid extends Procedure {
             double currentBidMax = results.getDouble(col++);
             long currentBuyerId = results.getLong(col++);
             results.close();
-            
+
             boolean updateMaxBid = false;
             assert((int)currentBidAmount == (int)i_current_price) :
                 String.format("%.2f == %.2f", currentBidAmount, i_current_price);
-            
+
             // Check whether this bidder is already the max bidder
             // This means we just need to increase their current max bid amount without
             // changing the current auction price
@@ -222,7 +222,7 @@ public class NewBid extends Procedure {
             else {
                 // The new maxBid trumps the existing guy, so our the buyer_id for this txn becomes the new
                 // winning bidder at this time. The new current price is one step above the previous
-                // max bid amount 
+                // max bid amount
                 if (newBid > currentBidMax) {
                     i_current_price = Math.min(newBid, currentBidMax + (i_initial_price * AuctionMarkConstants.ITEM_BID_PERCENT_STEP));
                     assert(i_current_price > currentBidMax);
@@ -246,7 +246,7 @@ public class NewBid extends Procedure {
                     if (debug) LOG.debug(String.format("Keeping the existing highest bidder of Item %d as %s but updating current price from %.2f to %.2f",
                                                        item_id, buyer_id, currentBidAmount, i_current_price));
                 }
-            
+
                 // Always insert an new ITEM_BID record even if BuyerId doesn't become
                 // the new highest bidder. We also want to insert a new record even if
                 // the BuyerId already has ITEM_BID record, because we want to maintain
@@ -263,7 +263,7 @@ public class NewBid extends Procedure {
                                                             currentTime,
                                                             item_id,
                                                             seller_id).executeUpdate();
-                
+
                 // This has to be done after we insert the ITEM_BID record to make sure
                 // that the HSQLDB test cases work
                 if (updateMaxBid) {
@@ -302,7 +302,7 @@ public class NewBid extends Procedure {
             if (debug) LOG.debug(String.format("Creating the first bid record for Item %d and setting %s as highest bidder at %.2f",
                                                item_id, buyer_id, i_current_price));
         }
-        
+
         // Return back information about the current state of the item auction
         return new Object[] {
             // ITEM_ID

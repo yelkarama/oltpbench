@@ -25,10 +25,10 @@ public enum ItemStatus {
     ENDING_SOON             (true), // Only used internally
     WAITING_FOR_PURCHASE    (false),
     CLOSED                  (false);
-    
+
     private final boolean internal;
-    
-    private ItemStatus(boolean internal) {
+
+    ItemStatus(boolean internal) {
         this.internal = internal;
     }
     public boolean isInternal() {

@@ -32,18 +32,18 @@ import com.oltpbenchmark.benchmarks.auctionmark.util.AuctionMarkUtil;
  * @author visawee
  */
 public class NewCommentResponse extends Procedure {
-	
+
     // -----------------------------------------------------------------
     // STATEMENTS
     // -----------------------------------------------------------------
-    
+
     public final SQLStmt updateComment = new SQLStmt(
         "UPDATE " + AuctionMarkConstants.TABLENAME_ITEM_COMMENT + " " +
         	"SET ic_response = ?, " +
         	"    ic_updated = ? " +
         "WHERE ic_id = ? AND ic_i_id = ? AND ic_u_id = ? "
     );
-    
+
     public final SQLStmt updateUser = new SQLStmt(
         "UPDATE " + AuctionMarkConstants.TABLENAME_USERACCT + " " +
            "SET u_comments = u_comments - 1, " +
@@ -54,12 +54,12 @@ public class NewCommentResponse extends Procedure {
     // -----------------------------------------------------------------
     // RUN METHOD
     // -----------------------------------------------------------------
-    
-    public void run(Connection conn, Timestamp benchmarkTimes[],
+
+    public void run(Connection conn, Timestamp[] benchmarkTimes,
                     long item_id, long seller_id, long comment_id, String response) throws SQLException {
         final Timestamp currentTime = AuctionMarkUtil.getProcTimestamp(benchmarkTimes);
         this.getPreparedStatement(conn, updateComment, response, currentTime, comment_id, item_id, seller_id).executeUpdate();
         this.getPreparedStatement(conn, updateUser, currentTime, seller_id).executeUpdate();
         return;
-    }	
+    }
 }

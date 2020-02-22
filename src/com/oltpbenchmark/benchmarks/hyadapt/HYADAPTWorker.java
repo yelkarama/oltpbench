@@ -62,13 +62,13 @@ public class HYADAPTWorker extends Worker<HYADAPTBenchmark> {
     private static final Logger LOG = Logger.getLogger(HYADAPTWorker.class);
 
     private static CounterGenerator insertRecord;
-    private double selectivity = wrkld.getSelectivity();
-    private int key_lower_bound = (int) ((1 - selectivity) * HYADAPTConstants.RANGE);
-            
+    private final double selectivity = wrkld.getSelectivity();
+    private final int key_lower_bound = (int) ((1 - selectivity) * HYADAPTConstants.RANGE);
+
     public HYADAPTWorker(HYADAPTBenchmark benchmarkModule, int id, int init_record_count) {
-        super(benchmarkModule, id);        
+        super(benchmarkModule, id);
         LOG.info("Key lower bound :: " + key_lower_bound);
-        
+
         synchronized (HYADAPTWorker.class) {
             // We must know where to start inserting
             if (insertRecord == null) {
@@ -80,7 +80,7 @@ public class HYADAPTWorker extends Worker<HYADAPTBenchmark> {
     @Override
     protected TransactionStatus executeWork(TransactionType nextTrans) throws UserAbortException, SQLException {
         Class<? extends Procedure> procClass = nextTrans.getProcedureClass();
-                
+
         if (procClass.equals(ReadRecord1.class)) {
             readRecord1();
         } else if (procClass.equals(ReadRecord2.class)) {
@@ -142,7 +142,7 @@ public class HYADAPTWorker extends Worker<HYADAPTBenchmark> {
         } else if (procClass.equals(SumRecord10.class)) {
             sumRecord10();
         }
-        
+
         conn.commit();
         return (TransactionStatus.SUCCESS);
     }
@@ -274,7 +274,7 @@ public class HYADAPTWorker extends Worker<HYADAPTBenchmark> {
         assert (proc != null);
         proc.run(conn, key_lower_bound);
     }
-    
+
     /////////////////////////
     // SUM
     /////////////////////////

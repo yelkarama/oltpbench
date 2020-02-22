@@ -35,14 +35,14 @@ import com.oltpbenchmark.benchmarks.twitter.util.TransactionSelector;
 import com.oltpbenchmark.benchmarks.twitter.util.TwitterOperation;
 
 public class TwitterBenchmark extends BenchmarkModule {
-	
-	private TwitterConfiguration twitterConf;
+
+	private final TwitterConfiguration twitterConf;
 
 	public TwitterBenchmark(WorkloadConfiguration workConf) {
 		super("twitter", workConf, true);
 		this.twitterConf = new TwitterConfiguration(workConf);
 	}
-	
+
 	@Override
 	protected Package getProcedurePackageImpl() {
 	    return GetFollowers.class.getPackage();
@@ -51,20 +51,20 @@ public class TwitterBenchmark extends BenchmarkModule {
 	@Override
 	protected List<Worker<? extends BenchmarkModule>> makeWorkersImpl(boolean verbose) throws IOException {
 		TransactionSelector transSel = new TransactionSelector(
-		twitterConf.getTracefile(), 
-		twitterConf.getTracefile2(), 
+		twitterConf.getTracefile(),
+		twitterConf.getTracefile2(),
 		workConf.getTransTypes());
 		List<TwitterOperation> trace = Collections.unmodifiableList(transSel.readAll());
 		transSel.close();
 		List<Worker<? extends BenchmarkModule>> workers = new ArrayList<Worker<? extends BenchmarkModule>>();
 		for (int i = 0; i < workConf.getTerminals(); ++i) {
-			TransactionGenerator<TwitterOperation> generator = 
+			TransactionGenerator<TwitterOperation> generator =
 			    new TraceTransactionGenerator(trace);
 			workers.add(new TwitterWorker(this, i, generator));
 		} // FOR
 		return workers;
 	}
-	
+
 	@Override
 	protected Loader<TwitterBenchmark> makeLoaderImpl() throws SQLException {
 		return new TwitterLoader(this);

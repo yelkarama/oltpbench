@@ -35,13 +35,13 @@ import org.apache.commons.collections15.set.ListOrderedSet;
 import org.apache.commons.lang.NotImplementedException;
 
 /**
- * 
+ *
  * @author pavlo
  */
 public abstract class CollectionUtil {
-    
+
     private static final Random RANDOM = new Random();
-    
+
     /**
      * Put all of the elements in items into the given array
      * This assumes that the array has been pre-allocated
@@ -49,9 +49,9 @@ public abstract class CollectionUtil {
      * @param items
      * @param array
      */
-    public static <T> void toArray(Collection<T> items, Object array[], boolean convert_to_primitive) {
+    public static <T> void toArray(Collection<T> items, Object[] array, boolean convert_to_primitive) {
         assert(items.size() == array.length);
-        
+
         int i = 0;
         for (T t : items) {
             if (convert_to_primitive) {
@@ -70,9 +70,9 @@ public abstract class CollectionUtil {
         }
         return;
     }
-    
+
     public static int[] toIntArray(Collection<Integer> items) {
-        int ret[] = new int[items.size()];
+        int[] ret = new int[items.size()];
         int idx = 0;
         for (Integer i : items) {
             assert(i != null);
@@ -80,7 +80,7 @@ public abstract class CollectionUtil {
         } // FOR
         return (ret);
     }
-    
+
     /**
      * Put all the values of an Iterator into a List
      * @param <T>
@@ -110,7 +110,7 @@ public abstract class CollectionUtil {
     public static <T> List<T> list(Iterable<T> it) {
         return (list(it.iterator()));
     }
-    
+
     /**
      * Put all the values of an Iterator into a Set
      * @param <T>
@@ -131,7 +131,7 @@ public abstract class CollectionUtil {
     public static <T> Set<T> set(Iterable<T> it) {
         return (set(it.iterator()));
     }
-    
+
     /**
      * Returns a list containing the string representations of the elements in the collection
      * @param <T>
@@ -143,9 +143,9 @@ public abstract class CollectionUtil {
         for (T t : data) ret.add(t.toString());
         return (ret);
     }
-    
+
     /**
-     * Returns a set containing the string representations of the elements in the collection 
+     * Returns a set containing the string representations of the elements in the collection
      * @param <T>
      * @param data
      * @return
@@ -155,7 +155,7 @@ public abstract class CollectionUtil {
         for (T t : data) ret.add(t.toString());
         return (ret);
     }
-    
+
     /**
      * Return a random value from the given Collection
      * @param <T>
@@ -164,7 +164,7 @@ public abstract class CollectionUtil {
     public static <T> T random(Collection<T> items) {
         return (CollectionUtil.random(items, RANDOM));
     }
-    
+
     /**
      * Return a random value from the given Collection
      * @param <T>
@@ -176,7 +176,7 @@ public abstract class CollectionUtil {
         int idx = rand.nextInt(items.size());
         return (CollectionUtil.get(items, idx));
     }
-    
+
     /**
      * Return a random value from the given Iterable
      * @param <T>
@@ -186,7 +186,7 @@ public abstract class CollectionUtil {
     public static <T> T random(Iterable<T> it) {
         return (CollectionUtil.random(it, RANDOM));
     }
-    
+
     /**
      * Return a random value from the given Iterable
      * @param <T>
@@ -194,18 +194,18 @@ public abstract class CollectionUtil {
      * @param rand
      * @return
      */
-    public static <T> T random(Iterable<T> it, Random rand) { 
+    public static <T> T random(Iterable<T> it, Random rand) {
         List<T> list = new ArrayList<T>();
         for (T t : it) {
             list.add(t);
         } // FOR
         return (CollectionUtil.random(list, rand));
     }
-    
-    public static <E extends Enum<?>> Set<E> getAllExcluding(E elements[], E...excluding) {
+
+    public static <E extends Enum<?>> Set<E> getAllExcluding(E[] elements, E...excluding) {
         Set<E> exclude_set = new HashSet<E>();
         for (E e : excluding) exclude_set.add(e);
-        
+
         Set<E> elements_set = new HashSet<E>();
         for (int i = 0; i < elements.length; i++) {
             if (!exclude_set.contains(elements[i])) elements_set.add(elements[i]);
@@ -216,7 +216,7 @@ public abstract class CollectionUtil {
 //        elements_set.toArray(new_elements);
 //        return ((E[])new_elements);
     }
-    
+
     /**
      * Add all the items in the array to a Collection
      * @param <T>
@@ -224,12 +224,12 @@ public abstract class CollectionUtil {
      * @param items
      */
     public static <T> Collection<T> addAll(Collection<T> data, T...items) {
-        for (T i : (T[])items) {
+        for (T i : items) {
             data.add(i);
         }
         return (data);
     }
-    
+
     /**
      * Add all the items in the Enumeration into a Collection
      * @param <T>
@@ -242,7 +242,7 @@ public abstract class CollectionUtil {
         } // WHILE
         return (data);
     }
-    
+
     /**
      * Add all of the items from the Iterable into the given collection
      * @param <T>
@@ -252,7 +252,7 @@ public abstract class CollectionUtil {
     public static <T> Collection<T> addAll(Collection<T> data, Iterable<T> items) {
         return (CollectionUtil.addAll(data, items.iterator()));
     }
-    
+
     /**
      * Add all of the items from the Iterator into the given collection
      * @param <T>
@@ -265,9 +265,9 @@ public abstract class CollectionUtil {
         } // WHILE
         return (data);
     }
-    
+
     /**
-     * 
+     *
      * @param <T>
      * @param <U>
      * @param map
@@ -286,7 +286,7 @@ public abstract class CollectionUtil {
         } // FOR
         return (max_key);
     }
-    
+
     /**
      * Return the first item in a Iterable
      * @param <T>
@@ -296,7 +296,7 @@ public abstract class CollectionUtil {
     public static <T> T first(Iterable<T> items) {
         return (CollectionUtil.get(items, 0));
     }
-    
+
     /**
      * Return the first item in a Iterator
      * @param <T>
@@ -306,7 +306,7 @@ public abstract class CollectionUtil {
     public static <T> T first(Iterator<T> items) {
         return (items.hasNext() ? items.next() : null);
     }
-    
+
     /**
      * Returns the first item in an Enumeration
      * @param <T>
@@ -316,7 +316,7 @@ public abstract class CollectionUtil {
     public static <T> T first(Enumeration<T> items) {
         return (items.hasMoreElements() ? items.nextElement() : null);
     }
-    
+
     /**
      * Return the ith element of a set. Super lame
      * @param <T>
@@ -336,7 +336,7 @@ public abstract class CollectionUtil {
         }
         return (null);
     }
-    
+
     /**
      * Return the last item in an Iterable
      * @param <T>
@@ -355,7 +355,7 @@ public abstract class CollectionUtil {
         }
         return (last);
     }
-    
+
     /**
      * Return the last item in an array
      * @param <T>
@@ -370,7 +370,7 @@ public abstract class CollectionUtil {
     }
 
     /**
-     * 
+     *
      * @param <K>
      * @param <V>
      * @param map
@@ -383,7 +383,7 @@ public abstract class CollectionUtil {
         } // FOR
         return (ret);
     }
-    
+
     /**
      * Wrap an Iterable around an Iterator
      * @param <T>
@@ -398,8 +398,8 @@ public abstract class CollectionUtil {
             }
         });
     }
-    
-    public static <T> Iterable<T> iterable(final T values[]) {
+
+    public static <T> Iterable<T> iterable(final T[] values) {
         return (new Iterable<T>() {
             @Override
             public Iterator<T> iterator() {
@@ -423,7 +423,7 @@ public abstract class CollectionUtil {
             }
         });
     }
-    
+
     /**
      * Wrap an Iterable around an Enumeration
      * @param <T>
@@ -451,7 +451,7 @@ public abstract class CollectionUtil {
             }
         });
     }
-    
+
     public static <T> T pop(Collection<T> items) {
         T t = CollectionUtil.first(items);
         if (t != null) {

@@ -39,9 +39,9 @@ import com.oltpbenchmark.util.*;
 public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
 
     private static final Logger LOG = Logger.getLogger(LinkBenchWorker.class);
-    private Random rng;
+    private final Random rng;
 
-    private Properties props;
+    private final Properties props;
 
     // Last node id accessed
     long lastNodeId;
@@ -70,7 +70,7 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
 
     // Chance of doing historical range query
     double p_historical_getlinklist;
-    
+
     // Access distributions
     private AccessDistribution writeDist; // link writes
     private AccessDistribution writeDistUncorr; // to blend with link writes
@@ -133,9 +133,9 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
     HashMap<HistoryKey, Integer> listTailHistoryIndex;
 
     // Limit of cache size
-    private int listTailHistoryLimit;
+    private final int listTailHistoryLimit;
 
-    public LinkBenchWorker(LinkBenchBenchmark benchmarkModule, int id, 
+    public LinkBenchWorker(LinkBenchBenchmark benchmarkModule, int id,
             Random masterRandom, Properties props, int nrequesters) {
         super(benchmarkModule, id);
         this.rng = masterRandom;
@@ -255,7 +255,7 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
         if (multigetDist != null) {
             nid2s = (int)multigetDist.choose(rng);
         }
-        long id2s[] = id2chooser.chooseMultipleForOp(rng, id1, link_type, nid2s,
+        long[] id2s = id2chooser.chooseMultipleForOp(rng, id1, link_type, nid2s,
                 ID2Chooser.P_GET_EXIST);
 
         int found = getLink(id1, link_type, id2s);
@@ -297,7 +297,7 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
             false);
     }
     private void updateLink() throws SQLException{
-        //yes, updateLink uses addlLink procedure .. 
+        //yes, updateLink uses addlLink procedure ..
         AddLink proc = this.getProcedure(AddLink.class);
         assert (proc != null);
         Link link = new Link();
@@ -316,7 +316,7 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
         boolean found = found1;
     }
     private void countLink() throws SQLException{
-        //yes, updateLink uses addlLink procedure .. 
+        //yes, updateLink uses addlLink procedure ..
         CountLink proc = this.getProcedure(CountLink.class);
         assert (proc != null);
         Link link = new Link();
@@ -325,11 +325,11 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
         long count = proc.run(conn, id1, link_type);
     }
     private void getLinkList() throws SQLException{
-        //yes, updateLink uses addlLink procedure .. 
+        //yes, updateLink uses addlLink procedure ..
         GetLinkList proc = this.getProcedure(GetLinkList.class);
         assert (proc != null);
         Link link = new Link();
-        Link links[];
+        Link[] links;
         if (rng.nextDouble() < p_historical_getlinklist &&
                     !this.listTailHistory.isEmpty()) {
           links = getLinkListTail();
@@ -506,7 +506,7 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
      * @return
      */
     private Node createAddNode() {
-        byte data[] = nodeAddDataGen.fill(rng, new byte[(int)nodeDataSize.choose(rng)]);
+        byte[] data = nodeAddDataGen.fill(rng, new byte[(int)nodeDataSize.choose(rng)]);
         return new Node(-1, LinkBenchConstants.DEFAULT_NODE_TYPE, 1,
                 (int)(System.currentTimeMillis()/1000), data);
     }
@@ -567,17 +567,17 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
      * Create new node for updating in database
      */
     private Node createUpdateNode(long id) {
-        byte data[] = nodeUpDataGen.fill(rng, new byte[(int)nodeDataSize.choose(rng)]);
+        byte[] data = nodeUpDataGen.fill(rng, new byte[(int)nodeDataSize.choose(rng)]);
         return new Node(id, LinkBenchConstants.DEFAULT_NODE_TYPE, 2,
                 (int)(System.currentTimeMillis()/1000), data);
     }
-    int getLink(long id1, long link_type, long id2s[]) throws SQLException {
-        Link links[] = multigetLinks(id1, link_type, id2s);
+    int getLink(long id1, long link_type, long[] id2s) throws SQLException {
+        Link[] links = multigetLinks(id1, link_type, id2s);
         return links == null ? 0 : links.length;
     }
-    Link[] multigetLinks(long id1, long link_type, long id2s[]) throws SQLException {
+    Link[] multigetLinks(long id1, long link_type, long[] id2s) throws SQLException {
         GetLink proc= this.getProcedure(GetLink.class);
-        Link links[] = proc.run(conn, id1, link_type, id2s);
+        Link[] links = proc.run(conn, id1, link_type, id2s);
         if (LOG.isDebugEnabled()) {
             LOG.trace("getLinkList(id1=" + id1 + ", link_type="  + link_type
                     + ") => count=" + (links == null ? 0 : links.length));
@@ -596,7 +596,7 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
     }
     Link[] getLinkList(long id1, long link_type) throws SQLException {
         GetLinkList proc= this.getProcedure(GetLinkList.class);
-        Link links[] = proc.run(conn, id1, link_type);
+        Link[] links = proc.run(conn, id1, link_type);
         if (LOG.isDebugEnabled()) {
            LOG.trace("getLinkList(id1=" + id1 + ", link_type="  + link_type
                          + ") => count=" + (links == null ? 0 : links.length));
@@ -621,7 +621,7 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
         Link prevLast = listTailHistory.get(choice);
 
         // Get links past the oldest last retrieved
-        Link links[] = proc.run(conn, prevLast.id1,
+        Link[] links = proc.run(conn, prevLast.id1,
             prevLast.link_type, 0, prevLast.time, 1, LinkBenchConstants.DEFAULT_LIMIT);
 
         if (LOG.isDebugEnabled()) {

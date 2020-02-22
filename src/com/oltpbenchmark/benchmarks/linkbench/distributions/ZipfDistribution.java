@@ -97,7 +97,7 @@ public class ZipfDistribution implements ProbabilityDistribution {
   private static final long MIN_CACHE_VALUE = 1000;
   private static final int MAX_CACHE_ENTRIES = 1024;
 
-  private static ArrayList<CacheEntry> zetanCache =
+  private static final ArrayList<CacheEntry> zetanCache =
                 new ArrayList<CacheEntry>(MAX_CACHE_ENTRIES);
 
   private double calcZetan(long n) {
@@ -163,7 +163,7 @@ public class ZipfDistribution implements ProbabilityDistribution {
     // Calculate this way to avoid losing precision by calculating very
     // small pdf number
     if (id < min || id >= max) return 0.0;
-    return (scale / (double) FastMath.pow(id + 1 - min, shape))/ zetan;
+    return (scale / FastMath.pow(id + 1 - min, shape))/ zetan;
   }
 
   @Override

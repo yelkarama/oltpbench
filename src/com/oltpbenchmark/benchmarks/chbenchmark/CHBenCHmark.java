@@ -35,15 +35,15 @@ import com.oltpbenchmark.util.ClassUtil;
 
 public class CHBenCHmark extends BenchmarkModule {
 	private static final Logger LOG = Logger.getLogger(CHBenCHmark.class);
-	
+
 	public CHBenCHmark(WorkloadConfiguration workConf) {
 		super("chbenchmark", workConf, true);
 	}
-	
+
 	protected Package getProcedurePackageImpl() {
 		return (Q15.class.getPackage());
 	}
-	
+
 	/**
 	 * @param Bool
 	 */
@@ -62,13 +62,13 @@ public class CHBenCHmark extends BenchmarkModule {
 
 		return workers;
 	}
-	
+
 	protected Loader<CHBenCHmark> makeLoaderImpl() throws SQLException {
 		return new CHBenCHmarkLoader(this);
 	}
 
     private void tryDropOldViews() {
-        Q15 query = (Q15)ClassUtil.newInstance(Q15.class, new Object[0], new Class<?>[0]);
+        Q15 query = ClassUtil.newInstance(Q15.class, new Object[0], new Class<?>[0]);
         Connection conn = null;
         try {
             conn = makeConnection();
@@ -84,5 +84,5 @@ public class CHBenCHmark extends BenchmarkModule {
             }
         }
     }
-	
+
 }

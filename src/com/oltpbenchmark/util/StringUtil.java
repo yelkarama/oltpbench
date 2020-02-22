@@ -21,6 +21,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -43,10 +44,10 @@ public abstract class StringUtil {
 
     private static final Pattern LINE_SPLIT = Pattern.compile("\n");
     private static final Pattern TITLE_SPLIT = Pattern.compile(" ");
-    
+
     private static final String SET_PLAIN_TEXT = "\033[0;0m";
     private static final String SET_BOLD_TEXT = "\033[0;1m";
-    
+
     private static String CACHE_REPEAT_STR = null;
     private static Integer CACHE_REPEAT_SIZE = null;
     private static String CACHE_REPEAT_RESULT = null;
@@ -71,20 +72,20 @@ public abstract class StringUtil {
         }
         return "" + (int) bytes + " bytes";
     }
-    
+
     /**
-     * 
+     *
      * @param str
      * @return
      */
     public static String[] splitLines(String str) {
         return (str != null ? LINE_SPLIT.split(str) : null);
     }
-    
+
     public static String header(String msg) {
         return StringUtil.header(msg, "-", 100);
     }
-    
+
     /**
      * Create a nicely format header string where the given message is surround
      * on both sides by the marker.
@@ -99,11 +100,11 @@ public abstract class StringUtil {
         length = Math.max(msg_length, length);
         int border_len = (length - msg_length - 2) / 2;
         String border = StringUtil.repeat(marker, border_len);
-        boolean add_extra = (border_len + msg_length + 2 + 1 == length);  
+        boolean add_extra = (border_len + msg_length + 2 + 1 == length);
         return String.format("%s %s %s%s", border, msg, border, (add_extra ? marker : ""));
     }
-    
-    
+
+
     /**
      * Return the MD5 checksum of the given string
      * @param input
@@ -121,18 +122,18 @@ public abstract class StringUtil {
         BigInteger hash = new BigInteger(1, digest.digest());
         return (hash.toString(16));
     }
-    
+
     /**
      * Split the multi-lined strings into separate columns
      * @param strs
      * @return
      */
     public static String columns(String...strs) {
-        String lines[][] = new String[strs.length][];
-        String prefixes[] = new String[strs.length];
+        String[][] lines = new String[strs.length][];
+        String[] prefixes = new String[strs.length];
         int max_length = 0;
         int max_lines = 0;
-        
+
         for (int i = 0; i < strs.length; i++) {
             lines[i] = LINE_SPLIT.split(strs[i]);
             prefixes[i] = (i == 0 ? "" : " \u2503 ");
@@ -141,7 +142,7 @@ public abstract class StringUtil {
             } // FOR
             max_lines = Math.max(max_lines, lines[i].length);
         } // FOR
-        
+
         String f = "%-" + max_length + "s";
         StringBuilder sb = new StringBuilder();
         for (int ii = 0; ii < max_lines; ii++) {
@@ -151,10 +152,10 @@ public abstract class StringUtil {
             } // FOR
             sb.append("\n");
         } // FOR
-        
+
         return (sb.toString());
     }
-    
+
     /**
      * Return key/value maps into a nicely formatted table
      * Delimiter ":", No UpperCase Keys, No Boxing
@@ -164,7 +165,7 @@ public abstract class StringUtil {
     public static String formatMaps(Map<?, ?>...maps) {
         return (formatMaps(":", false, false, false, false, true, true, maps));
     }
-    
+
     /**
      * Return key/value maps into a nicely formatted table using the given delimiter
      * No Uppercase Keys, No Boxing
@@ -180,13 +181,13 @@ public abstract class StringUtil {
      * Return key/value maps into a nicely formatted table
      * The maps are displayed in order from first to last, and there will be a spacer
      * created between each map. The format for each record is:
-     * 
+     *
      * <KEY><DELIMITER><SPACING><VALUE>
-     * 
+     *
      * If the delimiter is an equal sign, then the format is:
-     * 
+     *
      *  <KEY><SPACING><DELIMITER><VALUE>
-     * 
+     *
      * @param delimiter
      * @param upper Upper-case all keys
      * @param box Box results
@@ -200,26 +201,26 @@ public abstract class StringUtil {
     @SuppressWarnings("unchecked")
     public static String formatMaps(String delimiter, boolean upper, boolean box, boolean border_top, boolean border_bottom, boolean recursive, boolean first_element_title, Map<?, ?>...maps) {
         boolean need_divider = (maps.length > 1 || border_bottom || border_top);
-        
+
         // Figure out the largest key size so we can get spacing right
         int max_key_size = 0;
         int max_title_size = 0;
-        final Map<Object, String[]> map_keys[] = (Map<Object, String[]>[])new Map[maps.length];
-        final boolean map_titles[] = new boolean[maps.length];
+        final Map<Object, String[]>[] map_keys = (Map<Object, String[]>[])new Map[maps.length];
+        final boolean[] map_titles = new boolean[maps.length];
         for (int i = 0; i < maps.length; i++) {
             Map<?, ?> m = maps[i];
             if (m == null) continue;
             Map<Object, String[]> keys = new HashMap<Object, String[]>();
             boolean first = true;
             for (Object k : m.keySet()) {
-                String k_str[] = LINE_SPLIT.split(k != null ? k.toString() : "");
+                String[] k_str = LINE_SPLIT.split(k != null ? k.toString() : "");
                 keys.put(k, k_str);
-                
+
                 // If the first element has a null value, then we can let it be the title for this map
                 // It's length doesn't affect the other keys, but will affect the total size of the map
                 if (first && first_element_title && m.get(k) == null) {
                     for (String line : k_str) {
-                        max_title_size = Math.max(max_title_size, line.length());    
+                        max_title_size = Math.max(max_title_size, line.length());
                     } // FOR
                     map_titles[i] = true;
                 } else {
@@ -232,30 +233,30 @@ public abstract class StringUtil {
             } // FOR
             map_keys[i] = keys;
         } // FOR
-        
+
         boolean equalsDelimiter = delimiter.equals("=");
         final String f = "%-" + (max_key_size + delimiter.length() + 1) + "s" +
                          (equalsDelimiter ? "= " : "") +
                          "%s\n";
-        
+
         // Now make StringBuilder blocks for each map
         // We do it in this way so that we can get the max length of the values
         int max_value_size = 0;
-        StringBuilder blocks[] = new StringBuilder[maps.length];
+        StringBuilder[] blocks = new StringBuilder[maps.length];
         for (int map_i = 0; map_i < maps.length; map_i++) {
             blocks[map_i] = new StringBuilder();
             Map<?, ?> m = maps[map_i];
             if (m == null) continue;
             Map<Object, String[]> keys = map_keys[map_i];
-            
+
             boolean first = true;
             for (Entry<?, ?> e : m.entrySet()) {
-                String key[] = keys.get(e.getKey());
-                
+                String[] key = keys.get(e.getKey());
+
                 if (first && map_titles[map_i]) {
                     blocks[map_i].append(StringUtil.join("\n", key));
                     if (CollectionUtil.last(key).endsWith("\n") == false) blocks[map_i].append("\n");
-                    
+
                 } else {
                     Object v_obj = e.getValue();
                     String v = null;
@@ -269,21 +270,21 @@ public abstract class StringUtil {
                     } else {
                         v = v_obj.toString();
                     }
-    
-                    
+
+
                     // If the key or value is multiple lines, format them nicely!
-                    String value[] = LINE_SPLIT.split(v);
-                    int total_lines = Math.max(key.length, value.length); 
+                    String[] value = LINE_SPLIT.split(v);
+                    int total_lines = Math.max(key.length, value.length);
                     for (int line_i = 0; line_i < total_lines; line_i++) {
-                        String k_line = (line_i < key.length ? key[line_i] : ""); 
+                        String k_line = (line_i < key.length ? key[line_i] : "");
                         if (upper) k_line = k_line.toUpperCase();
-                        
+
                         String v_line = (line_i < value.length ? value[line_i] : "");
-                        
+
                         if (line_i == (key.length-1) && (first == false || (first && v_line.isEmpty() == false))) {
                             if (equalsDelimiter == false && k_line.trim().isEmpty() == false) k_line += ":";
                         }
-                    
+
                         blocks[map_i].append(String.format(f, k_line, v_line));
                         if (need_divider) max_value_size = Math.max(max_value_size, v_line.length());
                     } // FOR
@@ -292,7 +293,7 @@ public abstract class StringUtil {
                 first = false;
             }
         } // FOR
-        
+
         // Put it all together!
 //        System.err.println("max_title_size=" + max_title_size + ", max_key_size=" + max_key_size + ", max_value_size=" + max_value_size + ", delimiter=" + delimiter.length());
         int total_width = Math.max(max_title_size, (max_key_size + max_value_size + delimiter.length())) + 1;
@@ -313,7 +314,7 @@ public abstract class StringUtil {
     }
 
     /**
-     * 
+     *
      * @param maps
      * @return
      */
@@ -334,7 +335,7 @@ public abstract class StringUtil {
             CACHE_REPEAT_SIZE.equals(size)) {
             return (CACHE_REPEAT_RESULT);
         }
-        
+
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < size; i++) sb.append(str);
         CACHE_REPEAT_RESULT = sb.toString();
@@ -342,7 +343,7 @@ public abstract class StringUtil {
         CACHE_REPEAT_SIZE = size;
         return (CACHE_REPEAT_RESULT);
     }
-    
+
     /**
      * Make a box around some text. If str has multiple lines, then the box will be the length
      * of the longest string.
@@ -362,7 +363,7 @@ public abstract class StringUtil {
     public static String box(String str, String mark) {
         return (StringUtil.box(str, mark, null));
     }
-    
+
     /**
      * Create a box around some text
      * @param str
@@ -371,25 +372,25 @@ public abstract class StringUtil {
      * @return
      */
     public static String box(String str, String mark, Integer max_len) {
-        String lines[] = LINE_SPLIT.split(str);
+        String[] lines = LINE_SPLIT.split(str);
         if (lines.length == 0) return "";
-        
+
         if (max_len == null) {
             for (String line : lines) {
                 if (max_len == null || line.length() > max_len) max_len = line.length();
             } // FOR
         }
-        
+
         final String top_line = StringUtil.repeat(mark, max_len + 4); // padding
         final String f = "%s %-" + max_len + "s %s\n";
-        
+
         StringBuilder sb = new StringBuilder();
         sb.append(top_line).append("\n");
         for (String line : lines) {
             sb.append(String.format(f, mark, line, mark));
         } // FOR
         sb.append(top_line);
-        
+
         return (sb.toString());
     }
 
@@ -400,16 +401,16 @@ public abstract class StringUtil {
      * @return
      */
     public static String prefix(String str, String prefix) {
-        String lines[] = LINE_SPLIT.split(str);
+        String[] lines = LINE_SPLIT.split(str);
         if (lines.length == 0) return "";
-        
+
         StringBuilder sb = new StringBuilder();
         for (String line : lines) {
             sb.append(prefix).append(line).append("\n");
         } // FOR
         return (sb.toString());
     }
-    
+
     /**
      * Abbreviate the given string. The last three chars will be periods
      * @param str
@@ -437,7 +438,7 @@ public abstract class StringUtil {
         }
         return (ret);
     }
-    
+
     /**
      * Converts a string to title case (ala Python)
      * @param string
@@ -446,7 +447,7 @@ public abstract class StringUtil {
     public static String title(String string) {
         return (StringUtil.title(string, false));
     }
-    
+
     /**
      * Converts a string to title case (ala Python)
      * @param string
@@ -464,17 +465,17 @@ public abstract class StringUtil {
                     for (int i = 1; i < len; i++) {
                         String c = part.substring(i, i+1);
                         String up = c.toUpperCase();
-                        sb.append(c.equals(up) ? c : c.toLowerCase()); 
+                        sb.append(c.equals(up) ? c : c.toLowerCase());
                     } // FOR
                 } else {
-                    sb.append(part.substring(1).toLowerCase());    
+                    sb.append(part.substring(1).toLowerCase());
                 }
             }
             add = " ";
         } // FOR
         return (sb.toString());
     }
-    
+
     /**
      * Append SPACER to the front of each line in a string
      * @param str
@@ -487,7 +488,7 @@ public abstract class StringUtil {
         } // FOR
         return (sb.toString());
     }
-    
+
     /**
      * Python join()
      * @param <T>
@@ -498,11 +499,11 @@ public abstract class StringUtil {
     public static <T> String join(String delimiter, T...items) {
         return (join(delimiter, Arrays.asList(items)));
     }
-    
+
     public static <T> String join(String delimiter, final Iterator<T> items) {
         return (join("", delimiter, CollectionUtil.iterable(items)));
     }
-    
+
     /**
      * Wrap the given string with the control characters
      * to make the text appear bold in the console
@@ -510,7 +511,7 @@ public abstract class StringUtil {
     public static String bold(String str) {
         return (SET_BOLD_TEXT + str + SET_PLAIN_TEXT);
     }
-    
+
     /**
      * Python join()
      * @param delimiter
@@ -520,7 +521,7 @@ public abstract class StringUtil {
     public static String join(String delimiter, Iterable<?> items) {
         return (join("", delimiter, items));
     }
-    
+
     /**
      * Python join() with optional prefix
      * @param prefix
@@ -531,7 +532,7 @@ public abstract class StringUtil {
     public static String join(String prefix, String delimiter, Iterable<?> items) {
         if (items == null) return ("");
         if (prefix == null) prefix = "";
-        
+
         StringBuilder sb = new StringBuilder();
         int i = 0;
         for (Object x : items) {
@@ -541,10 +542,10 @@ public abstract class StringUtil {
         }
         if (i == 0) return "";
         sb.delete(sb.length() - delimiter.length(), sb.length());
-     
+
         return sb.toString();
     }
-    
+
     /**
      * Convert a byte array into a valid mysql string literal, assuming that
      * it will be inserted into a column with latin-1 encoding.
@@ -553,8 +554,8 @@ public abstract class StringUtil {
      * @param arr
      * @return
      */
-    public static String stringLiteral(byte arr[]) {
-      CharBuffer cb = Charset.forName("ISO-8859-1").decode(ByteBuffer.wrap(arr));
+    public static String stringLiteral(byte[] arr) {
+      CharBuffer cb = StandardCharsets.ISO_8859_1.decode(ByteBuffer.wrap(arr));
       StringBuilder sb = new StringBuilder();
       sb.append('\'');
       for (int i = 0; i < cb.length(); i++) {

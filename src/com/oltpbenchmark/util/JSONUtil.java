@@ -44,17 +44,17 @@ import com.oltpbenchmark.util.json.JSONStringer;
  */
 public abstract class JSONUtil {
     private static final Logger LOG = Logger.getLogger(JSONUtil.class.getName());
-    
+
     private static final String JSON_CLASS_SUFFIX = "_class";
     private static final Map<Class<?>, Field[]> SERIALIZABLE_FIELDS = new HashMap<Class<?>, Field[]>();
-    
+
     /**
-     * 
+     *
      * @param clazz
      * @return
      */
     public static Field[] getSerializableFields(Class<?> clazz, String...fieldsToExclude) {
-        Field ret[] = SERIALIZABLE_FIELDS.get(clazz);
+        Field[] ret = SERIALIZABLE_FIELDS.get(clazz);
         if (ret == null) {
             Collection<String> exclude = CollectionUtil.addAll(new HashSet<String>(), fieldsToExclude);
             synchronized (SERIALIZABLE_FIELDS) {
@@ -77,7 +77,7 @@ public abstract class JSONUtil {
         }
         return (ret);
     }
-    
+
     /**
      * JSON Pretty Print
      * @param json
@@ -93,7 +93,7 @@ public abstract class JSONUtil {
             throw new RuntimeException(ex);
         }
     }
-    
+
     /**
      * JSON Pretty Print
      * @param <T>
@@ -112,7 +112,7 @@ public abstract class JSONUtil {
         }
         return (JSONUtil.format(stringer.toString()));
     }
-    
+
     public static String format(JSONObject o) {
         try {
             return o.toString(1);
@@ -120,9 +120,9 @@ public abstract class JSONUtil {
             throw new RuntimeException(ex);
         }
     }
-    
+
     /**
-     * 
+     *
      * @param <T>
      * @param object
      * @return
@@ -144,7 +144,7 @@ public abstract class JSONUtil {
         }
         return (stringer.toString());
     }
-    
+
     public static <T extends JSONSerializable> T fromJSONString(T t, String json) {
         try {
             JSONObject json_object = new JSONObject(json);
@@ -154,7 +154,7 @@ public abstract class JSONUtil {
         }
         return (t);
     }
-    
+
     /**
      * Write the contents of a JSONSerializable object out to a file on the local disk
      * @param <T>
@@ -174,7 +174,7 @@ public abstract class JSONUtil {
             throw new IOException(ex);
         }
     }
-    
+
     /**
      * Load in a JSONSerialable stored in a file
      * @param <T>
@@ -209,14 +209,14 @@ public abstract class JSONUtil {
      * @param members
      * @throws JSONException
      */
-    public static <E extends Enum<?>, T> void fieldsToJSON(JSONStringer stringer, T object, Class<? extends T> base_class, E members[]) throws JSONException {
+    public static <E extends Enum<?>, T> void fieldsToJSON(JSONStringer stringer, T object, Class<? extends T> base_class, E[] members) throws JSONException {
         try {
-            fieldsToJSON(stringer, object, base_class, ClassUtil.getFieldsFromMembersEnum(base_class, members));    
+            fieldsToJSON(stringer, object, base_class, ClassUtil.getFieldsFromMembersEnum(base_class, members));
         } catch (NoSuchFieldException ex) {
             throw new JSONException(ex);
         }
     }
-    
+
     /**
      * For a given list of Fields, write out the contents of the corresponding field to the JSONObject
      * The each of the JSONObject's elements will be the upper case version of the Field's name
@@ -227,16 +227,16 @@ public abstract class JSONUtil {
      * @param fields
      * @throws JSONException
      */
-    public static <T> void fieldsToJSON(JSONStringer stringer, T object, Class<? extends T> base_class, Field fields[]) throws JSONException {
+    public static <T> void fieldsToJSON(JSONStringer stringer, T object, Class<? extends T> base_class, Field[] fields) throws JSONException {
         if (LOG.isDebugEnabled()) LOG.debug("Serializing out " + fields.length + " elements for " + base_class.getSimpleName());
         for (Field f : fields) {
             String json_key = f.getName().toUpperCase();
             stringer.key(json_key);
-            
+
             try {
                 Class<?> f_class = f.getType();
                 Object f_value = f.get(object);
-                
+
                 // Null
                 if (f_value == null) {
                     writeFieldValue(stringer, f_class, f_value);
@@ -252,9 +252,9 @@ public abstract class JSONUtil {
             }
         } // FOR
     }
-    
+
     /**
-     * 
+     *
      * @param stringer
      * @param field_class
      * @param field_value
@@ -265,7 +265,7 @@ public abstract class JSONUtil {
         if (field_value == null) {
             if (LOG.isDebugEnabled()) LOG.debug("writeNullFieldValue(" + field_class + ", " + field_value + ")");
             stringer.value(null);
-            
+
         // Collections
         } else if (ClassUtil.getInterfaces(field_class).contains(Collection.class)) {
             if (LOG.isDebugEnabled()) LOG.debug("writeCollectionFieldValue(" + field_class + ", " + field_value + ")");
@@ -278,7 +278,7 @@ public abstract class JSONUtil {
                 }
             } // FOR
             stringer.endArray();
-            
+
         // Maps
         } else if (field_value instanceof Map) {
             if (LOG.isDebugEnabled()) LOG.debug("writeMapFieldValue(" + field_class + ", " + field_value + ")");
@@ -292,7 +292,7 @@ public abstract class JSONUtil {
                     key_value = makePrimitiveValue(key_class, e.getKey()).toString();
                 }
                 stringer.key(key_value);
-                
+
                 // We can also handle null values. Where is your god now???
                 if (e.getValue() == null) {
                     stringer.value(null);
@@ -301,7 +301,7 @@ public abstract class JSONUtil {
                 }
             } // FOR
             stringer.endObject();
-            
+
         // Primitive
         } else {
             if (LOG.isDebugEnabled()) LOG.debug("writePrimitiveFieldValue(" + field_class + ", " + field_value + ")");
@@ -309,7 +309,7 @@ public abstract class JSONUtil {
         }
         return;
     }
-    
+
     /**
      * Read data from the given JSONObject and populate the given Map
      * @param json_object
@@ -323,16 +323,16 @@ public abstract class JSONUtil {
         Class<?> key_class = inner_classes.pop();
         Class<?> val_class = inner_classes.pop();
         Collection<Class<?>> val_interfaces = ClassUtil.getInterfaces(val_class);
-        
+
         assert(json_object != null);
         for (String json_key : CollectionUtil.iterable(json_object.keys())) {
             final Stack<Class> next_inner_classes = new Stack<Class>();
             next_inner_classes.addAll(inner_classes);
             assert(next_inner_classes.equals(inner_classes));
-            
+
             // KEY
             Object key = JSONUtil.getPrimitiveValue(json_key, key_class);
-            
+
             // VALUE
             Object object = null;
             if (json_object.isNull(json_key)) {
@@ -359,7 +359,7 @@ public abstract class JSONUtil {
             map.put(key, object);
         }
     }
-    
+
     /**
      * Read data from the given JSONArray and populate the given Collection
      * @param json_array
@@ -371,17 +371,17 @@ public abstract class JSONUtil {
     @SuppressWarnings("unchecked")
     protected static void readCollectionField(final JSONArray json_array, final Collection collection, final Stack<Class> inner_classes) throws Exception {
         // We need to figure out what the inner type of the collection is
-        // If it's a Collection or a Map, then we need to instantiate it before 
+        // If it's a Collection or a Map, then we need to instantiate it before
         // we can call readFieldValue() again for it.
         Class inner_class = inner_classes.pop();
         Collection<Class<?>> inner_interfaces = ClassUtil.getInterfaces(inner_class);
-        
+
         for (int i = 0, cnt = json_array.length(); i < cnt; i++) {
             final Stack<Class> next_inner_classes = new Stack<Class>();
             next_inner_classes.addAll(inner_classes);
             assert(next_inner_classes.equals(inner_classes));
             Object value = null;
-            
+
             // Null
             if (json_array.isNull(i)) {
                 value = null;
@@ -406,9 +406,9 @@ public abstract class JSONUtil {
         } // FOR
         return;
     }
-    
+
     /**
-     * 
+     *
      * @param json_object
      * @param catalog_db
      * @param json_key
@@ -422,12 +422,12 @@ public abstract class JSONUtil {
         Class<?> field_class = field_handle.getType();
         Object field_object = field_handle.get(object);
         // String field_name = field_handle.getName();
-        
+
         // Null
         if (json_object.isNull(json_key)) {
             if (LOG.isDebugEnabled()) LOG.debug("Field " + json_key + " is null");
             field_handle.set(object, null);
-            
+
         // Collections
         } else if (ClassUtil.getInterfaces(field_class).contains(Collection.class)) {
             if (LOG.isDebugEnabled()) LOG.debug("Field " + json_key + " is a collection");
@@ -435,8 +435,8 @@ public abstract class JSONUtil {
             Stack<Class> inner_classes = new Stack<Class>();
             inner_classes.addAll(ClassUtil.getGenericTypes(field_handle));
             Collections.reverse(inner_classes);
-            
-            JSONArray json_inner =json_object.getJSONArray(json_key); 
+
+            JSONArray json_inner =json_object.getJSONArray(json_key);
             if (json_inner == null) throw new JSONException("No array exists for '" + json_key + "'");
             readCollectionField(json_inner, (Collection)field_object, inner_classes);
 
@@ -447,11 +447,11 @@ public abstract class JSONUtil {
             Stack<Class> inner_classes = new Stack<Class>();
             inner_classes.addAll(ClassUtil.getGenericTypes(field_handle));
             Collections.reverse(inner_classes);
-            
+
             JSONObject json_inner = json_object.getJSONObject(json_key);
             if (json_inner == null) throw new JSONException("No object exists for '" + json_key + "'");
             readMapField(json_inner, (Map)field_object, inner_classes);
-            
+
         // Everything else...
         } else {
             Class explicit_field_class = JSONUtil.getClassForField(json_object, json_key);
@@ -465,7 +465,7 @@ public abstract class JSONUtil {
             if (LOG.isDebugEnabled()) LOG.debug("Set field " + json_key + " to '" + value + "'");
         }
     }
-    
+
     /**
      * For the given enum, load in the values from the JSON object into the current object
      * This will throw errors if a field is missing
@@ -478,7 +478,7 @@ public abstract class JSONUtil {
     public static <E extends Enum<?>, T> void fieldsFromJSON(JSONObject json_object, T object, Class<? extends T> base_class, E...members) throws JSONException {
         JSONUtil.fieldsFromJSON(json_object, object, base_class, false, members);
     }
-    
+
     /**
      * For the given enum, load in the values from the JSON object into the current object
      * If ignore_missing is false, then JSONUtil will not throw an error if a field is missing
@@ -494,12 +494,12 @@ public abstract class JSONUtil {
      */
     public static <E extends Enum<?>, T> void fieldsFromJSON(JSONObject json_object, T object, Class<? extends T> base_class, boolean ignore_missing, E...members) throws JSONException {
         try {
-            fieldsFromJSON(json_object, object, base_class, ignore_missing, ClassUtil.getFieldsFromMembersEnum(base_class, members));    
+            fieldsFromJSON(json_object, object, base_class, ignore_missing, ClassUtil.getFieldsFromMembersEnum(base_class, members));
         } catch (NoSuchFieldException ex) {
             throw new JSONException(ex);
         }
     }
-    
+
     /**
      * For the given list of Fields, load in the values from the JSON object into the current object
      * If ignore_missing is false, then JSONUtil will not throw an error if a field is missing
@@ -517,17 +517,17 @@ public abstract class JSONUtil {
         for (Field field_handle : fields) {
             String json_key = field_handle.getName().toUpperCase();
             if (LOG.isDebugEnabled()) LOG.debug("Retreiving value for field '" + json_key + "'");
-            
+
             if (!json_object.has(json_key)) {
-                String msg = "JSONObject for " + base_class.getSimpleName() + " does not have key '" + json_key + "': " + CollectionUtil.list(json_object.keys()); 
+                String msg = "JSONObject for " + base_class.getSimpleName() + " does not have key '" + json_key + "': " + CollectionUtil.list(json_object.keys());
                 if (ignore_missing) {
                     if (LOG.isDebugEnabled()) LOG.warn(msg);
                     continue;
                 } else {
-                    throw new JSONException(msg);    
+                    throw new JSONException(msg);
                 }
             }
-            
+
             try {
                 readFieldValue(json_object, json_key, field_handle, object);
             } catch (Exception ex) {
@@ -540,7 +540,7 @@ public abstract class JSONUtil {
 
     /**
      * Return the class of a field if it was stored in the JSONObject along with the value
-     * If there is no class information, then this will return null 
+     * If there is no class information, then this will return null
      * @param json_object
      * @param json_key
      * @return
@@ -558,9 +558,9 @@ public abstract class JSONUtil {
             }
         }
         return (field_class);
-        
+
     }
-    
+
     /**
      * Return the proper serialization string for the given value
      * @param field_name
@@ -570,7 +570,7 @@ public abstract class JSONUtil {
      */
     private static Object makePrimitiveValue(Class<?> field_class, Object field_value) {
         Object value = null;
-        
+
         // Class
         if (field_class.equals(Class.class)) {
             value = ((Class<?>)field_value).getName();
@@ -586,7 +586,7 @@ public abstract class JSONUtil {
         return (value);
     }
 
-    
+
     /**
      * For the given JSON string, figure out what kind of object it is and return it
      * @param json_value
@@ -634,51 +634,51 @@ public abstract class JSONUtil {
             value = Double.parseDouble(json_value);
         // String
         } else if (field_class.equals(String.class)) {
-            value = json_value.toString();
+            value = json_value;
         }
         return (value);
     }
-    
+
     public static Class<?> getPrimitiveType(String json_value) {
         Object value = null;
-        
+
         // Class
         try {
             value = ClassUtil.getClass(json_value);
             if (value != null) return (Class.class);
         } catch (Throwable ex) { } // IGNORE
-        
+
         // Short
         try {
             value = Short.parseShort(json_value);
             return (Short.class);
         } catch (NumberFormatException ex) { } // IGNORE
-        
+
         // Integer
         try {
             value = Integer.parseInt(json_value);
             return (Integer.class);
         } catch (NumberFormatException ex) { } // IGNORE
-        
+
         // Long
         try {
             value = Long.parseLong(json_value);
             return (Long.class);
         } catch (NumberFormatException ex) { } // IGNORE
-        
+
         // Float
         try {
             value = Float.parseFloat(json_value);
             return (Float.class);
         } catch (NumberFormatException ex) { } // IGNORE
-        
+
         // Double
         try {
             value = Double.parseDouble(json_value);
             return (Double.class);
         } catch (NumberFormatException ex) { } // IGNORE
 
-        
+
         // Boolean
         if (json_value.equalsIgnoreCase("true") || json_value.equalsIgnoreCase("false"))
             return (Boolean.class);

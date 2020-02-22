@@ -14,7 +14,7 @@ import com.oltpbenchmark.util.SQLUtil;
 import com.oltpbenchmark.util.TextGenerator;
 
 public class ResourceStresserLoader extends Loader<ResourceStresserBenchmark> {
-	
+
     private static final Logger LOG = Logger.getLogger(ResourceStresserLoader.class);
     private final int numEmployees;
 
@@ -55,7 +55,7 @@ public class ResourceStresserLoader extends Loader<ResourceStresserBenchmark> {
         });
         return (threads);
 	}
-	
+
 	private void loadTable(Connection conn, String tableName) throws SQLException {
 		Table catalog_tbl = this.benchmark.getTableCatalog(tableName);
 		assert (catalog_tbl != null);
@@ -74,14 +74,14 @@ public class ResourceStresserLoader extends Loader<ResourceStresserBenchmark> {
         			stmt.setString(j, TextGenerator.randomStr(rng(), ResourceStresserConstants.STRING_LENGTH));
         		}
         	} else {
-        		assert(tableName.equals(ResourceStresserConstants.TABLENAME_LOCKTABLE) || 
+        		assert(tableName.equals(ResourceStresserConstants.TABLENAME_LOCKTABLE) ||
         			   tableName.equals(ResourceStresserConstants.TABLENAME_IOTABLESMALLROW));
         		stmt.setInt(2, rng().nextInt());
         	}
 
             stmt.addBatch();
             if (++batch >= ResourceStresserConstants.COMMIT_BATCH_SIZE) {
-                int result[] = stmt.executeBatch();
+                int[] result = stmt.executeBatch();
                 assert (result != null);
                 conn.commit();
                 batch = 0;

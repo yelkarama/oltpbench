@@ -42,7 +42,7 @@ public class Pair<T, U> implements Comparable<Pair<T, U>> {
 
     public final T first;
     public final U second;
-    private transient Integer hash;
+    private final transient Integer hash;
 
     public Pair(T first, U second, boolean precomputeHash) {
         this.first = first;
@@ -58,7 +58,7 @@ public class Pair<T, U> implements Comparable<Pair<T, U>> {
         return (first == null ? 0 : first.hashCode() * 31) +
                (second == null ? 0 : second.hashCode());
     }
-    
+
     public int hashCode() {
         if (hash != null) return (hash.intValue());
         return (this.computeHashCode());
@@ -67,12 +67,12 @@ public class Pair<T, U> implements Comparable<Pair<T, U>> {
     public String toString() {
         return String.format("<%s, %s>", first, second);
     }
-    
+
     @Override
     public int compareTo(Pair<T, U> other) {
         return (other.hash - this.hash);
     }
-    
+
     public Object get(int idx) {
         if (idx == 0) return first;
         else if (idx == 1) return second;
@@ -94,7 +94,7 @@ public class Pair<T, U> implements Comparable<Pair<T, U>> {
         if (this == o) {
             return true;
         }
-        
+
         if (o == null || !(o instanceof Pair)) {
             return false;
         }
