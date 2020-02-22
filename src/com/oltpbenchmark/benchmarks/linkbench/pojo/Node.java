@@ -39,19 +39,19 @@ import java.util.Arrays;
  */
 public class Node {
   /** Unique identifier for node */
-  public long id;
+  public final long id;
 
   /** Type of node */
-  public int type;
+  public final int type;
 
   /** Version of node: typically updated on every change */
-  public long version;
+  public final long version;
 
   /** Last update time of node as UNIX timestamp */
-  public int time;
+  public final int time;
 
   /** Arbitrary payload data */
-  public byte[] data;
+  public final byte[] data;
 
   public Node(long id, int type, long version, int time,
               byte[] data) {

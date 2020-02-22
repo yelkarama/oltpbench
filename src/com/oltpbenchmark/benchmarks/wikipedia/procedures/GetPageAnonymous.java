@@ -28,25 +28,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class GetPageAnonymous extends Procedure {
-	
+
     // -----------------------------------------------------------------
     // STATEMENTS
     // -----------------------------------------------------------------
-    
-	public SQLStmt selectPage = new SQLStmt(
-        "SELECT * FROM " + WikipediaConstants.TABLENAME_PAGE + 
+
+	public final SQLStmt selectPage = new SQLStmt(
+        "SELECT * FROM " + WikipediaConstants.TABLENAME_PAGE +
         " WHERE page_namespace = ? AND page_title = ? LIMIT 1"
     );
-	public SQLStmt selectPageRestriction = new SQLStmt(
+	public final SQLStmt selectPageRestriction = new SQLStmt(
         "SELECT * FROM " + WikipediaConstants.TABLENAME_PAGE_RESTRICTIONS +
         " WHERE pr_page = ?"
     );
 	// XXX this is hard for translation
-	public SQLStmt selectIpBlocks = new SQLStmt(
-        "SELECT * FROM " + WikipediaConstants.TABLENAME_IPBLOCKS + 
+	public final SQLStmt selectIpBlocks = new SQLStmt(
+        "SELECT * FROM " + WikipediaConstants.TABLENAME_IPBLOCKS +
         " WHERE ipb_address = ?"
-    ); 
-	public SQLStmt selectPageRevision = new SQLStmt(
+    );
+	public final SQLStmt selectPageRevision = new SQLStmt(
         "SELECT * " +
 	    "  FROM " + WikipediaConstants.TABLENAME_PAGE + ", " +
 	                WikipediaConstants.TABLENAME_REVISION +
@@ -55,7 +55,7 @@ public class GetPageAnonymous extends Procedure {
 	    "   AND page_id = ? " +
         "   AND rev_id = page_latest LIMIT 1"
     );
-	public SQLStmt selectText = new SQLStmt(
+	public final SQLStmt selectText = new SQLStmt(
         "SELECT old_text, old_flags FROM " + WikipediaConstants.TABLENAME_TEXT +
         " WHERE old_id = ? LIMIT 1"
     );
@@ -63,11 +63,11 @@ public class GetPageAnonymous extends Procedure {
 	// -----------------------------------------------------------------
     // RUN
     // -----------------------------------------------------------------
-	
+
 	public Article run(Connection conn, boolean forSelect, String userIp,
-			                            int pageNamespace, String pageTitle) throws UserAbortException, SQLException {		
+			                            int pageNamespace, String pageTitle) throws UserAbortException, SQLException {
 	    int param = 1;
-	    
+
 		PreparedStatement st = this.getPreparedStatement(conn, selectPage);
         st.setInt(param++, pageNamespace);
         st.setString(param++, pageTitle);

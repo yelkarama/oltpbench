@@ -53,10 +53,10 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
     long numnotfound = 0;
     long numHistoryQueries = 0;
 
-    int nrequesters;
-    int requesterID;
-    long maxid1;
-    long startid1;
+    final int nrequesters;
+    final int requesterID;
+    final long maxid1;
+    final long startid1;
     boolean singleAssoc = false;
 
     // Cumulative percentages

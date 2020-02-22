@@ -26,10 +26,11 @@ import java.util.Random;
 
 public class TransactionSelector {
 
-	String filename,filename2;
+	final String filename;
+	final String filename2;
 	DataInputStream dis,dis2 = null;
 	Random r = null;
-	TransactionTypes transTypes;
+	final TransactionTypes transTypes;
 	static final double READ_WRITE_RATIO = 11.8; // from
 													// http://www.globule.org/publi/WWADH_comnet2009.html
 

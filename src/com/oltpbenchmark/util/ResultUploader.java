@@ -61,17 +61,19 @@ public class ResultUploader {
             "terminals"
     };
 
-    XMLConfiguration expConf;
-    Results results;
-    CommandLine argsLine;
-    DBCollector collector;
+    final XMLConfiguration expConf;
+    final Results results;
+    final CommandLine argsLine;
+    final DBCollector collector;
 
-    String dbUrl;
-    DatabaseType dbType;
-    String username, password;
-    String benchType;
+    final String dbUrl;
+    final DatabaseType dbType;
+    final String username;
+    final String password;
+    final String benchType;
 //    int windowSize;
-    String uploadCode, uploadUrl;
+final String uploadCode;
+    final String uploadUrl;
     String uploadHash;
 
     public ResultUploader(Results r, XMLConfiguration conf, CommandLine argsLine) {

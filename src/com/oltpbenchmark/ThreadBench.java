@@ -42,7 +42,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
     private final ArrayList<Thread> workerThreads;
     // private File profileFile;
     private final List<WorkloadConfiguration> workConfs;
-    ArrayList<LatencyRecord.Sample> samples = new ArrayList<LatencyRecord.Sample>();
+    final ArrayList<LatencyRecord.Sample> samples = new ArrayList<LatencyRecord.Sample>();
     private int intervalMonitor = 0;
 
     private ThreadBench(List<? extends Worker<? extends BenchmarkModule>> workers, List<WorkloadConfiguration> workConfs) {

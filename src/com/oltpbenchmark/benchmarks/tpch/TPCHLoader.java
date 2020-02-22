@@ -331,9 +331,9 @@ public class TPCHLoader extends Loader<TPCHBenchmark> {
     }
 
     private class TableLoader implements Runnable {
-        String tableName;
-        PreparedStatement prepStmt;
-        CastTypes[] types;
+        final String tableName;
+        final PreparedStatement prepStmt;
+        final CastTypes[] types;
         final TPCHLoader parent;
 
         private final Connection conn;

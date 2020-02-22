@@ -29,7 +29,7 @@ import java.util.TreeMap;
 public class CategoryParser {
     private static final Logger LOG = Logger.getLogger(CategoryParser.class);
 
-	Map<String, Category> _categoryMap;
+	final Map<String, Category> _categoryMap;
 	private int _nextCategoryID;
 	String _fileName;
 

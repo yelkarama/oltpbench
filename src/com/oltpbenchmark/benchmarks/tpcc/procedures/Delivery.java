@@ -30,47 +30,47 @@ public class Delivery extends TPCCProcedure {
 
     private static final Logger LOG = Logger.getLogger(Delivery.class);
 
-	public SQLStmt delivGetOrderIdSQL = new SQLStmt(
+	public final SQLStmt delivGetOrderIdSQL = new SQLStmt(
 	        "SELECT NO_O_ID FROM " + TPCCConstants.TABLENAME_NEWORDER +
 	        " WHERE NO_D_ID = ? " +
 	        "   AND NO_W_ID = ? " +
 	        " ORDER BY NO_O_ID ASC " +
 	        " LIMIT 1");
 
-	public SQLStmt delivDeleteNewOrderSQL = new SQLStmt(
+	public final SQLStmt delivDeleteNewOrderSQL = new SQLStmt(
 	        "DELETE FROM " + TPCCConstants.TABLENAME_NEWORDER +
 			" WHERE NO_O_ID = ? " +
             "   AND NO_D_ID = ?" +
 			"   AND NO_W_ID = ?");
 
-	public SQLStmt delivGetCustIdSQL = new SQLStmt(
+	public final SQLStmt delivGetCustIdSQL = new SQLStmt(
 	        "SELECT O_C_ID FROM " + TPCCConstants.TABLENAME_OPENORDER +
 	        " WHERE O_ID = ? " +
             "   AND O_D_ID = ? " +
 	        "   AND O_W_ID = ?");
 
-	public SQLStmt delivUpdateCarrierIdSQL = new SQLStmt(
+	public final SQLStmt delivUpdateCarrierIdSQL = new SQLStmt(
 	        "UPDATE " + TPCCConstants.TABLENAME_OPENORDER +
 	        "   SET O_CARRIER_ID = ? " +
 			" WHERE O_ID = ? " +
 	        "   AND O_D_ID = ?" +
 			"   AND O_W_ID = ?");
 
-	public SQLStmt delivUpdateDeliveryDateSQL = new SQLStmt(
+	public final SQLStmt delivUpdateDeliveryDateSQL = new SQLStmt(
 	        "UPDATE " + TPCCConstants.TABLENAME_ORDERLINE +
 	        "   SET OL_DELIVERY_D = ? " +
 			" WHERE OL_O_ID = ? " +
 			"   AND OL_D_ID = ? " +
 			"   AND OL_W_ID = ? ");
 
-	public SQLStmt delivSumOrderAmountSQL = new SQLStmt(
+	public final SQLStmt delivSumOrderAmountSQL = new SQLStmt(
 	        "SELECT SUM(OL_AMOUNT) AS OL_TOTAL " +
 			"  FROM " + TPCCConstants.TABLENAME_ORDERLINE +
 			" WHERE OL_O_ID = ? " +
 			"   AND OL_D_ID = ? " +
 			"   AND OL_W_ID = ?");
 
-	public SQLStmt delivUpdateCustBalDelivCntSQL = new SQLStmt(
+	public final SQLStmt delivUpdateCustBalDelivCntSQL = new SQLStmt(
 	        "UPDATE " + TPCCConstants.TABLENAME_CUSTOMER +
 	        "   SET C_BALANCE = C_BALANCE + ?," +
 			"       C_DELIVERY_CNT = C_DELIVERY_CNT + 1 " +

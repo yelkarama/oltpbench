@@ -32,13 +32,13 @@ public class StockLevel extends TPCCProcedure {
 
     private static final Logger LOG = Logger.getLogger(StockLevel.class);
 
-	public SQLStmt stockGetDistOrderIdSQL = new SQLStmt(
+	public final SQLStmt stockGetDistOrderIdSQL = new SQLStmt(
 	        "SELECT D_NEXT_O_ID " +
             "  FROM " + TPCCConstants.TABLENAME_DISTRICT +
 	        " WHERE D_W_ID = ? " +
             "   AND D_ID = ?");
 
-	public SQLStmt stockGetCountStockSQL = new SQLStmt(
+	public final SQLStmt stockGetCountStockSQL = new SQLStmt(
 	        "SELECT COUNT(DISTINCT (S_I_ID)) AS STOCK_COUNT " +
 			" FROM " + TPCCConstants.TABLENAME_ORDERLINE + ", " + TPCCConstants.TABLENAME_STOCK +
 			" WHERE OL_W_ID = ?" +

@@ -47,8 +47,10 @@ public class ScrambledZipfianGenerator extends IntegerGenerator
         public static final double USED_ZIPFIAN_CONSTANT=0.99;
 	public static final long ITEM_COUNT=10000000000L;
 
-	ZipfianGenerator gen;
-	long _min,_max,_itemcount;
+	final ZipfianGenerator gen;
+	final long _min;
+    final long _max;
+    final long _itemcount;
 
 	/******************************* Constructors **************************************/
 

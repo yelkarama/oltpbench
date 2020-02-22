@@ -51,7 +51,7 @@ public abstract class AuctionMarkConstants {
     // EXECUTION CONFIGURATION
     // ----------------------------------------------------------------
 
-    public static boolean CLOSE_AUCTIONS_ENABLE = false;
+    public static final boolean CLOSE_AUCTIONS_ENABLE = false;
 
     /**
      * How often to execute CLOSE_AUCTIONS in virtual seconds
@@ -64,7 +64,7 @@ public abstract class AuctionMarkConstants {
      * in a separate thread. If set to false, then these txns will be executed
      * whenever the interval interrupt occurs on the first worker thread
      */
-    public static boolean CLOSE_AUCTIONS_SEPARATE_THREAD = false;
+    public static final boolean CLOSE_AUCTIONS_SEPARATE_THREAD = false;
 
     /**
      * If set to true, then the first client will attempt to reset the database

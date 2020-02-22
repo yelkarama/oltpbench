@@ -36,14 +36,14 @@ public class UpdatePage extends Procedure {
     // STATEMENTS
     // -----------------------------------------------------------------
 
-	public SQLStmt insertText = new SQLStmt(
+	public final SQLStmt insertText = new SQLStmt(
         "INSERT INTO " + WikipediaConstants.TABLENAME_TEXT + " (" +
         "old_page,old_text,old_flags" +
         ") VALUES (" +
         "?,?,?" +
         ")"
     );
-	public SQLStmt insertRevision = new SQLStmt(
+	public final SQLStmt insertRevision = new SQLStmt(
         "INSERT INTO " + WikipediaConstants.TABLENAME_REVISION + " (" +
 		"rev_page, " +
 		"rev_text_id, " +
@@ -59,12 +59,12 @@ public class UpdatePage extends Procedure {
         "?, ?, ?, ?, ?, ?, ?, ?, ?, ?" +
 		")"
 	);
-	public SQLStmt updatePage = new SQLStmt(
+	public final SQLStmt updatePage = new SQLStmt(
         "UPDATE " + WikipediaConstants.TABLENAME_PAGE +
         "   SET page_latest = ?, page_touched = ?, page_is_new = 0, page_is_redirect = 0, page_len = ? " +
         " WHERE page_id = ?"
     );
-	public SQLStmt insertRecentChanges = new SQLStmt(
+	public final SQLStmt insertRecentChanges = new SQLStmt(
         "INSERT INTO " + WikipediaConstants.TABLENAME_RECENTCHANGES + " (" +
 	    "rc_timestamp, " +
 	    "rc_cur_time, " +
@@ -88,24 +88,24 @@ public class UpdatePage extends Procedure {
         "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?" +
         ")"
     );
-	public SQLStmt selectWatchList = new SQLStmt(
+	public final SQLStmt selectWatchList = new SQLStmt(
         "SELECT wl_user FROM " + WikipediaConstants.TABLENAME_WATCHLIST +
         " WHERE wl_title = ?" +
         "   AND wl_namespace = ?" +
 		"   AND wl_user != ?" +
 		"   AND wl_notificationtimestamp IS NULL"
     );
-	public SQLStmt updateWatchList = new SQLStmt(
+	public final SQLStmt updateWatchList = new SQLStmt(
         "UPDATE " + WikipediaConstants.TABLENAME_WATCHLIST +
         "   SET wl_notificationtimestamp = ? " +
 	    " WHERE wl_title = ?" +
 	    "   AND wl_namespace = ?" +
 	    "   AND wl_user = ?"
     );
-	public SQLStmt selectUser = new SQLStmt(
+	public final SQLStmt selectUser = new SQLStmt(
         "SELECT * FROM " + WikipediaConstants.TABLENAME_USER + " WHERE user_id = ?"
     );
-	public SQLStmt insertLogging = new SQLStmt(
+	public final SQLStmt insertLogging = new SQLStmt(
         "INSERT INTO " + WikipediaConstants.TABLENAME_LOGGING + " (" +
 		"log_type, log_action, log_timestamp, log_user, log_user_text, " +
         "log_namespace, log_title, log_page, log_comment, log_params" +
@@ -113,12 +113,12 @@ public class UpdatePage extends Procedure {
         "'patrol','patrol',?,?,?,?,?,?,'',?" +
         ")"
     );
-	public SQLStmt updateUserEdit = new SQLStmt(
+	public final SQLStmt updateUserEdit = new SQLStmt(
         "UPDATE " + WikipediaConstants.TABLENAME_USER +
         "   SET user_editcount=user_editcount+1" +
         " WHERE user_id = ?"
     );
-	public SQLStmt updateUserTouched = new SQLStmt(
+	public final SQLStmt updateUserTouched = new SQLStmt(
         "UPDATE " + WikipediaConstants.TABLENAME_USER +
         "   SET user_touched = ?" +
         " WHERE user_id = ?"

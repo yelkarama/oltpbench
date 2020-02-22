@@ -32,11 +32,11 @@ import java.sql.SQLException;
 public class JPABWorker extends Worker<JPABBenchmark> {
 
 	public EntityManager em;
-	public Test test;
+	public final Test test;
 
 	public JPABWorker(JPABBenchmark benchmarkModule, int id, Test test) {
 		super(benchmarkModule, id);
-		// Connections are managed by JPA .. 
+		// Connections are managed by JPA ..
 		// No need to keep this
 		this.test=test;
 		try {
@@ -50,16 +50,16 @@ public class JPABWorker extends Worker<JPABBenchmark> {
 
 	@Override
 	protected TransactionStatus executeWork(TransactionType txnType) throws UserAbortException, SQLException {
-		if (txnType.getProcedureClass().equals(Persist.class)) {			
+		if (txnType.getProcedureClass().equals(Persist.class)) {
 			persistTest();
 		}
-	    if (txnType.getProcedureClass().equals(Retrieve.class)) {            
+	    if (txnType.getProcedureClass().equals(Retrieve.class)) {
 	        retrieveTest();
 	    }
-	    if (txnType.getProcedureClass().equals(Update.class)) {            
+	    if (txnType.getProcedureClass().equals(Update.class)) {
 	        updateTest();
 	    }
-	    if (txnType.getProcedureClass().equals(Delete.class)) {            
+	    if (txnType.getProcedureClass().equals(Delete.class)) {
 	        deleteTest();
 	    }
 		return (TransactionStatus.SUCCESS);

@@ -29,11 +29,11 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 public class SSHGetStats {
-	String hostname;
-	String username;
-	String password;
+	final String hostname;
+	final String username;
+	final String password;
 	Connection conn;
-	String diskname = "sda";
+	final String diskname = "sda";
 	Session sess;
 	long diskOldTime;
 	long diskOldValue;

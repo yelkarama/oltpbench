@@ -33,12 +33,12 @@ public class JPABLoader extends Loader<JPABBenchmark> {
     private static final Logger LOG = Logger.getLogger(JPABLoader.class);
 
 
-    String persistanceUnit;
+    final String persistanceUnit;
     public JPABLoader(JPABBenchmark benchmark, String persistanceUnit) throws SQLException {
         super(benchmark);
         this.persistanceUnit=persistanceUnit;
     }
-    
+
     @Override
     public List<LoaderThread> createLoaderThreads() throws SQLException {
         List<LoaderThread> threads = new ArrayList<LoaderThread>();

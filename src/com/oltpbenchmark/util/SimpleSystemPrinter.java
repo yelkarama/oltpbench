@@ -20,7 +20,7 @@ package com.oltpbenchmark.util;
 import java.io.PrintStream;
 
 public class SimpleSystemPrinter implements SimplePrinter {
-	PrintStream out;
+	final PrintStream out;
 
 	public SimpleSystemPrinter(PrintStream out) {
 		this.out = out;

@@ -55,12 +55,12 @@ public class AccessDistributions {
 
   public static class BuiltinAccessDistribution implements AccessDistribution {
     private final AccessDistMode mode;
-    protected long minid;
-    protected long maxid;
+    protected final long minid;
+    protected final long maxid;
     private final long config;
 
     /** Use to generate decent quality random longs in range */
-    UniformDistribution uniform;
+    final UniformDistribution uniform;
 
     public BuiltinAccessDistribution(AccessDistMode mode,
                             long minid, long maxid, long config) {

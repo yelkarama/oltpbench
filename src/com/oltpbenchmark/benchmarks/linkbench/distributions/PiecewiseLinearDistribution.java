@@ -54,8 +54,8 @@ public abstract class PiecewiseLinearDistribution implements ProbabilityDistribu
 
   //helper class to store (value, probability)
   public static class Point implements Comparable<Point> {
-    public int value;
-    public double probability;
+    public final int value;
+    public final double probability;
 
     public Point(int input_value, double input_probability) {
       this.value = input_value;

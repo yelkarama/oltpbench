@@ -19,11 +19,11 @@ package com.oltpbenchmark.benchmarks.wikipedia.util;
 
 public class Article {
 
-	public String userText;
-	public int pageId;
-	public String oldText;
-	public int textId;
-	public int revisionId;
+	public final String userText;
+	public final int pageId;
+	public final String oldText;
+	public final int textId;
+	public final int revisionId;
 
 	public Article(String userText, int pageId, String oldText, int textId,
 			int revisionId) {

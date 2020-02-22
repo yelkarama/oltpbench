@@ -104,7 +104,7 @@ public class JSONWriter {
     /**
      * The writer that will receive the output.
      */
-    protected Writer writer;
+    protected final Writer writer;
 
     /**
      * Make a fresh JSONWriter. It can be used to build one JSON text.

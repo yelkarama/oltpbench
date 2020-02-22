@@ -24,11 +24,14 @@ import java.sql.SQLException;
 
 public class MeasureTargetSystem implements Runnable {
 
-	BufferedWriter out, out2 = null;
+	final BufferedWriter out;
+	BufferedWriter out2 = null;
 	StatisticsCollector sc = null;
-	int intermediateWarmupTime, measuringTime, speed;
+	final int intermediateWarmupTime;
+	final int measuringTime;
+	int speed;
 	long lastPhaseChange;
-	StatsHolder s;
+	final StatsHolder s;
 
 	public MeasureTargetSystem(BufferedWriter out, BufferedWriter out2,
 			StatisticsCollector sc, int intermediateWarmupTime,

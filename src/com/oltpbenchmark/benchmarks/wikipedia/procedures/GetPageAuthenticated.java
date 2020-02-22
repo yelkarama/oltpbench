@@ -28,24 +28,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class GetPageAuthenticated extends Procedure {
-	
+
     // -----------------------------------------------------------------
     // STATEMENTS
     // -----------------------------------------------------------------
-    
-    public SQLStmt selectPage = new SQLStmt(
-        "SELECT * FROM " + WikipediaConstants.TABLENAME_PAGE + 
+
+    public final SQLStmt selectPage = new SQLStmt(
+        "SELECT * FROM " + WikipediaConstants.TABLENAME_PAGE +
         " WHERE page_namespace = ? AND page_title = ? LIMIT 1"
     );
-    public SQLStmt selectPageRestriction = new SQLStmt(
-        "SELECT * FROM " + WikipediaConstants.TABLENAME_PAGE_RESTRICTIONS + 
+    public final SQLStmt selectPageRestriction = new SQLStmt(
+        "SELECT * FROM " + WikipediaConstants.TABLENAME_PAGE_RESTRICTIONS +
         " WHERE pr_page = ?"
     );
-    public SQLStmt selectIpBlocks = new SQLStmt(
+    public final SQLStmt selectIpBlocks = new SQLStmt(
         "SELECT * FROM " + WikipediaConstants.TABLENAME_IPBLOCKS +
         " WHERE ipb_user = ?"
-    ); 
-    public SQLStmt selectPageRevision = new SQLStmt(
+    );
+    public final SQLStmt selectPageRevision = new SQLStmt(
         "SELECT * " +
         "  FROM " + WikipediaConstants.TABLENAME_PAGE + ", " +
                     WikipediaConstants.TABLENAME_REVISION +
@@ -54,23 +54,23 @@ public class GetPageAuthenticated extends Procedure {
         "   AND page_id = ? " +
         "   AND rev_id = page_latest LIMIT 1"
     );
-    public SQLStmt selectText = new SQLStmt(
+    public final SQLStmt selectText = new SQLStmt(
         "SELECT old_text,old_flags FROM " + WikipediaConstants.TABLENAME_TEXT +
         " WHERE old_id = ? LIMIT 1"
     );
-	public SQLStmt selectUser = new SQLStmt(
-        "SELECT * FROM " + WikipediaConstants.TABLENAME_USER + 
+	public final SQLStmt selectUser = new SQLStmt(
+        "SELECT * FROM " + WikipediaConstants.TABLENAME_USER +
         " WHERE user_id = ? LIMIT 1"
     );
-	public SQLStmt selectGroup = new SQLStmt(
-        "SELECT ug_group FROM " + WikipediaConstants.TABLENAME_USER_GROUPS + 
+	public final SQLStmt selectGroup = new SQLStmt(
+        "SELECT ug_group FROM " + WikipediaConstants.TABLENAME_USER_GROUPS +
         " WHERE ug_user = ?"
     );
 
     // -----------------------------------------------------------------
     // RUN
     // -----------------------------------------------------------------
-	
+
     public Article run(Connection conn, boolean forSelect, String userIp, int userId, int nameSpace, String pageTitle) throws SQLException {
         // =======================================================
         // LOADING BASIC DATA: txn1
@@ -123,7 +123,7 @@ public class GetPageAuthenticated extends Procedure {
             assert(pr_type != null);
         }
         rs.close();
-        
+
         // check using blocking of a user by either the IP address or the
         // user_name
         st = this.getPreparedStatement(conn, selectIpBlocks);

@@ -39,10 +39,10 @@ import java.util.Random;
 public class InvertibleShuffler {
   private final long[] params;
   private final int shuffleGroups;
-  long n;
-  long nRoundedUp; // n rounded up to next multiple of shuffleGroups
-  long nRoundedDown; // n rounded down to next multiple of shuffleGroups
-  int minGroupSize;
+  final long n;
+  final long nRoundedUp; // n rounded up to next multiple of shuffleGroups
+  final long nRoundedDown; // n rounded down to next multiple of shuffleGroups
+  final int minGroupSize;
 
   public InvertibleShuffler(long seed, int shuffleGroups, long n) {
     this(new Random(seed), shuffleGroups, n);

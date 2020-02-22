@@ -32,7 +32,7 @@ public class AddWatchList extends Procedure {
     // STATEMENTS
     // -----------------------------------------------------------------
 
-    public SQLStmt insertWatchList = new SQLStmt(
+    public final SQLStmt insertWatchList = new SQLStmt(
         "INSERT INTO " + WikipediaConstants.TABLENAME_WATCHLIST + " (" +
         "wl_user, wl_namespace, wl_title, wl_notificationtimestamp" +
         ") VALUES (" +
@@ -40,7 +40,7 @@ public class AddWatchList extends Procedure {
         ")"
     );
 
-    public SQLStmt setUserTouched = new SQLStmt(
+    public final SQLStmt setUserTouched = new SQLStmt(
         "UPDATE " + WikipediaConstants.TABLENAME_USER +
         "   SET user_touched = ? WHERE user_id = ?"
     );

@@ -291,7 +291,7 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
         protected final Pattern random_str_regex = Pattern.compile("[\\w]+\\_SATTR[\\d]+", Pattern.CASE_INSENSITIVE);
 
         /** Any column with the name XX_IATTR## will automatically be filled with a random integer */
-        protected List<Column> random_int_cols = new ArrayList<Column>();
+        protected final List<Column> random_int_cols = new ArrayList<Column>();
         protected final Pattern random_int_regex = Pattern.compile("[\\w]+\\_IATTR[\\d]+", Pattern.CASE_INSENSITIVE);
 
         /**

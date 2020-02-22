@@ -22,7 +22,7 @@ import java.util.Properties;
 
 public class StatisticsCollector {
 
-	SSHGetStats osStats;
+	final SSHGetStats osStats;
 	MysqlGetStats mysqlGetStats;
 
 	public StatisticsCollector(Properties ini) throws SQLException {
