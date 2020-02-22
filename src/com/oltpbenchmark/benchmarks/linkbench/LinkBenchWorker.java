@@ -46,8 +46,6 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
     private static final Logger LOG = Logger.getLogger(LinkBenchWorker.class);
     private final Random rng;
 
-    private final Properties props;
-
     // Last node id accessed
     long lastNodeId;
     // Other informational counters
@@ -145,7 +143,6 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
         super(benchmarkModule, id);
         this.rng = masterRandom;
 
-        this.props = props;
         this.requesterID =  id;
         this.nrequesters = nrequesters;
         maxid1 = ConfigUtil.getLong(props, LinkBenchConstants.MAX_ID);
@@ -165,9 +162,9 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
             LOG.info("Testing single row assoc read.");
         }
 
-        initRequestProbabilities(this.props);
-        initLinkDataGeneration(this.props);
-        initLinkRequestDistributions(this.props, requesterID, nrequesters);
+        initRequestProbabilities(props);
+        initLinkDataGeneration(props);
+        initLinkRequestDistributions(props, requesterID, nrequesters);
         if (pc_getnode > pc_getlinklist) {
             //            // Load stuff for node workload if needed
             //            if (nodeStore == null) {
@@ -180,7 +177,7 @@ public class LinkBenchWorker extends Worker<LinkBenchBenchmark> {
         listTailHistoryLimit = 2048; // Hardcoded limit for now
         listTailHistory = new ArrayList<Link>(listTailHistoryLimit);
         listTailHistoryIndex = new HashMap<HistoryKey, Integer>();
-        p_historical_getlinklist = ConfigUtil.getDouble(this.props,
+        p_historical_getlinklist = ConfigUtil.getDouble(props,
                             LinkBenchConstants.PR_GETLINKLIST_HISTORY, 0.0) / 100;
         lastNodeId = startid1;
     }

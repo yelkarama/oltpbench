@@ -39,14 +39,13 @@ import java.util.Random;
 public class LinkBenchBenchmark extends BenchmarkModule {
 
     private static final Logger LOG = Logger.getLogger(LinkBenchBenchmark.class);
-    private final LinkBenchConfiguration linkBenchConf;
     private final Properties props;
 
     public LinkBenchBenchmark(WorkloadConfiguration workConf) throws Exception {
         super("linkbench", workConf, true);
-        this.linkBenchConf = new LinkBenchConfiguration(workConf);
+        LinkBenchConfiguration linkBenchConf = new LinkBenchConfiguration(workConf);
         props = new Properties();
-        props.load(new FileInputStream(this.linkBenchConf.getConfigFile()));
+        props.load(new FileInputStream(linkBenchConf.getConfigFile()));
     }
 
     @Override

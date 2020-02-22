@@ -107,16 +107,7 @@ public class Payment extends TPCCProcedure {
             "   AND C_LAST = ? " +
             " ORDER BY C_FIRST");
 
-    // Payment Txn
-    private PreparedStatement payUpdateWhse = null;
-    private PreparedStatement payGetWhse = null;
-    private PreparedStatement payUpdateDist = null;
-    private PreparedStatement payGetDist = null;
     private PreparedStatement payGetCust = null;
-    private PreparedStatement payGetCustCdata = null;
-    private PreparedStatement payUpdateCustBalCdata = null;
-    private PreparedStatement payUpdateCustBal = null;
-    private PreparedStatement payInsertHist = null;
     private PreparedStatement customerByName = null;
 
     public ResultSet run(Connection conn, Random gen,
@@ -124,15 +115,16 @@ public class Payment extends TPCCProcedure {
                          int terminalDistrictLowerID, int terminalDistrictUpperID, TPCCWorker w) throws SQLException {
 
         // initializing all prepared statements
-        payUpdateWhse = this.getPreparedStatement(conn, payUpdateWhseSQL);
-        payGetWhse = this.getPreparedStatement(conn, payGetWhseSQL);
-        payUpdateDist = this.getPreparedStatement(conn, payUpdateDistSQL);
-        payGetDist = this.getPreparedStatement(conn, payGetDistSQL);
+        // Payment Txn
+        PreparedStatement payUpdateWhse = this.getPreparedStatement(conn, payUpdateWhseSQL);
+        PreparedStatement payGetWhse = this.getPreparedStatement(conn, payGetWhseSQL);
+        PreparedStatement payUpdateDist = this.getPreparedStatement(conn, payUpdateDistSQL);
+        PreparedStatement payGetDist = this.getPreparedStatement(conn, payGetDistSQL);
         payGetCust = this.getPreparedStatement(conn, payGetCustSQL);
-        payGetCustCdata = this.getPreparedStatement(conn, payGetCustCdataSQL);
-        payUpdateCustBalCdata = this.getPreparedStatement(conn, payUpdateCustBalCdataSQL);
-        payUpdateCustBal = this.getPreparedStatement(conn, payUpdateCustBalSQL);
-        payInsertHist = this.getPreparedStatement(conn, payInsertHistSQL);
+        PreparedStatement payGetCustCdata = this.getPreparedStatement(conn, payGetCustCdataSQL);
+        PreparedStatement payUpdateCustBalCdata = this.getPreparedStatement(conn, payUpdateCustBalCdataSQL);
+        PreparedStatement payUpdateCustBal = this.getPreparedStatement(conn, payUpdateCustBalSQL);
+        PreparedStatement payInsertHist = this.getPreparedStatement(conn, payInsertHistSQL);
         customerByName = this.getPreparedStatement(conn, customerByNameSQL);
 
         // payUpdateWhse =this.getPreparedStatement(conn, payUpdateWhseSQL);

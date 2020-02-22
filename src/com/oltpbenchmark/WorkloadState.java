@@ -43,7 +43,6 @@ public class WorkloadState {
     private final int num_terminals;
     private int workerNeedSleep;
 
-    private List<Phase> works = new ArrayList<Phase>();
     private final Iterator<Phase> phaseIterator;
     private Phase currentPhase = null;
     private final long phaseStartNs = 0;
@@ -51,7 +50,6 @@ public class WorkloadState {
 
     public WorkloadState(BenchmarkState benchmarkState, List<Phase> works, int num_terminals, TraceReader traceReader) {
         this.benchmarkState = benchmarkState;
-        this.works = works;
         this.num_terminals = num_terminals;
         this.workerNeedSleep = num_terminals;
         this.traceReader = traceReader;

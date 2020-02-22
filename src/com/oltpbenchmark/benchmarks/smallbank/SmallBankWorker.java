@@ -30,8 +30,6 @@ public class SmallBankWorker extends Worker<SmallBankBenchmark> {
     private final WriteCheck procWriteCheck;
 
     private final DiscreteRNG rng;
-    private final long numAccounts;
-    private final int custNameLength;
     private final String custNameFormat;
     private final long[] custIdsBuffer = { -1l, -1l };
 
@@ -48,10 +46,10 @@ public class SmallBankWorker extends Worker<SmallBankBenchmark> {
         this.procTransactSavings = this.getProcedure(TransactSavings.class);
         this.procWriteCheck = this.getProcedure(WriteCheck.class);
 
-        this.numAccounts = benchmarkModule.numAccounts;
-        this.custNameLength = SmallBankBenchmark.getCustomerNameLength(benchmarkModule.getTableCatalog(SmallBankConstants.TABLENAME_ACCOUNTS));
-        this.custNameFormat = "%0"+this.custNameLength+"d";
-        this.rng = new Flat(rng(), 0, this.numAccounts);
+        long numAccounts = benchmarkModule.numAccounts;
+        int custNameLength = SmallBankBenchmark.getCustomerNameLength(benchmarkModule.getTableCatalog(SmallBankConstants.TABLENAME_ACCOUNTS));
+        this.custNameFormat = "%0"+ custNameLength +"d";
+        this.rng = new Flat(rng(), 0, numAccounts);
     }
 
     protected void generateCustIds(boolean needsTwoAccts) {

@@ -30,7 +30,6 @@ public abstract class GenericQuery extends Procedure {
 
     protected static final Logger LOG = Logger.getLogger(GenericQuery.class);
 
-    private PreparedStatement stmt;
     private Connection conn;
     private Worker owner;
 
@@ -42,7 +41,7 @@ public abstract class GenericQuery extends Procedure {
 
     public ResultSet run(Connection conn, RandomGenerator rand) throws SQLException {
         //initializing all prepared statements
-        stmt = getStatement(conn, rand);
+        PreparedStatement stmt = getStatement(conn, rand);
 
         if (owner != null)
             owner.setCurrStatement(stmt);

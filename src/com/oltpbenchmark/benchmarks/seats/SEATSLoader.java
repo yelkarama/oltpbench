@@ -1010,11 +1010,9 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
 
         private int outer_ctr = 0;
         private String outer_airport;
-        private Pair<Double, Double> outer_location;
 
         private Integer last_inner_ctr = null;
         private String inner_airport;
-        private Pair<Double, Double> inner_location;
         private double distance;
 
         /**
@@ -1039,7 +1037,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
         protected boolean hasNext() {
             for (; this.outer_ctr < (this.num_airports - 1); this.outer_ctr++) {
                 this.outer_airport = SEATSLoader.this.airport_locations.get(this.outer_ctr);
-                this.outer_location = SEATSLoader.this.airport_locations.getValue(this.outer_ctr);
+                Pair<Double, Double> outer_location = SEATSLoader.this.airport_locations.getValue(this.outer_ctr);
                 if (SEATSLoader.this.profile.hasFlights(this.outer_airport) == false) {
                     continue;
                 }
@@ -1049,11 +1047,11 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
                 for (; inner_ctr < this.num_airports; inner_ctr++) {
                     assert (this.outer_ctr != inner_ctr);
                     this.inner_airport = SEATSLoader.this.airport_locations.get(inner_ctr);
-                    this.inner_location = SEATSLoader.this.airport_locations.getValue(inner_ctr);
+                    Pair<Double, Double> inner_location = SEATSLoader.this.airport_locations.getValue(inner_ctr);
                     if (SEATSLoader.this.profile.hasFlights(this.inner_airport) == false) {
                         continue;
                     }
-                    this.distance = DistanceUtil.distance(this.outer_location, this.inner_location);
+                    this.distance = DistanceUtil.distance(outer_location, inner_location);
 
                     // Store the distance between the airports locally if either
                     // one is in our
@@ -1112,7 +1110,6 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
         private final ListOrderedMap<Timestamp, Integer> flights_per_day = new ListOrderedMap<Timestamp, Integer>();
 
         private int day_idx = 0;
-        private final Timestamp today;
         private Timestamp start_date;
 
         private FlightId flight_id;
@@ -1154,7 +1151,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
             this.flight_times = new FlatHistogram<String>(SEATSLoader.this.rng, histogram);
 
             // Figure out how many flights that we want for each day
-            this.today = new Timestamp(System.currentTimeMillis());
+            Timestamp today = new Timestamp(System.currentTimeMillis());
 
             // Sometimes there are more flights per day, and sometimes there are
             // fewer
@@ -1162,7 +1159,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
 
             this.total = 0;
             boolean first = true;
-            for (long t = this.today.getTime() - (days_past * SEATSConstants.MILLISECONDS_PER_DAY); t < this.today.getTime(); t += SEATSConstants.MILLISECONDS_PER_DAY) {
+            for (long t = today.getTime() - (days_past * SEATSConstants.MILLISECONDS_PER_DAY); t < today.getTime(); t += SEATSConstants.MILLISECONDS_PER_DAY) {
                 Timestamp timestamp = new Timestamp(t);
                 if (first) {
                     this.start_date = timestamp;
@@ -1173,14 +1170,14 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
                 this.total += num_flights;
             } // FOR
             if (this.start_date == null) {
-                this.start_date = this.today;
+                this.start_date = today;
             }
             SEATSLoader.this.profile.setFlightStartDate(this.start_date);
 
             // This is for upcoming flights that we want to be able to schedule
             // new reservations for in the benchmark
-            SEATSLoader.this.profile.setFlightUpcomingDate(this.today);
-            for (long t = this.today.getTime(), last_date = this.today.getTime() + (days_future * SEATSConstants.MILLISECONDS_PER_DAY); t <= last_date; t += SEATSConstants.MILLISECONDS_PER_DAY) {
+            SEATSLoader.this.profile.setFlightUpcomingDate(today);
+            for (long t = today.getTime(), last_date = today.getTime() + (days_future * SEATSConstants.MILLISECONDS_PER_DAY); t <= last_date; t += SEATSConstants.MILLISECONDS_PER_DAY) {
                 Timestamp timestamp = new Timestamp(t);
                 int num_flights = gaussian.nextInt();
                 this.flights_per_day.put(timestamp, num_flights);

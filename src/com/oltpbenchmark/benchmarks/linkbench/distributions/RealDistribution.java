@@ -144,7 +144,9 @@ public class RealDistribution extends PiecewiseLinearDistribution {
 
   private static ArrayList<Point> nlinks_cdf, link_nreads_cdf, link_nwrites_cdf,
                   node_nreads_cdf, node_nwrites_cdf;
-  private static double[] link_nreads_cs, nwrites_cs, node_nreads_cs, node_nwrites_cs;
+  private static double[] link_nreads_cs;
+  private static double[] nwrites_cs;
+  private static double[] node_nreads_cs;
   /**
    * These right_points arrays are used to keep track of state of
    * the id1 generation, with each cell holding the next id to
@@ -155,8 +157,9 @@ public class RealDistribution extends PiecewiseLinearDistribution {
    * certainly is non-deterministic when multiple threads are
    * involved.
    */
-  private static long[] link_nreads_right_points, nwrites_right_points,
-                        node_nreads_right_points, node_nwrites_right_points;
+  private static long[] link_nreads_right_points;
+  private static long[] nwrites_right_points;
+  private static long[] node_nreads_right_points;
   private static double nlinks_expected_val, link_nreads_expected_val, link_nwrites_expected_val,
                         node_nreads_expected_val, node_nwrites_expected_val;
 
@@ -336,9 +339,9 @@ public class RealDistribution extends PiecewiseLinearDistribution {
         node_nwrites_cdf = readCDF(filename, scanner);
         double[] node_nwrites_pdf = getPDF(node_nwrites_cdf);
         double[] node_nwrites_ccdf = getCCDF(node_nwrites_pdf);
-        node_nwrites_cs = getCumulativeSum(node_nwrites_ccdf);
+        double[] node_nwrites_cs = getCumulativeSum(node_nwrites_ccdf);
 
-        node_nwrites_right_points = new long[node_nwrites_cs.length];
+        long[] node_nwrites_right_points = new long[node_nwrites_cs.length];
         for (int i = 0; i < node_nwrites_right_points.length; ++i) {
           node_nwrites_right_points[i] = 0;
         }

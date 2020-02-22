@@ -62,7 +62,6 @@ public class TPCHLoader extends Loader<TPCHBenchmark> {
 //    private static final int numRegionCols = 3;
 //    private static final int numSupplierCols = 7;
 
-    private static Date now;
     private static long lastTimeMS;
 
     public TPCHLoader(TPCHBenchmark benchmark) {
@@ -408,7 +407,7 @@ public class TPCHLoader extends Loader<TPCHBenchmark> {
             try {
                 this.conn.setAutoCommit(false);
                 try {
-                    now = new java.util.Date();
+                    Date now = new Date();
                     LOG.debug("\nStart " + tableName + " load @ " + now + "...");
                     String format = getFileFormat();
                     File file = new File(workConf.getDataDir()

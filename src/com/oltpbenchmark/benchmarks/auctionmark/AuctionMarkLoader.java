@@ -64,10 +64,6 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
 
     private final Histogram<String> tableSizes = new Histogram<String>();
 
-    private final File category_file;
-
-    private final boolean fail = false;
-
     // -----------------------------------------------------------------
     // INITIALIZATION
     // -----------------------------------------------------------------
@@ -82,7 +78,7 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
         // BenchmarkProfile
         this.profile = new AuctionMarkProfile(benchmark, benchmark.getRandomGenerator());
 
-        this.category_file = new File(benchmark.getDataDir().getAbsolutePath() + "/table.category.gz");
+        File category_file = new File(benchmark.getDataDir().getAbsolutePath() + "/table.category.gz");
 
         try {
             // ---------------------------
@@ -253,7 +249,8 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
         stmt.close();
 
         // Mark as finished
-        if (this.fail == false) {
+        boolean fail = false;
+        if (fail == false) {
             generator.markAsFinished();
             synchronized (this) {
                 this.finished.add(tableName);
@@ -688,15 +685,13 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
      * CATEGORY Generator
      **********************************************************************************************/
     protected class CategoryGenerator extends AbstractTableGenerator {
-        private final File data_file;
         private final Map<String, Category> categoryMap;
         private final LinkedList<Category> categories = new LinkedList<Category>();
 
         public CategoryGenerator(File data_file) throws SQLException {
             super(AuctionMarkConstants.TABLENAME_CATEGORY);
-            this.data_file = data_file;
-            assert(this.data_file.exists()) :
-                "The data file for the category generator does not exist: " + this.data_file;
+            assert(data_file.exists()) :
+                "The data file for the category generator does not exist: " + data_file;
 
             this.categoryMap = (new CategoryParser(data_file)).getCategoryMap();
             this.tableSize = (long)this.categoryMap.size();
@@ -737,7 +732,6 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
      * GLOBAL_ATTRIBUTE_GROUP Generator
      **********************************************************************************************/
     protected class GlobalAttributeGroupGenerator extends AbstractTableGenerator {
-        private long num_categories = 0l;
         private final Histogram<Integer> category_groups = new Histogram<Integer>();
         private final LinkedList<GlobalAttributeGroupId> group_ids = new LinkedList<GlobalAttributeGroupId>();
 
@@ -753,10 +747,10 @@ public class AuctionMarkLoader extends Loader<AuctionMarkBenchmark> {
         @Override
         public void prepare() {
             // Grab the number of CATEGORY items that we have inserted
-            this.num_categories = getGenerator(AuctionMarkConstants.TABLENAME_CATEGORY).tableSize;
+            long num_categories = getGenerator(AuctionMarkConstants.TABLENAME_CATEGORY).tableSize;
 
             for (int i = 0; i < this.tableSize; i++) {
-                int category_id = profile.rng.number(0, (int)this.num_categories);
+                int category_id = profile.rng.number(0, (int) num_categories);
                 this.category_groups.put(category_id);
                 int id = this.category_groups.get(category_id).intValue();
                 int count = (int)profile.rng.number(1, AuctionMarkConstants.TABLESIZE_GLOBAL_ATTRIBUTE_VALUE_PER_GROUP);

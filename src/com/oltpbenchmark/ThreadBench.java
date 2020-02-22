@@ -42,7 +42,6 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
     private final ArrayList<Thread> workerThreads;
     // private File profileFile;
     private final List<WorkloadConfiguration> workConfs;
-    private List<WorkloadState> workStates;
     ArrayList<LatencyRecord.Sample> samples = new ArrayList<LatencyRecord.Sample>();
     private int intervalMonitor = 0;
 
@@ -231,13 +230,12 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
             this.setDaemon(true);
         }
 
-        private final boolean stop = false;
-
         @Override
         public void run() {
             Map<String, Object> m = new ListOrderedMap<String, Object>();
             LOG.info("Starting WatchDogThread");
-            while (this.stop == false) {
+            boolean stop = false;
+            while (stop == false) {
                 try {
                     Thread.sleep(20000);
                 } catch (InterruptedException ex) {
@@ -307,7 +305,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
     public Results runRateLimitedMultiPhase() throws QueueLimitException, IOException {
         assert testState == null;
         testState = new BenchmarkState(workers.size() + 1);
-        workStates = new ArrayList<WorkloadState>();
+        List<WorkloadState> workStates = new ArrayList<WorkloadState>();
 
         for (WorkloadConfiguration workState : this.workConfs) {
             workStates.add(workState.initializeState(testState));
@@ -327,7 +325,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
 
         Phase phase = null;
 
-        for (WorkloadState workState : this.workStates) {
+        for (WorkloadState workState : workStates) {
             workState.switchToNextPhase();
             phase = workState.getCurrentPhase();
             LOG.info(phase.currentPhaseString());
@@ -357,7 +355,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
             // posting new work... and reseting the queue in case we have new
             // portion of the workload...
 
-            for (WorkloadState workState : this.workStates) {
+            for (WorkloadState workState : workStates) {
                 if (workState.getCurrentPhase() != null) {
                     rateFactor = workState.getCurrentPhase().rate / lowestRate;
                 } else {

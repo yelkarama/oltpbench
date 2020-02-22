@@ -135,11 +135,6 @@ public class CopyUtil {
     }
 
     private static class StripEndInputStream extends FilterInputStream {
-        /**
-         * To remove the | at the end of each line DBGEN creates.
-         */
-
-        private Integer curr = null;
         private Integer next = null;
 
         /**
@@ -161,7 +156,10 @@ public class CopyUtil {
                 next = super.read();
             }
 
-            curr = next;
+            /**
+             * To remove the | at the end of each line DBGEN creates.
+             */
+            Integer curr = next;
             next = super.read();
 
             if (next == '\n') {

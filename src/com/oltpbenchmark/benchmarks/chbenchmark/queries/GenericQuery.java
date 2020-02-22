@@ -33,7 +33,6 @@ public abstract class GenericQuery extends Procedure {
 
     private static final Logger LOG = Logger.getLogger(GenericQuery.class);
 
-	private PreparedStatement stmt;
     private Worker owner;
 
     public void setOwner(Worker w) {
@@ -65,7 +64,7 @@ public abstract class GenericQuery extends Procedure {
     public ResultSet run(Connection conn) throws SQLException {
 
 		//initializing all prepared statements
-    	stmt=this.getPreparedStatement(conn, get_query());
+        PreparedStatement stmt = this.getPreparedStatement(conn, get_query());
         if (owner != null)
             owner.setCurrStatement(stmt);
 

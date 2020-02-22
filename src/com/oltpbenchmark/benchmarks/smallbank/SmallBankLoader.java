@@ -20,10 +20,6 @@ import java.util.List;
 public class SmallBankLoader extends Loader<SmallBankBenchmark> {
     private static final Logger LOG = Logger.getLogger(SmallBankLoader.class);
 
-    private final Table catalogAccts;
-    private final Table catalogSavings;
-    private final Table catalogChecking;
-
     private final String sqlAccts;
     private final String sqlSavings;
     private final String sqlChecking;
@@ -34,19 +30,19 @@ public class SmallBankLoader extends Loader<SmallBankBenchmark> {
     public SmallBankLoader(SmallBankBenchmark benchmark) {
         super(benchmark);
 
-        this.catalogAccts = this.benchmark.getTableCatalog(SmallBankConstants.TABLENAME_ACCOUNTS);
-        assert(this.catalogAccts != null);
-        this.catalogSavings = this.benchmark.getTableCatalog(SmallBankConstants.TABLENAME_SAVINGS);
-        assert(this.catalogSavings != null);
-        this.catalogChecking = this.benchmark.getTableCatalog(SmallBankConstants.TABLENAME_CHECKING);
-        assert(this.catalogChecking != null);
+        Table catalogAccts = this.benchmark.getTableCatalog(SmallBankConstants.TABLENAME_ACCOUNTS);
+        assert(catalogAccts != null);
+        Table catalogSavings = this.benchmark.getTableCatalog(SmallBankConstants.TABLENAME_SAVINGS);
+        assert(catalogSavings != null);
+        Table catalogChecking = this.benchmark.getTableCatalog(SmallBankConstants.TABLENAME_CHECKING);
+        assert(catalogChecking != null);
 
-        this.sqlAccts = SQLUtil.getInsertSQL(this.catalogAccts, this.getDatabaseType());
-        this.sqlSavings = SQLUtil.getInsertSQL(this.catalogSavings, this.getDatabaseType());
-        this.sqlChecking = SQLUtil.getInsertSQL(this.catalogChecking, this.getDatabaseType());
+        this.sqlAccts = SQLUtil.getInsertSQL(catalogAccts, this.getDatabaseType());
+        this.sqlSavings = SQLUtil.getInsertSQL(catalogSavings, this.getDatabaseType());
+        this.sqlChecking = SQLUtil.getInsertSQL(catalogChecking, this.getDatabaseType());
 
         this.numAccounts = benchmark.numAccounts;
-        this.custNameLength = SmallBankBenchmark.getCustomerNameLength(this.catalogAccts);
+        this.custNameLength = SmallBankBenchmark.getCustomerNameLength(catalogAccts);
     }
 
     @Override

@@ -32,8 +32,6 @@ import java.util.List;
 
 public class JPABBenchmark extends BenchmarkModule {
 
-    private EntityManagerFactory emf;
-
     private final JPABConfiguration jpabConf;
 
     public JPABBenchmark(WorkloadConfiguration workConf) {
@@ -44,7 +42,7 @@ public class JPABBenchmark extends BenchmarkModule {
     @Override
     protected List<Worker<? extends BenchmarkModule>> makeWorkersImpl(boolean verbose) throws IOException {
         List<Worker<? extends BenchmarkModule>> workers = new ArrayList<Worker<? extends BenchmarkModule>>();
-        emf = Persistence.createEntityManagerFactory(jpabConf.getPersistanceUnit());
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(jpabConf.getPersistanceUnit());
         Test test = null;
         try {
             test = (Test)Class.forName("com.oltpbenchmark.benchmarks.jpab.tests."+this.jpabConf.getTestName()).newInstance();
