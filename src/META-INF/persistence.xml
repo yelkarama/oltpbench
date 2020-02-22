@@ -23,7 +23,7 @@
       <property name="hibernate.c3p0.min_size" value="5" />
       <property name="javax.persistence.validation.mode" value="NONE" />
       <property name="hibernate.hbm2ddl.auto" value="update" />
-      <property name="hibernate.bytecode.provider" value="javassist" />
+<!--      <property name="hibernate.bytecode.provider" value="javassist" />-->
       <property name="hibernate.bytecode.use_reflection_optimizer" value="true" />
       <property name="hibernate.connection.release_mode" value="on_close" />
     </properties>
